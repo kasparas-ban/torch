@@ -1,0 +1,65 @@
+import { ReactComponent as GoalsIcon } from "../assets/navigation_icons/goals.svg";
+import { ReactComponent as CalendarIcon } from "../assets/navigation_icons/calendar.svg";
+import { ReactComponent as TimerIcon } from "../assets/navigation_icons/timer.svg";
+import { ReactComponent as WorldIcon } from "../assets/navigation_icons/world.svg";
+import { ReactComponent as StatsIcon } from "../assets/navigation_icons/stats.svg";
+import { ReactComponent as TorchLogo } from "../assets/torch_logo.svg";
+import { ReactComponent as UserIcon } from "../assets/user.svg";
+import { ReactComponent as MenuIcon } from "../assets/navigation_icons/menu.svg";
+
+function NavigationBar() {
+  return (
+    <div className="mt-4 flex justify-between max-[768px]:px-6 md:space-x-36 md:justify-center">
+      <div className="relative -top-1 h-12 hover:cursor-pointer">
+        <TorchLogo className="h-12 w-6" />
+      </div>
+      <ul className="flex h-12 space-x-1 overflow-visible rounded-[16px] px-4">
+        <NavigationLink Icon={GoalsIcon} linkName={"Goals"} />
+        <NavigationLink Icon={CalendarIcon} linkName={"Calendar"} />
+        <NavigationLink Icon={TimerIcon} linkName={"Timer"} highlight />
+        <NavigationLink Icon={WorldIcon} linkName={"World"} />
+        <NavigationLink Icon={StatsIcon} linkName={"Stats"} />
+      </ul>
+      <div className="group flex items-center hover:cursor-pointer max-[400px]:hidden">
+        <UserIcon className="h-8" />
+        <div className="relative hidden translate-y-5 group-hover:block">
+          <div className="absolute -translate-x-11 -translate-y-0.5 rounded-lg bg-red-200 p-1">
+            Account
+          </div>
+        </div>
+      </div>
+      <div className="group items-center hover:cursor-pointer hidden max-[400px]:flex">
+        <MenuIcon className="h-8" />
+      </div>
+    </div>
+  );
+}
+
+interface NavigationLinkProps {
+  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  linkName: string;
+  highlight?: boolean;
+}
+
+function NavigationLink({ Icon, linkName, highlight }: NavigationLinkProps) {
+  return (
+    <li className="flex flex-col items-center justify-center">
+      {highlight ? (
+        <div className="peer mx-2 rounded-full bg-red-400 py-2 px-2 hover:cursor-pointer hover:bg-rose-500">
+          <Icon className="mx-auto h-8 w-8 text-slate-800" />
+        </div>
+      ) : (
+        <div className="peer rounded-lg py-2 px-3 hover:cursor-pointer hover:bg-slate-300 max-[400px]:hidden">
+          <Icon className="mx-auto h-6 w-6 text-slate-800" />
+        </div>
+      )}
+      <div className="relative hidden translate-y-5 peer-hover:block">
+        <div className="absolute -translate-x-1/2 -translate-y-1/2 rounded-lg bg-red-200 p-1">
+          {linkName}
+        </div>
+      </div>
+    </li>
+  );
+}
+
+export default NavigationBar;
