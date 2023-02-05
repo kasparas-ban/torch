@@ -1,15 +1,19 @@
-import { ReactComponent as GoalsIcon } from "../assets/navigation_icons/goals.svg";
-import { ReactComponent as CalendarIcon } from "../assets/navigation_icons/calendar.svg";
-import { ReactComponent as TimerIcon } from "../assets/navigation_icons/timer.svg";
-import { ReactComponent as WorldIcon } from "../assets/navigation_icons/world.svg";
-import { ReactComponent as StatsIcon } from "../assets/navigation_icons/stats.svg";
-import { ReactComponent as TorchLogo } from "../assets/torch_logo.svg";
-import { ReactComponent as UserIcon } from "../assets/user.svg";
-import { ReactComponent as MenuIcon } from "../assets/navigation_icons/menu.svg";
+import { ReactComponent as GoalsIcon } from "../assets/navigation_icons/goals.svg"
+import { ReactComponent as CalendarIcon } from "../assets/navigation_icons/calendar.svg"
+import { ReactComponent as TimerIcon } from "../assets/navigation_icons/timer.svg"
+import { ReactComponent as WorldIcon } from "../assets/navigation_icons/world.svg"
+import { ReactComponent as StatsIcon } from "../assets/navigation_icons/stats.svg"
+import { ReactComponent as TorchLogo } from "../assets/torch_logo.svg"
+import { ReactComponent as UserIcon } from "../assets/user.svg"
+import { ReactComponent as CloseIcon } from "../assets/close.svg"
+import { ReactComponent as MenuIcon } from "../assets/navigation_icons/menu.svg"
+import { useState } from "react"
 
 function NavigationBar() {
+  const [showModalMenu, setShowModalMenu] = useState(false)
+
   return (
-    <div className="mt-4 flex justify-between max-[768px]:px-6 md:space-x-36 md:justify-center">
+    <div className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
       <div className="relative -top-1 h-12 hover:cursor-pointer">
         <TorchLogo className="h-12 w-6" />
       </div>
@@ -28,17 +32,65 @@ function NavigationBar() {
           </div>
         </div>
       </div>
-      <div className="group items-center hover:cursor-pointer hidden max-[400px]:flex">
-        <MenuIcon className="h-8" />
+      <div className="group hidden items-center hover:cursor-pointer max-[400px]:flex">
+        {showModalMenu ? (
+          <CloseIcon
+            onClick={() => setShowModalMenu((prev) => !prev)}
+            className="h-8 w-6"
+          />
+        ) : (
+          <MenuIcon
+            onClick={() => setShowModalMenu((prev) => !prev)}
+            className="h-8 w-6"
+          />
+        )}
+      </div>
+      <div
+        className={`fixed top-20 left-0 h-full w-full bg-white ${
+          showModalMenu ? "visible" : "hidden"
+        }`}
+      >
+        <ul className="divide-y divide-slate-200 px-4">
+          <li className="py-1">
+            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
+              <GoalsIcon className="h-6 w-6 text-slate-800" />
+              <div className="ml-5 flex items-center">Goals</div>
+            </div>
+          </li>
+          <li className="py-1">
+            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
+              <CalendarIcon className="h-6 w-6 text-slate-800" />
+              <div className="ml-5 flex items-center">Calendar</div>
+            </div>
+          </li>
+          <li className="py-1">
+            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
+              <WorldIcon className="h-6 w-6 text-slate-800" />
+              <div className="ml-5 flex items-center">World</div>
+            </div>
+          </li>
+          <li className="py-1">
+            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
+              <StatsIcon className="h-6 w-6 text-slate-800" />
+              <div className="ml-5 flex items-center">Statistics</div>
+            </div>
+          </li>
+          <li className="py-1">
+            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
+              <UserIcon className="h-6 w-6 text-slate-800" />
+              <div className="ml-5 flex items-center">Account</div>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
-  );
+  )
 }
 
 interface NavigationLinkProps {
-  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  linkName: string;
-  highlight?: boolean;
+  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  linkName: string
+  highlight?: boolean
 }
 
 function NavigationLink({ Icon, linkName, highlight }: NavigationLinkProps) {
@@ -53,13 +105,13 @@ function NavigationLink({ Icon, linkName, highlight }: NavigationLinkProps) {
           <Icon className="mx-auto h-6 w-6 text-slate-800" />
         </div>
       )}
-      <div className="relative hidden translate-y-5 peer-hover:block">
+      <div className="relative hidden translate-y-5 min-[400px]:peer-hover:block">
         <div className="absolute -translate-x-1/2 -translate-y-1/2 rounded-lg bg-red-200 p-1">
           {linkName}
         </div>
       </div>
     </li>
-  );
+  )
 }
 
-export default NavigationBar;
+export default NavigationBar
