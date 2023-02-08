@@ -1,4 +1,5 @@
 module.exports = {
   tailwindConfig: './tailwind.config.cjs',
-  semi: false
+  semi: false,
+  arrowParens: 'avoid'
 }

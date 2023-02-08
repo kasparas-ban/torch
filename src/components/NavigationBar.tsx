@@ -1,19 +1,19 @@
+import { useState } from "react"
 import { ReactComponent as GoalsIcon } from "../assets/navigation_icons/goals.svg"
 import { ReactComponent as CalendarIcon } from "../assets/navigation_icons/calendar.svg"
 import { ReactComponent as TimerIcon } from "../assets/navigation_icons/timer.svg"
 import { ReactComponent as WorldIcon } from "../assets/navigation_icons/world.svg"
 import { ReactComponent as StatsIcon } from "../assets/navigation_icons/stats.svg"
+import { ReactComponent as MenuIcon } from "../assets/navigation_icons/menu.svg"
 import { ReactComponent as TorchLogo } from "../assets/torch_logo.svg"
 import { ReactComponent as UserIcon } from "../assets/user.svg"
 import { ReactComponent as CloseIcon } from "../assets/close.svg"
-import { ReactComponent as MenuIcon } from "../assets/navigation_icons/menu.svg"
-import { useState } from "react"
 
 function NavigationBar() {
   const [showModalMenu, setShowModalMenu] = useState(false)
 
   return (
-    <div className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
+    <nav className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
       <div className="relative -top-1 h-12 hover:cursor-pointer">
         <TorchLogo className="h-12 w-6" />
       </div>
@@ -35,12 +35,12 @@ function NavigationBar() {
       <div className="group hidden items-center hover:cursor-pointer max-[400px]:flex">
         {showModalMenu ? (
           <CloseIcon
-            onClick={() => setShowModalMenu((prev) => !prev)}
+            onClick={() => setShowModalMenu(prev => !prev)}
             className="h-8 w-6"
           />
         ) : (
           <MenuIcon
-            onClick={() => setShowModalMenu((prev) => !prev)}
+            onClick={() => setShowModalMenu(prev => !prev)}
             className="h-8 w-6"
           />
         )}
@@ -83,7 +83,7 @@ function NavigationBar() {
           </li>
         </ul>
       </div>
-    </div>
+    </nav>
   )
 }
 
