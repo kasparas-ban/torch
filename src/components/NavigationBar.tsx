@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { ReactComponent as GoalsIcon } from "../assets/navigation_icons/goals.svg"
 import { ReactComponent as CalendarIcon } from "../assets/navigation_icons/calendar.svg"
 import { ReactComponent as TimerIcon } from "../assets/navigation_icons/timer.svg"
@@ -18,11 +19,20 @@ function NavigationBar() {
         <TorchLogo className="h-12 w-6" />
       </div>
       <ul className="flex h-12 space-x-1 overflow-visible rounded-[16px] px-4">
-        <NavigationLink Icon={GoalsIcon} linkName={"Goals"} />
-        <NavigationLink Icon={CalendarIcon} linkName={"Calendar"} />
-        <NavigationLink Icon={TimerIcon} linkName={"Timer"} highlight />
-        <NavigationLink Icon={WorldIcon} linkName={"World"} />
-        <NavigationLink Icon={StatsIcon} linkName={"Stats"} />
+        <NavigationLink path={"goals"} Icon={GoalsIcon} linkName={"Goals"} />
+        <NavigationLink
+          path="calendar"
+          Icon={CalendarIcon}
+          linkName="Calendar"
+        />
+        <NavigationLink
+          path="timer"
+          Icon={TimerIcon}
+          linkName="Timer"
+          highlight
+        />
+        <NavigationLink path="world" Icon={WorldIcon} linkName={"World"} />
+        <NavigationLink path="stats" Icon={StatsIcon} linkName={"Stats"} />
       </ul>
       <div className="group flex items-center hover:cursor-pointer max-[400px]:hidden">
         <UserIcon className="h-8" />
@@ -89,13 +99,19 @@ function NavigationBar() {
 
 interface NavigationLinkProps {
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  path: string
   linkName: string
   highlight?: boolean
 }
 
-function NavigationLink({ Icon, linkName, highlight }: NavigationLinkProps) {
+function NavigationLink({
+  Icon,
+  path,
+  linkName,
+  highlight,
+}: NavigationLinkProps) {
   return (
-    <li className="flex flex-col items-center justify-center">
+    <Link to={path} className="flex flex-col items-center justify-center">
       {highlight ? (
         <div className="peer mx-2 rounded-full bg-red-400 py-2 px-2 hover:cursor-pointer hover:bg-rose-500">
           <Icon className="mx-auto h-8 w-8 text-slate-800" />
@@ -110,7 +126,7 @@ function NavigationLink({ Icon, linkName, highlight }: NavigationLinkProps) {
           {linkName}
         </div>
       </div>
-    </li>
+    </Link>
   )
 }
 

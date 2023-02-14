@@ -1,14 +1,26 @@
-import Timer from "./components/Timer"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import NavigationBar from "./components/NavigationBar"
+import TimerPage from "./pages/TimerPage"
+import GoalsPage from "./pages/GoalsPage"
+import CalendarPage from "./pages/CalendarPage"
+import WorldPage from "./pages/WorldPage"
+import StatsPage from "./pages/StatsPage"
 import "./App.css"
 
 function App() {
-  const initialTime = 4 //5 * 60
-
   return (
     <>
-      <main>
-        <Timer initialTime={initialTime} />
-      </main>
+      <BrowserRouter>
+        <NavigationBar />
+        <Routes>
+          <Route index element={<TimerPage />} />
+          <Route path="goals" element={<GoalsPage />} />
+          <Route path="calendar" element={<CalendarPage />} />
+          <Route path="world" element={<WorldPage />} />
+          <Route path="stats" element={<StatsPage />} />
+          <Route path="*" element={<>Page not found</>} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
