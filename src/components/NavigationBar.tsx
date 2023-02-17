@@ -25,12 +25,7 @@ function NavigationBar() {
           Icon={CalendarIcon}
           linkName="Calendar"
         />
-        <NavigationLink
-          path="timer"
-          Icon={TimerIcon}
-          linkName="Timer"
-          highlight
-        />
+        <NavigationLink path="" Icon={TimerIcon} linkName="Timer" highlight />
         <NavigationLink path="world" Icon={WorldIcon} linkName={"World"} />
         <NavigationLink path="stats" Icon={StatsIcon} linkName={"Stats"} />
       </ul>
