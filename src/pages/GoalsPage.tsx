@@ -46,10 +46,6 @@ const goals: Goal[] = [
     title: 'Finish "The Shape of Space"',
     tasks: [],
   },
-  {
-    title: 'Finish "Linear Algebra"',
-    tasks: [],
-  },
 ]
 
 function GoalsPage() {
