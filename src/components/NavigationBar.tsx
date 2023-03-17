@@ -51,7 +51,7 @@ function NavigationBar() {
         )}
       </div>
       <div
-        className={`fixed top-20 left-0 h-full w-full bg-white ${
+        className={`fixed top-20 left-0 z-10 h-full w-full bg-white ${
           showModalMenu ? "visible" : "hidden"
         }`}
       >

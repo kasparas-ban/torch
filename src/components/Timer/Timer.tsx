@@ -1,4 +1,5 @@
 import { useState, useEffect, useReducer } from "react"
+import { TimerShape } from "./TimerShape"
 
 interface ITimer {
   initialTime: number
@@ -85,45 +86,48 @@ function Timer({ initialTime }: ITimer) {
 
   return (
     <>
-      <div className="m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border border-rose-800 max-[320px]:mx-2">
-        <div className="text-center text-8xl font-thin tabular-nums max-[300px]:text-7xl">
-          {`${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}
+      <div className="max-[320px]:mx-2">
+        <div className="m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border border-rose-800">
+          <TimerShape initialTime={initialTime} currentTime={state.time} />
+          <div className="text-center text-8xl font-thin tabular-nums max-[300px]:text-7xl">
+            {`${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}
+          </div>
         </div>
-      </div>
-      {state.timerState === "idle" ? (
-        <button
-          type="submit"
-          onClick={() => dispatch({ type: "start" })}
-          className="m-auto mt-8 flex h-8 w-24 rounded-full bg-rose-400"
-        >
-          <div className="m-auto">Start</div>
-        </button>
-      ) : state.timerState === "running" ? (
-        <button
-          type="submit"
-          onClick={() => dispatch({ type: "pause" })}
-          className="m-auto mt-8 flex h-8 w-24 rounded-full bg-rose-400"
-        >
-          <div className="m-auto">Pause</div>
-        </button>
-      ) : (
-        <div className="flex justify-center space-x-3">
+        {state.timerState === "idle" ? (
           <button
             type="submit"
             onClick={() => dispatch({ type: "start" })}
-            className="mt-8 flex h-8 w-24 rounded-full bg-rose-400"
+            className="m-auto mt-8 flex h-8 w-24 rounded-full bg-rose-400"
           >
-            <div className="m-auto">Continue</div>
+            <div className="m-auto">Start</div>
           </button>
+        ) : state.timerState === "running" ? (
           <button
             type="submit"
-            onClick={() => dispatch({ type: "reset", newTime: initialTime })}
-            className="mt-8 flex h-8 w-24 rounded-full bg-rose-400"
+            onClick={() => dispatch({ type: "pause" })}
+            className="m-auto mt-8 flex h-8 w-24 rounded-full bg-rose-400"
           >
-            <div className="m-auto">Stop</div>
+            <div className="m-auto">Pause</div>
           </button>
-        </div>
-      )}
+        ) : (
+          <div className="flex justify-center space-x-3">
+            <button
+              type="submit"
+              onClick={() => dispatch({ type: "start" })}
+              className="mt-8 flex h-8 w-24 rounded-full bg-rose-400"
+            >
+              <div className="m-auto">Continue</div>
+            </button>
+            <button
+              type="submit"
+              onClick={() => dispatch({ type: "reset", newTime: initialTime })}
+              className="mt-8 flex h-8 w-24 rounded-full bg-rose-400"
+            >
+              <div className="m-auto">Stop</div>
+            </button>
+          </div>
+        )}
+      </div>
     </>
   )
 }
