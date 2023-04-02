@@ -3,6 +3,7 @@ import { ReactComponent as FilterIcon } from "../assets/filter.svg"
 import { ReactComponent as PlusIcon } from "../assets/plus.svg"
 import { ReactComponent as ArrowIcon } from "../assets/arrow.svg"
 import { ReactComponent as TimerStartIcon } from "../assets/timer_start.svg"
+import AddGoalModal from "../components/AddGoalModal/AddGoalModal"
 
 interface Task {
   title: string
@@ -49,17 +50,23 @@ const goals: Goal[] = [
 ]
 
 function GoalsPage() {
+  const [modalIsOpen, setModalIsOpen] = useState(true)
+
   return (
     <div className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
       <div className="w-[650px]">
-        <GoalsHeader />
+        <GoalsHeader openAddGoalModal={() => setModalIsOpen(true)} />
         <GoalsList goals={goals} />
+        <AddGoalModal
+          modalIsOpen={modalIsOpen}
+          closeModal={() => setModalIsOpen(false)}
+        />
       </div>
     </div>
   )
 }
 
-function GoalsHeader() {
+function GoalsHeader({ openAddGoalModal }: { openAddGoalModal: () => void }) {
   return (
     <div className="mb-8 flex">
       <div className="flex cursor-pointer">
@@ -68,7 +75,7 @@ function GoalsHeader() {
       </div>
       <div className="mt-7 ml-auto flex space-x-4">
         <FilterIcon className="cursor-pointer" />
-        <PlusIcon className="cursor-pointer" />
+        <PlusIcon className="cursor-pointer" onClick={openAddGoalModal} />
       </div>
     </div>
   )
