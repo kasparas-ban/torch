@@ -58,7 +58,7 @@ function GoalsPage() {
         <GoalsHeader openAddGoalModal={() => setModalIsOpen(true)} />
         <GoalsList goals={goals} />
         <AddGoalModal
-          modalIsOpen={modalIsOpen}
+          showModal={modalIsOpen}
           closeModal={() => setModalIsOpen(false)}
         />
       </div>

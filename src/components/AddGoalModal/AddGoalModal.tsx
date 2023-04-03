@@ -3,35 +3,34 @@ import { ReactComponent as BackIcon } from "../../assets/back.svg"
 import { ReactComponent as EditIcon } from "../../assets/edit.svg"
 
 interface IAddGoalModal {
-  modalIsOpen: boolean
+  showModal: boolean
   closeModal: () => void
 }
 
-function AddGoalModal({ modalIsOpen, closeModal }: IAddGoalModal) {
+function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
   return (
     <Modal
-      isOpen={modalIsOpen}
+      isOpen={showModal}
       // onAfterOpen={afterOpenModal}
       onRequestClose={closeModal}
       // style={customStyles}
       contentLabel="Example Modal"
+      className="absolute inset-0 m-auto mx-auto w-full border-gray-200 bg-white p-5 sm:h-fit sm:max-w-xl sm:rounded sm:border"
     >
-      {/* <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2> */}
       <button onClick={closeModal}>
         <BackIcon />
       </button>
       <div className="text-center text-5xl font-semibold">New Goal</div>
-      <form>
-        <div className="max-w-sm"></div>
+      <div className="mx-auto">
         <Input />
-      </form>
+      </div>
     </Modal>
   )
 }
 
 function Input() {
   return (
-    <div className="px-10 pt-4 pb-8">
+    <div className="px-0 pt-4 pb-8 sm:px-10">
       <form className="mt-12">
         <div className="relative mb-8">
           <input
@@ -53,7 +52,7 @@ function Input() {
         </div>
 
         <div className="relative mb-8">
-          <ul className="grid w-full gap-4 md:grid-cols-3">
+          <ul className="grid w-full gap-2 min-[400px]:grid-cols-3">
             <li>
               <input
                 type="radio"
@@ -65,7 +64,7 @@ function Input() {
               />
               <label
                 htmlFor="priority-low"
-                className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-500/50 peer-checked:text-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+                className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-500/50 peer-checked:text-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
               >
                 Low
               </label>
@@ -81,7 +80,7 @@ function Input() {
               />
               <label
                 htmlFor="priority-medium"
-                className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-500/50 peer-checked:text-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+                className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-500/50 peer-checked:text-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
               >
                 Medium
               </label>
@@ -96,7 +95,7 @@ function Input() {
               />
               <label
                 htmlFor="priority-high"
-                className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-500/50 peer-checked:text-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+                className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-500/50 peer-checked:text-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
               >
                 High
               </label>
@@ -110,7 +109,7 @@ function Input() {
           </label>
         </div>
 
-        <div className="relative mb-8">
+        <div className="relative mb-7">
           <input
             id="goal_deadline"
             name="goal_deadline"
@@ -127,6 +126,10 @@ function Input() {
           <div className="absolute right-0 top-2 cursor-text px-4 text-gray-400 transition-all peer-focus:hidden">
             <EditIcon />
           </div>
+        </div>
+
+        <div className="relative flex justify-center">
+          <button className="px-3 py-1 font-medium">Save</button>
         </div>
 
         {/* <div className="relative mb-7">
