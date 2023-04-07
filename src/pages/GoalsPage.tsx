@@ -50,7 +50,7 @@ const goals: Goal[] = [
 ]
 
 function GoalsPage() {
-  const [modalIsOpen, setModalIsOpen] = useState(true)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
 
   return (
     <div className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
