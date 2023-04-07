@@ -84,8 +84,8 @@ function GoalsHeader({ openAddGoalModal }: { openAddGoalModal: () => void }) {
 function GoalsList({ goals }: { goals: Goal[] }) {
   return (
     <ul className="space-y-3">
-      {goals.map(goal => (
-        <GoalItem goal={goal} />
+      {goals.map((goal, idx) => (
+        <GoalItem goal={goal} key={idx} />
       ))}
     </ul>
   )
@@ -124,8 +124,8 @@ function GoalSublist({ tasks }: { tasks: Task[] }) {
   return (
     <div>
       <ul className="mt-3 ml-6 space-y-3">
-        {tasks.map(task => (
-          <li className="flex space-x-3">
+        {tasks.map((task, idx) => (
+          <li key={idx} className="flex space-x-3">
             <div className="my-auto aspect-square w-4 rounded-full bg-gray-500"></div>
             <div className="flex w-full cursor-pointer rounded-full bg-red-400 py-3 px-6">
               <div>{task.title}</div>
