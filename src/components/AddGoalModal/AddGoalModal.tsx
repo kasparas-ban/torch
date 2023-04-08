@@ -3,6 +3,7 @@ import Modal from "react-modal"
 import { ReactComponent as BackIcon } from "../../assets/back.svg"
 import { ReactComponent as EditIcon } from "../../assets/edit.svg"
 import { ReactComponent as ArrowsIcon } from "../../assets/arrows.svg"
+import { ReactComponent as CloseIcon } from "../../assets/close.svg"
 import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import "./inputStyles.css"
@@ -17,7 +18,7 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
     <Modal
       isOpen={showModal}
       onRequestClose={closeModal}
-      style={{ content: { outline: "none" } }}
+      style={{ content: { outline: "none", overflowY: "auto" } }}
       className="absolute inset-0 m-auto mx-auto w-full border border-gray-200 bg-white p-5 sm:h-fit sm:max-w-xl sm:rounded sm:border"
       appElement={document.getElementById("root") || undefined}
     >
@@ -34,7 +35,7 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
 
 function GoalForm() {
   return (
-    <div className="px-0 pt-4 pb-8 sm:px-10">
+    <div className="px-0 pt-4 pb-2 sm:px-10">
       <form className="mt-6">
         <div className="relative mb-8">
           <TextInput inputName="goal_title" label="Goal title" />
@@ -48,6 +49,8 @@ function GoalForm() {
           <DateInput />
         </div>
 
+        <AddGoalSections />
+
         <Subtasks />
 
         <div className="relative mt-6 mb-5 flex justify-center">
@@ -59,10 +62,60 @@ function GoalForm() {
           </button>
         </div>
 
-        <div className="relative flex justify-center">
+        <div className="relative mb-2 flex justify-center">
           <button className="px-3 py-1 text-xl font-medium">Save</button>
         </div>
       </form>
+    </div>
+  )
+}
+
+function AddTaskSections() {
+  return (
+    <div className="mt-3 flex flex-wrap justify-center gap-2">
+      <button className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600">
+        Recurring
+        <div className="relative top-1 ml-0.5">
+          <PlusSmallIcon className="h-4 w-4" />
+        </div>
+      </button>
+      <button className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600">
+        Deadline
+        <div className="relative top-1 ml-0.5">
+          <PlusSmallIcon className="h-4 w-4" />
+        </div>
+      </button>
+      <button className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600">
+        Priority
+        <div className="relative top-1 ml-0.5">
+          <PlusSmallIcon className="h-4 w-4" />
+        </div>
+      </button>
+    </div>
+  )
+}
+
+function AddGoalSections() {
+  return (
+    <div className="my-4 flex flex-wrap justify-center gap-2">
+      <button className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300">
+        Assign Dream
+        <div className="relative top-1 ml-0.5">
+          <PlusSmallIcon className="h-4 w-4" />
+        </div>
+      </button>
+      <button className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300">
+        Deadline
+        <div className="relative top-1 ml-0.5">
+          <PlusSmallIcon className="h-4 w-4" />
+        </div>
+      </button>
+      <button className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300">
+        Priority
+        <div className="relative top-1 ml-0.5">
+          <PlusSmallIcon className="h-4 w-4" />
+        </div>
+      </button>
     </div>
   )
 }
@@ -71,7 +124,10 @@ function Subtasks() {
   return (
     <>
       <div className="mb-1 px-4 text-sm text-gray-600">Subtasks</div>
-      <div className="rounded-2xl bg-gray-300 px-2 py-2">
+      <div className="relative rounded-2xl bg-gray-300 p-2 drop-shadow-xl">
+        <button className="absolute top-[-10px] right-[-5px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500">
+          <CloseIcon className="m-auto h-full w-6 text-gray-200" />
+        </button>
         <div className="relative mb-1">
           <TextInput inputName="task_title" label="Task title" />
         </div>
@@ -80,6 +136,9 @@ function Subtasks() {
         </div>
         <div className="relative mt-8">
           <DateInput />
+        </div>
+        <div className="mt-4 mb-1">
+          <AddTaskSections />
         </div>
       </div>
     </>
@@ -101,7 +160,7 @@ function PriorityInput() {
           />
           <label
             htmlFor="priority-low"
-            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-500/50 peer-checked:text-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-200 peer-checked:bg-blue-200 peer-checked:shadow-none peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
           >
             Low
           </label>
@@ -117,7 +176,7 @@ function PriorityInput() {
           />
           <label
             htmlFor="priority-medium"
-            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-500/50 peer-checked:text-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-200 peer-checked:bg-blue-200 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
           >
             Medium
           </label>
@@ -132,7 +191,7 @@ function PriorityInput() {
           />
           <label
             htmlFor="priority-high"
-            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-500/50 peer-checked:text-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-200 peer-checked:bg-blue-200 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
           >
             High
           </label>
@@ -317,7 +376,9 @@ function TimeInput({
         <EditIcon />
       </div>
       <div
-        className="absolute left-8 bottom-2 cursor-text px-4 pl-2 text-gray-400 transition-all peer-focus:text-gray-600"
+        className={`absolute left-8 bottom-2 cursor-text px-4 pl-2 transition-all ${
+          inputValue ? "text-gray-600" : "text-gray-400"
+        } peer-focus:text-gray-600`}
         onClick={() => inputRef?.current?.focus()}
       >
         hours
