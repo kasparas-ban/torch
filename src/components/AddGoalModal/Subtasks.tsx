@@ -170,11 +170,6 @@ export function Subtasks({
     }))
   }
 
-  // const handlePriorityChange = (val: 'LOW' | 'MEDIUM' | 'HIGH') => setGoal(prev => ({
-  //   ...prev,
-  //   subtasks:
-  // }))
-
   return (
     <>
       <div className="mb-1 px-4 text-sm text-gray-600">Subtasks</div>
@@ -221,7 +216,20 @@ export function Subtasks({
                   )
                 return (
                   <div key={`subtask_deadline_${idx}}`} className="relative">
-                    <DateInput />
+                    <DateInput
+                      id={`subtask_deadline_${idx}`}
+                      value={subtask.deadline}
+                      setValue={(input: string) =>
+                        setGoal(prev => ({
+                          ...prev,
+                          subtasks: prev.subtasks?.map((task, index) =>
+                            index === idx
+                              ? { ...task, deadline: new Date(input) }
+                              : task
+                          ),
+                        }))
+                      }
+                    />
                   </div>
                 )
               })}

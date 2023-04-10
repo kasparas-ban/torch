@@ -112,7 +112,13 @@ function GoalForm({
             return (
               goal.deadline !== undefined && (
                 <div key="goal_deadline" className="relative">
-                  <DateInput />
+                  <DateInput
+                    id="goal_deadline"
+                    value={goal.deadline}
+                    setValue={(input: string) =>
+                      setGoal(prev => ({ ...prev, deadline: new Date(input) }))
+                    }
+                  />
                 </div>
               )
             )

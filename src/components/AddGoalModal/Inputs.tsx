@@ -76,8 +76,15 @@ export function PriorityInput({
   )
 }
 
-export function DateInput() {
-  const [dateInput, setDateInput] = useState("")
+export function DateInput({
+  id,
+  value,
+  setValue,
+}: {
+  id: string
+  value?: Date | null
+  setValue: (input: string) => void
+}) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   return (
@@ -89,17 +96,17 @@ export function DateInput() {
         Deadline
       </label>
       <input
-        id="goal_deadline"
-        name="goal_deadline"
+        id={id}
+        name={`${id}_name`}
         ref={inputRef}
         type="date"
         className={`${
-          dateInput ? "text-gray-900" : "empty-date"
+          value ? "text-gray-900" : "empty-date"
         } peer h-10 w-full cursor-text rounded-2xl bg-gray-200 px-4  focus:bg-white focus:outline-2 focus:outline-blue-500/50 `}
-        placeholder="Aa..."
         onFocus={e => e.target.showPicker()}
         onClick={e => (e.target as HTMLInputElement).showPicker()}
-        onChange={e => setDateInput(e.target.value)}
+        onChange={e => setValue(e.target.value)}
+        value={value === null ? "" : value?.toLocaleDateString("en-CA")}
       />
       <div
         className="absolute right-0 bottom-2 cursor-text px-4 pl-2 text-gray-400 transition-all peer-focus:hidden"
