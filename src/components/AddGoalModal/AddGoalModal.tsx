@@ -5,6 +5,7 @@ import { ReactComponent as EditIcon } from "../../assets/edit.svg"
 import { ReactComponent as ArrowsIcon } from "../../assets/arrows.svg"
 import { ReactComponent as CloseIcon } from "../../assets/close.svg"
 import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
+import { ReactComponent as MinusSmallIcon } from "../../assets/minus_small.svg"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import "./inputStyles.css"
 
@@ -13,12 +14,38 @@ interface IAddGoalModal {
   closeModal: () => void
 }
 
+interface IGoal {
+  title: string
+  priority?: "LOW" | "MEDIUM" | "HIGH"
+  deadline?: Date | null
+  dream?: any | null
+  subtasks?: ITask[]
+  inputOrder: string[]
+}
+
+interface ITask {
+  title: string
+  priority?: "LOW" | "MEDIUM" | "HIGH"
+  duration?: number | null
+  deadline?: Date | null
+}
+
 function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
+  const defaultGoal = { title: "", inputOrder: [] }
+  const [goal, setGoal] = useState<IGoal>(defaultGoal)
+
   return (
     <Modal
       isOpen={showModal}
       onRequestClose={closeModal}
-      style={{ content: { outline: "none", overflowY: "auto" } }}
+      style={{
+        content: {
+          outline: "none",
+          overflowY: "auto",
+          maxHeight: "80vh",
+          scrollbarGutter: "stable both-edges",
+        },
+      }}
       className="absolute inset-0 m-auto mx-auto w-full border border-gray-200 bg-white p-5 sm:h-fit sm:max-w-xl sm:rounded sm:border"
       appElement={document.getElementById("root") || undefined}
     >
@@ -27,34 +54,73 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
       </button>
       <div className="text-center text-5xl font-semibold">New Goal</div>
       <div className="mx-auto">
-        <GoalForm />
+        <GoalForm goal={goal} setGoal={setGoal} />
       </div>
     </Modal>
   )
 }
 
-function GoalForm() {
+function GoalForm({
+  goal,
+  setGoal,
+}: {
+  goal: IGoal
+  setGoal: React.Dispatch<React.SetStateAction<IGoal>>
+}) {
+  const defaultTask = { title: "" }
+
+  const addSubtask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault()
+    setGoal(prev => ({
+      ...prev,
+      subtasks: [...(prev.subtasks ? prev.subtasks : []), defaultTask],
+    }))
+  }
+
   return (
     <div className="px-0 pt-4 pb-2 sm:px-10">
       <form className="mt-6">
-        <div className="relative mb-8">
-          <TextInput inputName="goal_title" label="Goal title" />
+        <div className="flex flex-col gap-1">
+          <div className="relative">
+            <TextInput inputName="goal_title" label="Goal title" />
+          </div>
+
+          {goal.inputOrder.map(input => {
+            if (input === "dream")
+              return (
+                goal.dream !== undefined && (
+                  <div className="relative">
+                    <TextInput inputName="goal_dream" label="Dream" />
+                  </div>
+                )
+              )
+            if (input === "priority")
+              return (
+                goal.priority && (
+                  <div className="relative">
+                    <PriorityInput />
+                  </div>
+                )
+              )
+            return (
+              goal.deadline !== undefined && (
+                <div className="relative">
+                  <DateInput />
+                </div>
+              )
+            )
+          })}
         </div>
 
-        <div className="relative mb-8">
-          <PriorityInput />
-        </div>
+        <AddGoalSections goal={goal} setGoal={setGoal} />
 
-        <div className="relative mb-3">
-          <DateInput />
-        </div>
-
-        <AddGoalSections />
-
-        <Subtasks />
+        {!!goal.subtasks?.length && <Subtasks goal={goal} setGoal={setGoal} />}
 
         <div className="relative mt-6 mb-5 flex justify-center">
-          <button className="flex px-3 py-1 text-[15px] text-gray-500">
+          <button
+            className="flex px-3 py-1 text-[15px] text-gray-500"
+            onClick={addSubtask}
+          >
             <div className="relative bottom-px">
               <PlusSmallIcon />
             </div>
@@ -95,51 +161,153 @@ function AddTaskSections() {
   )
 }
 
-function AddGoalSections() {
+function AddGoalSections({
+  goal,
+  setGoal,
+}: {
+  goal: IGoal
+  setGoal: React.Dispatch<React.SetStateAction<IGoal>>
+}) {
+  const addDeadline = () =>
+    setGoal(prev => ({
+      ...prev,
+      deadline: null,
+      inputOrder: [...prev.inputOrder, "deadline"],
+    }))
+  const removeDeadline = () =>
+    setGoal(prev => ({
+      ...prev,
+      deadline: undefined,
+      inputOrder: prev.inputOrder.filter(input => input !== "deadline"),
+    }))
+
+  const addPriority = () =>
+    setGoal(prev => ({
+      ...prev,
+      priority: "MEDIUM",
+      inputOrder: [...prev.inputOrder, "priority"],
+    }))
+  const removePriority = () =>
+    setGoal(prev => ({
+      ...prev,
+      priority: undefined,
+      inputOrder: prev.inputOrder.filter(input => input !== "priority"),
+    }))
+
+  const addDream = () =>
+    setGoal(prev => ({
+      ...prev,
+      dream: null,
+      inputOrder: [...prev.inputOrder, "dream"],
+    }))
+  const removeDream = () =>
+    setGoal(prev => ({
+      ...prev,
+      dream: undefined,
+      inputOrder: prev.inputOrder.filter(input => input !== "dream"),
+    }))
+
   return (
     <div className="my-4 flex flex-wrap justify-center gap-2">
-      <button className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300">
+      <button
+        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        onClick={e => {
+          e.preventDefault()
+          goal.dream === undefined ? addDream() : removeDream()
+        }}
+      >
         Assign Dream
         <div className="relative top-1 ml-0.5">
-          <PlusSmallIcon className="h-4 w-4" />
+          {goal.dream === undefined ? (
+            <PlusSmallIcon className="h-4 w-4" />
+          ) : (
+            <MinusSmallIcon className="h-4 w-4" />
+          )}
         </div>
       </button>
-      <button className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300">
+      <button
+        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        onClick={e => {
+          e.preventDefault()
+          goal.deadline === undefined ? addDeadline() : removeDeadline()
+        }}
+      >
         Deadline
         <div className="relative top-1 ml-0.5">
-          <PlusSmallIcon className="h-4 w-4" />
+          {goal.deadline === undefined ? (
+            <PlusSmallIcon className="h-4 w-4" />
+          ) : (
+            <MinusSmallIcon className="h-4 w-4" />
+          )}
         </div>
       </button>
-      <button className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300">
+      <button
+        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        onClick={e => {
+          e.preventDefault()
+          goal.priority ? removePriority() : addPriority()
+        }}
+      >
         Priority
         <div className="relative top-1 ml-0.5">
-          <PlusSmallIcon className="h-4 w-4" />
+          {!goal.priority ? (
+            <PlusSmallIcon className="h-4 w-4" />
+          ) : (
+            <MinusSmallIcon className="h-4 w-4" />
+          )}
         </div>
       </button>
     </div>
   )
 }
 
-function Subtasks() {
+function Subtasks({
+  goal,
+  setGoal,
+}: {
+  goal: IGoal
+  setGoal: React.Dispatch<React.SetStateAction<IGoal>>
+}) {
+  const removeTask = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    idx: number
+  ) => {
+    e.preventDefault()
+    setGoal(prev => ({
+      ...prev,
+      subtasks: prev.subtasks?.filter((_, index) => index !== idx),
+    }))
+  }
+
   return (
     <>
       <div className="mb-1 px-4 text-sm text-gray-600">Subtasks</div>
-      <div className="relative rounded-2xl bg-gray-300 p-2 drop-shadow-xl">
-        <button className="absolute top-[-10px] right-[-5px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500">
-          <CloseIcon className="m-auto h-full w-6 text-gray-200" />
-        </button>
-        <div className="relative mb-1">
-          <TextInput inputName="task_title" label="Task title" />
-        </div>
-        <div className="relative mb-8">
-          <DurationInput />
-        </div>
-        <div className="relative mt-8">
-          <DateInput />
-        </div>
-        <div className="mt-4 mb-1">
-          <AddTaskSections />
-        </div>
+      <div className="flex flex-col gap-4">
+        {goal.subtasks?.map((subtask, idx) => (
+          <div
+            key={idx}
+            className="relative rounded-2xl bg-gray-300 p-2 drop-shadow-xl"
+          >
+            <button
+              className="absolute top-[-10px] right-[-5px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500"
+              onClick={e => removeTask(e, idx)}
+            >
+              <CloseIcon className="m-auto h-full w-6 text-gray-200" />
+            </button>
+            <div className="relative mb-1">
+              <TextInput inputName="task_title" label="Task title" />
+            </div>
+            <div className="relative mb-8">
+              <DurationInput />
+            </div>
+            <div className="relative mt-8">
+              <DateInput />
+            </div>
+            <div className="mt-4 mb-1">
+              <AddTaskSections />
+            </div>
+          </div>
+        ))}
       </div>
     </>
   )
@@ -148,6 +316,12 @@ function Subtasks() {
 function PriorityInput() {
   return (
     <>
+      <label
+        htmlFor="priority"
+        className="cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:text-sm peer-focus:text-sm peer-focus:text-gray-600"
+      >
+        Priority
+      </label>
       <ul className="grid w-full gap-2 min-[400px]:grid-cols-3">
         <li>
           <input
@@ -197,12 +371,6 @@ function PriorityInput() {
           </label>
         </li>
       </ul>
-      <label
-        htmlFor="priority"
-        className="absolute left-0 -top-[22px] cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:text-sm peer-focus:text-gray-600"
-      >
-        Priority
-      </label>
     </>
   )
 }
@@ -213,6 +381,12 @@ function DateInput() {
 
   return (
     <>
+      <label
+        htmlFor="goal_deadline"
+        className="cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:text-sm peer-focus:text-sm peer-focus:text-gray-600"
+      >
+        Deadline
+      </label>
       <input
         id="goal_deadline"
         name="goal_deadline"
@@ -226,14 +400,8 @@ function DateInput() {
         onClick={e => (e.target as HTMLInputElement).showPicker()}
         onChange={e => setDateInput(e.target.value)}
       />
-      <label
-        htmlFor="goal_deadline"
-        className="absolute left-0 -top-[22px] cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:text-sm peer-focus:text-sm peer-focus:text-gray-600"
-      >
-        Deadline
-      </label>
       <div
-        className="absolute right-0 top-2 cursor-text px-4 text-gray-400 transition-all peer-focus:hidden"
+        className="absolute right-0 bottom-2 cursor-text px-4 pl-2 text-gray-400 transition-all peer-focus:hidden"
         onClick={() => inputRef?.current?.focus()}
       >
         <EditIcon />
