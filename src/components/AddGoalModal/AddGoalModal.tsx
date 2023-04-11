@@ -83,7 +83,15 @@ function GoalForm({
       <form className="mt-6">
         <div className="flex flex-col gap-1">
           <div className="relative">
-            <TextInput inputName="goal_title" label="Goal title" />
+            <TextInput
+              id="goal_title"
+              value={goal.title}
+              setValue={(input: string) =>
+                setGoal(prev => ({ ...prev, title: input }))
+              }
+              inputName="goal_title"
+              label="Goal title"
+            />
           </div>
 
           {goal.inputOrder.map(input => {
@@ -91,7 +99,15 @@ function GoalForm({
               return (
                 goal.dream !== undefined && (
                   <div key="goal_title" className="relative">
-                    <TextInput inputName="goal_dream" label="Dream" />
+                    <TextInput
+                      id="goal_dream"
+                      value={goal.dream}
+                      setValue={(input: string) =>
+                        setGoal(prev => ({ ...prev, dream: input }))
+                      }
+                      inputName="goal_dream"
+                      label="Dream"
+                    />
                   </div>
                 )
               )

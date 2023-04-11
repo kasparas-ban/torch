@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import { ReactComponent as EditIcon } from "../../assets/edit.svg"
 import { ReactComponent as ArrowsIcon } from "../../assets/arrows.svg"
-import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
+import { ReactComponent as TimerIcon } from "../../assets/timer_30.svg"
 
 export type PriorityType = "LOW" | "MEDIUM" | "HIGH"
 
@@ -119,9 +119,15 @@ export function DateInput({
 }
 
 export function TextInput({
+  id,
+  value,
+  setValue,
   inputName,
   label,
 }: {
+  id: string
+  value?: string
+  setValue: (input: string) => void
   inputName: string
   label?: string
 }) {
@@ -131,19 +137,21 @@ export function TextInput({
     <div className="relative w-full">
       {label && (
         <label
-          htmlFor={inputName}
+          htmlFor={id}
           className="cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:text-sm peer-focus:text-sm peer-focus:text-gray-600"
         >
           {label}
         </label>
       )}
       <input
-        id={inputName}
+        id={id}
         name={inputName}
         ref={inputRef}
         type="text"
         className="peer h-10 w-full rounded-2xl bg-gray-200 pl-4 pr-12 text-gray-900 focus:bg-white focus:outline-2 focus:outline-blue-500/50"
         placeholder="Aa..."
+        value={value}
+        onChange={e => setValue(e.target.value)}
       />
       <div
         className="absolute right-0 bottom-2 cursor-text px-4 pl-2 text-gray-400 transition-all peer-focus:hidden"
@@ -156,11 +164,17 @@ export function TextInput({
 }
 
 export function NumberInput({
+  id,
+  value,
+  setValue,
   inputName,
   label,
   icon,
   placeholder,
 }: {
+  id: string
+  value?: string | number
+  setValue: (input: string) => void
   inputName: string
   label?: string
   icon?: JSX.Element
@@ -172,21 +186,25 @@ export function NumberInput({
     <div className="relative w-full">
       {label && (
         <label
-          htmlFor={inputName}
+          htmlFor={id}
           className="cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:text-sm peer-focus:text-sm peer-focus:text-gray-600"
         >
           {label}
         </label>
       )}
       <input
-        id={inputName}
+        id={id}
         name={inputName}
         ref={inputRef}
         type="number"
+        min={0}
+        max={99}
         className={`peer h-10 w-full rounded-2xl bg-gray-200 ${
           icon ? "pl-10" : "pl-4"
         } pr-12 text-gray-900 focus:bg-white focus:outline-2 focus:outline-blue-500/50`}
         placeholder={placeholder ?? "Aa..."}
+        value={value !== undefined ? Number(value) * 2 : ""}
+        onChange={e => setValue((Number(e.target.value) / 2).toString())}
       />
       <div
         className="absolute right-0 bottom-2 cursor-text px-4 pl-2 text-gray-400 transition-all peer-focus:hidden"
@@ -196,7 +214,9 @@ export function NumberInput({
       </div>
       {icon && (
         <div
-          className="absolute left-0 bottom-2 cursor-text px-4 pl-2 text-gray-400 transition-all peer-focus:text-gray-700"
+          className={`absolute left-0 bottom-2 cursor-text px-4 pl-2 ${
+            value ? "text-gray-700" : "text-gray-400"
+          } transition-all peer-focus:text-gray-700`}
           onClick={() => inputRef?.current?.focus()}
         >
           {icon}
@@ -207,27 +227,32 @@ export function NumberInput({
 }
 
 export function TimeInput({
+  id,
+  value,
+  setValue,
   inputName,
   label,
 }: {
+  id: string
+  value?: string | number
+  setValue: (input: string) => void
   inputName: string
   label?: string
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const [inputValue, setInputValue] = useState("")
 
   return (
     <div className="relative w-full">
       {label && (
         <label
-          htmlFor={inputName}
+          htmlFor={id}
           className="cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:text-sm peer-focus:text-sm peer-focus:text-gray-600"
         >
           {label}
         </label>
       )}
       <input
-        id={inputName}
+        id={id}
         name={inputName}
         ref={inputRef}
         type="number"
@@ -235,15 +260,10 @@ export function TimeInput({
         placeholder="1"
         min={0}
         max={99}
-        value={inputValue}
-        onChange={e => {
-          console.log(
-            e.target.value,
-            Number(e.target.value),
-            Number(e.target.value.length) < 3
-          )
-          Number(e.target.value.length) < 3 && setInputValue(e.target.value)
-        }}
+        value={value ?? ""}
+        onChange={e =>
+          Number(e.target.value.length) < 3 && setValue(e.target.value)
+        }
       />
       <div
         className="absolute right-0 bottom-2 cursor-text px-4 pl-2 text-gray-400 transition-all peer-focus:hidden"
@@ -252,8 +272,8 @@ export function TimeInput({
         <EditIcon />
       </div>
       <div
-        className={`absolute left-8 bottom-2 cursor-text px-4 pl-2 transition-all ${
-          inputValue ? "text-gray-600" : "text-gray-400"
+        className={`absolute left-11 bottom-2 cursor-text px-4 pl-2 transition-all ${
+          value ? "text-gray-600" : "text-gray-400"
         } peer-focus:text-gray-600`}
         onClick={() => inputRef?.current?.focus()}
       >
@@ -263,7 +283,15 @@ export function TimeInput({
   )
 }
 
-export function DurationInput() {
+export function DurationInput({
+  id,
+  duration,
+  setDuration,
+}: {
+  id: string
+  duration?: number | null
+  setDuration: (input: string) => void
+}) {
   return (
     <div className="w-full">
       <label
@@ -273,11 +301,23 @@ export function DurationInput() {
         Duration
       </label>
       <div className="flex gap-2">
-        <TimeInput inputName="time" />
+        <TimeInput
+          id={`${id}_hours`}
+          value={duration === null ? "" : duration}
+          setValue={setDuration}
+          inputName="time"
+        />
         <div className="my-auto text-gray-400">
           <ArrowsIcon />
         </div>
-        <NumberInput inputName="time" icon={<TimerIcon />} placeholder="2" />
+        <NumberInput
+          id={`${id}_timers`}
+          value={duration === null ? "" : duration}
+          setValue={setDuration}
+          inputName="time"
+          icon={<TimerIcon />}
+          placeholder="2"
+        />
       </div>
     </div>
   )

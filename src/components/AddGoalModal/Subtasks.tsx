@@ -101,7 +101,9 @@ export function AddTaskSections({
   return (
     <div className="mt-3 flex flex-wrap justify-center gap-2">
       <button
-        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600"
+        className={`flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600 ${
+          task.recurring ? "bg-blue-300" : ""
+        }`}
         onClick={e => {
           e.preventDefault()
           task.recurring ? removeRecurring() : addRecurring()
@@ -187,11 +189,37 @@ export function Subtasks({
             </button>
             <div className="flex flex-col gap-1">
               <div className="relative">
-                <TextInput inputName="task_title" label="Task title" />
+                <TextInput
+                  id={`subtask_title_${idx}`}
+                  value={subtask.title}
+                  setValue={(input: string) =>
+                    setGoal(prev => ({
+                      ...prev,
+                      subtasks: prev.subtasks?.map((task, index) =>
+                        index === idx ? { ...task, title: input } : task
+                      ),
+                    }))
+                  }
+                  inputName="task_title"
+                  label="Task title"
+                />
               </div>
 
               <div className="relative">
-                <DurationInput />
+                <DurationInput
+                  id={`subtask_duration_${idx}`}
+                  duration={subtask.duration}
+                  setDuration={(input: string) =>
+                    setGoal(prev => ({
+                      ...prev,
+                      subtasks: prev.subtasks?.map((task, index) =>
+                        idx === index
+                          ? { ...task, duration: Number(input) }
+                          : task
+                      ),
+                    }))
+                  }
+                />
               </div>
 
               {subtask.inputOrder.map(input => {
