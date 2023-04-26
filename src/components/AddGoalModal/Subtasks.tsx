@@ -22,19 +22,19 @@ const formVariants = {
 }
 
 export function AddTaskSections({
-  idx,
+  id,
   task,
   setGoal,
 }: {
-  idx: number
+  id: number
   task: ITask
   setGoal: React.Dispatch<React.SetStateAction<IGoal>>
 }) {
   const addRecurring = () =>
     setGoal(prev => ({
       ...prev,
-      subtasks: prev.subtasks?.map((task, index) =>
-        idx === index
+      subtasks: prev.subtasks?.map(task =>
+        task.id === id
           ? {
               ...task,
               recurring: true,
@@ -45,8 +45,8 @@ export function AddTaskSections({
   const removeRecurring = () =>
     setGoal(prev => ({
       ...prev,
-      subtasks: prev.subtasks?.map((task, index) =>
-        idx === index
+      subtasks: prev.subtasks?.map(task =>
+        task.id === id
           ? {
               ...task,
               recurring: undefined,
@@ -58,8 +58,8 @@ export function AddTaskSections({
   const addDeadline = () =>
     setGoal(prev => ({
       ...prev,
-      subtasks: prev.subtasks?.map((task, index) =>
-        idx === index
+      subtasks: prev.subtasks?.map(task =>
+        task.id === id
           ? {
               ...task,
               deadline: null,
@@ -71,8 +71,8 @@ export function AddTaskSections({
   const removeDeadline = () =>
     setGoal(prev => ({
       ...prev,
-      subtasks: prev.subtasks?.map((task, index) =>
-        idx === index
+      subtasks: prev.subtasks?.map(task =>
+        task.id === id
           ? {
               ...task,
               deadline: undefined,
@@ -85,8 +85,8 @@ export function AddTaskSections({
   const addPriority = () =>
     setGoal(prev => ({
       ...prev,
-      subtasks: prev.subtasks?.map((task, index) =>
-        idx === index
+      subtasks: prev.subtasks?.map(task =>
+        task.id === id
           ? {
               ...task,
               priority: "MEDIUM",
@@ -98,8 +98,8 @@ export function AddTaskSections({
   const removePriority = () =>
     setGoal(prev => ({
       ...prev,
-      subtasks: prev.subtasks?.map((task, index) =>
-        idx === index
+      subtasks: prev.subtasks?.map(task =>
+        task.id === id
           ? {
               ...task,
               priority: undefined,
@@ -174,130 +174,165 @@ export function Subtasks({
 }) {
   const removeTask = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    idx: number
+    id: number
   ) => {
     e.preventDefault()
     setGoal(prev => ({
       ...prev,
-      subtasks: prev.subtasks?.filter((_, index) => index !== idx),
+      subtasks: prev.subtasks?.filter(subtask => subtask.id !== id),
     }))
   }
 
   return (
     <>
-      <motion.div layout className="mb-1 px-4 text-sm text-gray-600">
+      <motion.div
+        layout
+        key="subtasks_title"
+        className="mb-1 px-4 text-sm text-gray-600"
+      >
         Subtasks
       </motion.div>
-      <motion.div layout className="flex flex-col gap-4">
-        <AnimatePresence mode="wait">
-          {goal.subtasks?.map((subtask, idx) => (
+      <div key="subtasks_list" className="flex flex-col gap-4">
+        <AnimatePresence mode="popLayout">
+          {goal.subtasks?.map(subtask => (
             <motion.div
               layout
-              key={`subtask_${idx}`}
+              key={`subtask_${subtask.id}`}
               className="relative rounded-2xl bg-gray-300 p-2 drop-shadow-xl"
               variants={formVariants}
               initial="addInitial"
               animate="default"
               exit="remove"
             >
-              <button
+              <motion.button
+                layout
                 className="absolute top-[-10px] right-[-5px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500"
-                onClick={e => removeTask(e, idx)}
+                onClick={e => removeTask(e, subtask.id)}
+                whileTap={{ scale: 0.95 }}
               >
                 <CloseIcon className="m-auto h-full w-6 text-gray-200" />
-              </button>
+              </motion.button>
               <div className="flex flex-col gap-1">
-                <div className="relative">
-                  <TextInput
-                    id={`subtask_title_${idx}`}
-                    value={subtask.title}
-                    setValue={(input: string) =>
-                      setGoal(prev => ({
-                        ...prev,
-                        subtasks: prev.subtasks?.map((task, index) =>
-                          index === idx ? { ...task, title: input } : task
-                        ),
-                      }))
-                    }
-                    inputName="task_title"
-                    label="Task title"
-                  />
-                </div>
+                <AnimatePresence initial={false} mode="popLayout">
+                  <motion.div
+                    layout
+                    key={`subtask_title_${subtask.id}`}
+                    className="relative"
+                  >
+                    <TextInput
+                      id={`subtask_title_${subtask.id}`}
+                      value={subtask.title}
+                      setValue={(input: string) =>
+                        setGoal(prev => ({
+                          ...prev,
+                          subtasks: prev.subtasks?.map(task =>
+                            task.id === subtask.id
+                              ? { ...task, title: input }
+                              : task
+                          ),
+                        }))
+                      }
+                      inputName="task_title"
+                      label="Task title"
+                    />
+                  </motion.div>
 
-                <div className="relative">
-                  <DurationInput
-                    id={`subtask_duration_${idx}`}
-                    duration={subtask.duration}
-                    setDuration={(hours: string, minutes: string) =>
-                      setGoal(prev => ({
-                        ...prev,
-                        subtasks: prev.subtasks?.map((task, index) =>
-                          idx === index
-                            ? {
-                                ...task,
-                                duration: {
-                                  hours: Number(hours),
-                                  minutes: Number(minutes),
-                                },
-                              }
-                            : task
-                        ),
-                      }))
-                    }
-                  />
-                </div>
+                  <motion.div
+                    layout
+                    key={`subtask_duration_${subtask.id}`}
+                    className="relative"
+                  >
+                    <DurationInput
+                      id={`subtask_duration_${subtask.id}`}
+                      duration={subtask.duration}
+                      setDuration={(hours: string, minutes: string) =>
+                        setGoal(prev => ({
+                          ...prev,
+                          subtasks: prev.subtasks?.map(task =>
+                            task.id === subtask.id
+                              ? {
+                                  ...task,
+                                  duration: {
+                                    hours: Number(hours),
+                                    minutes: Number(minutes),
+                                  },
+                                }
+                              : task
+                          ),
+                        }))
+                      }
+                    />
+                  </motion.div>
 
-                {subtask.inputOrder.map(input => {
-                  if (input === "priority")
+                  {subtask.inputOrder.map(input => {
+                    if (input === "priority")
+                      return (
+                        <motion.div
+                          layout
+                          key={`subtask_priority_${subtask.id}}`}
+                          className="relative"
+                          variants={formVariants}
+                          initial="addInitial"
+                          animate="default"
+                          exit="remove"
+                        >
+                          <PriorityInput
+                            id={`subtask_priority_${subtask.id}`}
+                            value={subtask.priority}
+                            setValue={(input: PriorityType) =>
+                              setGoal(prev => ({
+                                ...prev,
+                                subtasks: prev.subtasks?.map(task =>
+                                  task.id === subtask.id
+                                    ? { ...task, priority: input }
+                                    : task
+                                ),
+                              }))
+                            }
+                          />
+                        </motion.div>
+                      )
                     return (
-                      <div
-                        key={`subtask_priority_${idx}}`}
+                      <motion.div
+                        layout
+                        key={`subtask_deadline_${subtask.id}}`}
                         className="relative"
+                        variants={formVariants}
+                        initial="addInitial"
+                        animate="default"
+                        exit="remove"
                       >
-                        <PriorityInput
-                          id={`subtask_priority_${idx}`}
-                          value={subtask.priority}
-                          setValue={(input: PriorityType) =>
+                        <DateInput
+                          id={`subtask_deadline_${subtask.id}`}
+                          value={subtask.deadline}
+                          setValue={(input: string) =>
                             setGoal(prev => ({
                               ...prev,
-                              subtasks: prev.subtasks?.map((task, index) =>
-                                index === idx
-                                  ? { ...task, priority: input }
+                              subtasks: prev.subtasks?.map(task =>
+                                task.id === subtask.id
+                                  ? { ...task, deadline: new Date(input) }
                                   : task
                               ),
                             }))
                           }
                         />
-                      </div>
+                      </motion.div>
                     )
-                  return (
-                    <div key={`subtask_deadline_${idx}}`} className="relative">
-                      <DateInput
-                        id={`subtask_deadline_${idx}`}
-                        value={subtask.deadline}
-                        setValue={(input: string) =>
-                          setGoal(prev => ({
-                            ...prev,
-                            subtasks: prev.subtasks?.map((task, index) =>
-                              index === idx
-                                ? { ...task, deadline: new Date(input) }
-                                : task
-                            ),
-                          }))
-                        }
-                      />
-                    </div>
-                  )
-                })}
+                  })}
 
-                <div className="mb-1">
-                  <AddTaskSections idx={idx} task={subtask} setGoal={setGoal} />
-                </div>
+                  <motion.div layout className="mb-1">
+                    <AddTaskSections
+                      id={subtask.id}
+                      task={subtask}
+                      setGoal={setGoal}
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </motion.div>
           ))}
         </AnimatePresence>
-      </motion.div>
+      </div>
     </>
   )
 }

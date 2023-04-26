@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Modal from "react-modal"
 import { AnimatePresence, motion } from "framer-motion"
 import { ReactComponent as BackIcon } from "../../assets/back.svg"
@@ -23,12 +23,23 @@ export interface IGoal {
 }
 
 export interface ITask {
+  id: number
   title: string
   priority?: "LOW" | "MEDIUM" | "HIGH"
   duration?: { hours: number | null; minutes: number | null }
   deadline?: Date | null
   recurring?: boolean
   inputOrder: string[]
+}
+
+const modalVariants = {
+  default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
+  initial: { opacity: 0, scale: 0.95 },
+  close: {
+    opacity: 0,
+    scale: 0.95,
+    transition: { duration: 0.2 },
+  },
 }
 
 const formVariants = {
@@ -44,52 +55,60 @@ const formVariants = {
 function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
   const defaultGoal = { title: "", inputOrder: [] }
   const [goal, setGoal] = useState<IGoal>(defaultGoal)
-  const modalRef = useRef<ReactModal | null>(null)
+  const modalRef = useRef<HTMLDivElement | null>(null)
+
+  const handleClickOutside = (e: MouseEvent) =>
+    !modalRef.current?.contains(e.target as Node) && closeModal()
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   return (
-    <AnimatePresence initial={false} mode="wait">
-      <motion.div
-        layout
-        key="add_modal"
-        className="absolute inset-0 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded sm:border"
-      >
-        <motion.button layout onClick={closeModal}>
-          <BackIcon />
-        </motion.button>
-        <motion.div layout className="text-center text-5xl font-semibold">
-          New Goal
-        </motion.div>
-        <div className="mx-auto">
-          <GoalForm goal={goal} setGoal={setGoal} modalRef={modalRef} />
-        </div>
-      </motion.div>
+    <AnimatePresence>
+      {showModal && (
+        <>
+          <motion.div
+            layout
+            variants={modalVariants}
+            initial="initial"
+            animate="default"
+            exit="close"
+            ref={modalRef}
+            key="add_modal"
+            className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
+          >
+            <motion.button layout onClick={closeModal}>
+              <BackIcon />
+            </motion.button>
+            <motion.div layout className="text-center text-5xl font-semibold">
+              New Goal
+            </motion.div>
+            <div className="mx-auto">
+              <GoalForm goal={goal} setGoal={setGoal} modalRef={modalRef} />
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 0.9,
+              transition: { duration: 0.2 },
+            }}
+            exit={{
+              opacity: 0,
+              transition: { duration: 0.2 },
+            }}
+            className="absolute inset-0 z-10 bg-gray-200"
+          />
+        </>
+      )}
     </AnimatePresence>
   )
-
-  // return (
-  //   <Modal
-  //     ref={modalRef}
-  //     isOpen={showModal}
-  //     onRequestClose={closeModal}
-  //     style={{
-  //       content: {
-  //         outline: "none",
-  //         overflowY: "auto",
-  //         scrollbarGutter: "stable both-edges",
-  //       },
-  //     }}
-  //     className="absolute inset-0 m-auto mx-auto w-full border border-gray-200 bg-white p-5 sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded sm:border"
-  //     appElement={document.getElementById("root") || undefined}
-  //   >
-  //     <button onClick={closeModal}>
-  //       <BackIcon />
-  //     </button>
-  //     <div className="text-center text-5xl font-semibold">New Goal</div>
-  //     <div className="mx-auto">
-  //       <GoalForm goal={goal} setGoal={setGoal} modalRef={modalRef} />
-  //     </div>
-  //   </Modal>
-  // )
 }
 
 function GoalForm({
@@ -99,23 +118,24 @@ function GoalForm({
 }: {
   goal: IGoal
   setGoal: React.Dispatch<React.SetStateAction<IGoal>>
-  modalRef: React.MutableRefObject<Modal | null>
+  modalRef: React.MutableRefObject<HTMLDivElement | null>
 }) {
+  const subtaskIdRef = useRef(0)
+
   const addSubtask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     setGoal(prev => ({
       ...prev,
       subtasks: [
         ...(prev.subtasks ? prev.subtasks : []),
-        { title: "", inputOrder: [] },
+        { id: ++subtaskIdRef.current, title: "", inputOrder: [] },
       ],
     }))
 
-    const modalElement = (modalRef.current as any).node.firstChild.firstChild
-    if (modalElement)
+    if (modalRef.current)
       setTimeout(
         () =>
-          modalElement.scrollBy({
+          modalRef.current?.scrollBy({
             top: 1000,
             behavior: "smooth",
           }),
@@ -127,7 +147,7 @@ function GoalForm({
     <div className="px-0 pt-4 pb-2 sm:px-10">
       <form className="mt-6">
         <div className="flex flex-col gap-1">
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence initial={false} mode="popLayout">
             <motion.div layout className="relative">
               <TextInput
                 id="goal_title"
@@ -224,6 +244,7 @@ function GoalForm({
             layout
             className="flex px-3 py-1 text-[15px] text-gray-500"
             onClick={addSubtask}
+            whileTap={{ scale: 0.95 }}
           >
             <div className="relative bottom-px">
               <PlusSmallIcon />
@@ -233,7 +254,11 @@ function GoalForm({
         </div>
 
         <div className="relative mb-2 flex justify-center">
-          <motion.button layout className="px-3 py-1 text-xl font-medium">
+          <motion.button
+            layout
+            className="px-3 py-1 text-xl font-medium"
+            whileTap={{ scale: 0.95 }}
+          >
             Save
           </motion.button>
         </div>

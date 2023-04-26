@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import { ReactComponent as EditIcon } from "../../assets/edit.svg"
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
 import { ReactComponent as MinusIcon } from "../../assets/minus.svg"
