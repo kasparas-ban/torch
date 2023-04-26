@@ -51,7 +51,7 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
       <motion.div
         layout
         key="add_modal"
-        className="absolute inset-0 m-auto mx-auto w-full animate-appear overflow-auto border border-gray-200 bg-white p-5 sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded sm:border"
+        className="absolute inset-0 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded sm:border"
       >
         <motion.button layout onClick={closeModal}>
           <BackIcon />
@@ -78,7 +78,7 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
   //         scrollbarGutter: "stable both-edges",
   //       },
   //     }}
-  //     className="absolute inset-0 m-auto mx-auto w-full animate-appear border border-gray-200 bg-white p-5 sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded sm:border"
+  //     className="absolute inset-0 m-auto mx-auto w-full border border-gray-200 bg-white p-5 sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded sm:border"
   //     appElement={document.getElementById("root") || undefined}
   //   >
   //     <button onClick={closeModal}>
