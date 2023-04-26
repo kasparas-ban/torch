@@ -314,9 +314,9 @@ function TimerInput({
   setDuration: (hours: string, minutes: string) => void
 }) {
   return (
-    <div className="w-42 h-8">
-      <div className="relative mt-1 flex h-8 w-full flex-row gap-3 bg-transparent">
-        <div className="flex flex-grow flex-row">
+    <div className="w-42">
+      <div className="relative mt-1 flex w-full flex-row gap-3 bg-transparent max-[400px]:flex-wrap max-[400px]:gap-2">
+        <div className="flex h-8 flex-grow flex-row max-[400px]:basis-full">
           <button
             data-action="decrement"
             className="h-full cursor-pointer rounded-l-xl bg-gray-400 px-1 text-gray-600 outline-none drop-shadow-lg hover:bg-gray-500 hover:text-gray-700"
@@ -360,11 +360,11 @@ function TimerInput({
               <PlusIcon />
             </span>
           </button>
+          <span className="my-auto ml-2.5 h-full text-lg font-medium text-gray-500 max-[400px]:basis-4/12">
+            h
+          </span>
         </div>
-        <span className="my-auto h-full text-lg font-medium text-gray-500">
-          h
-        </span>
-        <div className="flex flex-grow flex-row">
+        <div className="flex h-8 flex-grow flex-row">
           <button
             data-action="decrement"
             className="h-full cursor-pointer rounded-l-xl bg-gray-400 px-1 text-gray-600 outline-none drop-shadow-lg hover:bg-gray-500 hover:text-gray-700"
@@ -410,10 +410,10 @@ function TimerInput({
               <PlusIcon />
             </span>
           </button>
+          <span className="my-auto ml-2.5 h-full text-lg font-medium text-gray-500 max-[400px]:basis-4/12">
+            min
+          </span>
         </div>
-        <span className="my-auto h-full text-lg font-medium text-gray-500">
-          min
-        </span>
       </div>
     </div>
   )

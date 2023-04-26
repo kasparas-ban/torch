@@ -8,8 +8,9 @@ import StatisticsPage from "./pages/StatisticsPage"
 import "./App.css"
 
 function App() {
+  // TODO: need to disable body scroll when modal is open
   return (
-    <>
+    <div>
       <BrowserRouter>
         <NavigationBar />
         <Routes>
@@ -21,7 +22,7 @@ function App() {
           <Route path="*" element={<>Page not found</>} />
         </Routes>
       </BrowserRouter>
-    </>
+    </div>
   )
 }
 

@@ -193,7 +193,7 @@ export function Subtasks({
         Subtasks
       </motion.div>
       <div key="subtasks_list" className="flex flex-col gap-4">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence initial={false} mode="popLayout">
           {goal.subtasks?.map(subtask => (
             <motion.div
               layout
