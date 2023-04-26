@@ -1,7 +1,7 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ReactComponent as EditIcon } from "../../assets/edit.svg"
-import { ReactComponent as ArrowsIcon } from "../../assets/arrows.svg"
-import { ReactComponent as TimerIcon } from "../../assets/timer_30.svg"
+import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
+import { ReactComponent as MinusIcon } from "../../assets/minus.svg"
 
 export type PriorityType = "LOW" | "MEDIUM" | "HIGH"
 
@@ -34,7 +34,7 @@ export function PriorityInput({
           />
           <label
             htmlFor={`${id}_low`}
-            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-200 peer-checked:bg-blue-200 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-300 peer-checked:bg-blue-300 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
           >
             Low
           </label>
@@ -50,7 +50,7 @@ export function PriorityInput({
           />
           <label
             htmlFor={`${id}_medium`}
-            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-200 peer-checked:bg-blue-200 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-300 peer-checked:bg-blue-300 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
           >
             Medium
           </label>
@@ -66,7 +66,7 @@ export function PriorityInput({
           />
           <label
             htmlFor={`${id}_high`}
-            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-200 peer-checked:bg-blue-200 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-300 peer-checked:bg-blue-300 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
           >
             High
           </label>
@@ -100,6 +100,7 @@ export function DateInput({
         name={`${id}_name`}
         ref={inputRef}
         type="date"
+        min={new Date().toLocaleDateString("en-CA")}
         className={`${
           value ? "text-gray-900" : "empty-date"
         } peer h-10 w-full cursor-text rounded-2xl bg-gray-200 px-4  focus:bg-white focus:outline-2 focus:outline-blue-500/50 `}
@@ -203,7 +204,7 @@ export function NumberInput({
           icon ? "pl-10" : "pl-4"
         } pr-12 text-gray-900 focus:bg-white focus:outline-2 focus:outline-blue-500/50`}
         placeholder={placeholder ?? "Aa..."}
-        value={value !== undefined ? Number(value) * 2 : ""}
+        value={value ? Number(value) * 2 : ""}
         onChange={e => setValue((Number(e.target.value) / 2).toString())}
       />
       <div
@@ -226,7 +227,7 @@ export function NumberInput({
   )
 }
 
-export function TimeInput({
+export function HoursInput({
   id,
   value,
   setValue,
@@ -260,7 +261,7 @@ export function TimeInput({
         placeholder="1"
         min={0}
         max={99}
-        value={value ?? ""}
+        value={value ? value : ""}
         onChange={e =>
           Number(e.target.value.length) < 3 && setValue(e.target.value)
         }
@@ -289,8 +290,8 @@ export function DurationInput({
   setDuration,
 }: {
   id: string
-  duration?: number | null
-  setDuration: (input: string) => void
+  duration?: { hours?: number | null; minutes?: number | null }
+  setDuration: (hours: string, minutes: string) => void
 }) {
   return (
     <div className="w-full">
@@ -300,25 +301,208 @@ export function DurationInput({
       >
         Duration
       </label>
-      <div className="flex gap-2">
-        <TimeInput
-          id={`${id}_hours`}
-          value={duration === null ? "" : duration}
-          setValue={setDuration}
-          inputName="time"
-        />
-        <div className="my-auto text-gray-400">
-          <ArrowsIcon />
+      <TimerInput duration={duration} setDuration={setDuration} />
+    </div>
+  )
+}
+
+function TimerInput({
+  duration,
+  setDuration,
+}: {
+  duration?: { hours?: number | null; minutes?: number | null }
+  setDuration: (hours: string, minutes: string) => void
+}) {
+  return (
+    <div className="w-42 h-8">
+      <div className="relative mt-1 flex h-8 w-full flex-row gap-3 bg-transparent">
+        <div className="flex flex-grow flex-row">
+          <button
+            data-action="decrement"
+            className="h-full cursor-pointer rounded-l-xl bg-gray-400 px-1 text-gray-600 outline-none drop-shadow-lg hover:bg-gray-500 hover:text-gray-700"
+            onClick={e => {
+              e.preventDefault()
+              setDuration(
+                duration?.hours && duration.hours > 0
+                  ? (Number(duration.hours) - 1).toString()
+                  : "0",
+                duration?.minutes?.toString() ?? ""
+              )
+            }}
+          >
+            <span className="m-auto flex justify-center text-2xl font-thin">
+              <MinusIcon />
+            </span>
+          </button>
+          <input
+            type="number"
+            className="text-md md:text-basecursor-default flex w-full items-center bg-gray-200 text-center font-semibold  text-gray-700 outline-none hover:text-black focus:text-black  focus:outline-none"
+            name="timer"
+            min={0}
+            max={99}
+            value={duration?.hours ?? 0}
+            onChange={e =>
+              setDuration(e.target.value, duration?.minutes?.toString() ?? "")
+            }
+          ></input>
+          <button
+            data-action="increment"
+            className="h-full cursor-pointer rounded-r-xl bg-gray-400 px-1 text-gray-600 drop-shadow-lg hover:bg-gray-500 hover:text-gray-700"
+            onClick={e => {
+              e.preventDefault()
+              setDuration(
+                duration?.hours ? (Number(duration.hours) + 1).toString() : "1",
+                duration?.minutes?.toString() ?? ""
+              )
+            }}
+          >
+            <span className="m-auto flex justify-center text-2xl font-thin">
+              <PlusIcon />
+            </span>
+          </button>
         </div>
-        <NumberInput
-          id={`${id}_timers`}
-          value={duration === null ? "" : duration}
-          setValue={setDuration}
-          inputName="time"
-          icon={<TimerIcon />}
-          placeholder="2"
-        />
+        <span className="my-auto h-full text-lg font-medium text-gray-500">
+          h
+        </span>
+        <div className="flex flex-grow flex-row">
+          <button
+            data-action="decrement"
+            className="h-full cursor-pointer rounded-l-xl bg-gray-400 px-1 text-gray-600 outline-none drop-shadow-lg hover:bg-gray-500 hover:text-gray-700"
+            onClick={e => {
+              e.preventDefault()
+              setDuration(
+                duration?.hours?.toString() ?? "",
+                duration?.minutes && duration.minutes > 0
+                  ? (Number(duration.minutes) - 1).toString()
+                  : "0"
+              )
+            }}
+          >
+            <span className="m-auto flex justify-center text-2xl font-thin">
+              <MinusIcon />
+            </span>
+          </button>
+          <input
+            type="number"
+            className="text-md md:text-basecursor-default flex w-full items-center bg-gray-200 text-center font-semibold  text-gray-700 outline-none hover:text-black focus:text-black  focus:outline-none"
+            name="timer"
+            min={0}
+            max={99}
+            value={duration?.minutes ?? 0}
+            onChange={e =>
+              setDuration(duration?.hours?.toString() ?? "", e.target.value)
+            }
+          ></input>
+          <button
+            data-action="increment"
+            className="h-full cursor-pointer rounded-r-xl bg-gray-400 px-1 text-gray-600 drop-shadow-lg hover:bg-gray-500 hover:text-gray-700"
+            onClick={e => {
+              e.preventDefault()
+              setDuration(
+                duration?.hours?.toString() ?? "",
+                duration?.minutes
+                  ? (Number(duration.minutes) + 1).toString()
+                  : "1"
+              )
+            }}
+          >
+            <span className="m-auto flex justify-center text-2xl font-thin">
+              <PlusIcon />
+            </span>
+          </button>
+        </div>
+        <span className="my-auto h-full text-lg font-medium text-gray-500">
+          min
+        </span>
       </div>
     </div>
   )
 }
+
+// function Dropdown() {
+//   const dropdownButtonRef = useRef<HTMLDivElement>(null)
+//   const dropdownPanelRef = useRef<HTMLDivElement>(null)
+//   const [value, setValue] = useState("min")
+//   const [showDropdown, setShowDropDown] = useState(false)
+
+//   useEffect(() => {
+//     const onClick = (event: Event) => {
+//       const clickInside = [dropdownButtonRef, dropdownPanelRef].some(
+//         reference_ => reference_.current?.contains(event.target as Node)
+//       )
+//       if (showDropdown && !clickInside) {
+//         return setShowDropDown(false)
+//       }
+//     }
+//     if (!showDropdown) {
+//       return document.removeEventListener("click", onClick)
+//     }
+//     document.addEventListener("click", onClick)
+//     return () => document.removeEventListener("click", onClick)
+//   }, [dropdownButtonRef, dropdownPanelRef, showDropdown])
+
+//   return (
+//     <div className="ml-3 h-full">
+//       <div ref={dropdownButtonRef} className="h-full w-20">
+//         <button
+//           type="button"
+//           onClick={() => setShowDropDown(prev => !prev)}
+//           className="inline-flex h-full w-full items-center justify-center gap-x-1.5 rounded-xl bg-white px-3 py-2 text-lg font-bold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+//           id="menu-button"
+//         >
+//           <div className="flex">
+//             <span className="w-10">{value}</span>
+//             <span className="flex items-center">
+//               <svg
+//                 className="relative top-[2px] -mr-1 h-5 w-5 text-gray-400"
+//                 viewBox="0 0 20 20"
+//                 fill="currentColor"
+//               >
+//                 <path
+//                   fillRule="evenodd"
+//                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+//                   clipRule="evenodd"
+//                 />
+//               </svg>
+//             </span>
+//           </div>
+//         </button>
+//       </div>
+//       {showDropdown && (
+//         <div
+//           className="absolute right-0 z-50 mt-2 w-20 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+//           role="menu"
+//           tabIndex={-1}
+//           ref={dropdownPanelRef}
+//         >
+//           <div className="" role="none">
+//             <button
+//               className="block w-full rounded-t-xl px-4 py-2 text-center text-lg font-bold text-gray-700 hover:bg-gray-200"
+//               role="menuitem"
+//               tabIndex={-1}
+//               id="menu-item-0"
+//               onClick={() => {
+//                 setValue("min")
+//                 setShowDropDown(false)
+//               }}
+//             >
+//               min
+//             </button>
+//             <button
+//               className="block w-full rounded-b-xl px-4 py-2 text-center text-lg font-bold text-gray-700 hover:bg-gray-200"
+//               role="menuitem"
+//               tabIndex={-1}
+//               id="menu-item-1"
+//               onClick={() => {
+//                 setValue("h")
+//                 setShowDropDown(false)
+//               }}
+//             >
+//               h
+//             </button>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   )
+// }

@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion"
 import { IGoal, ITask } from "./AddGoalModal"
 import {
   DateInput,
@@ -9,6 +10,16 @@ import {
 import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../assets/minus_small.svg"
 import { ReactComponent as CloseIcon } from "../../assets/close.svg"
+
+const formVariants = {
+  default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
+  addInitial: { opacity: 0, scale: 0.8 },
+  remove: {
+    opacity: 0,
+    scale: 0.8,
+    transition: { duration: 0.2 },
+  },
+}
 
 export function AddTaskSections({
   idx,
@@ -174,67 +185,102 @@ export function Subtasks({
 
   return (
     <>
-      <div className="mb-1 px-4 text-sm text-gray-600">Subtasks</div>
-      <div className="flex flex-col gap-4">
-        {goal.subtasks?.map((subtask, idx) => (
-          <div
-            key={idx}
-            className="relative rounded-2xl bg-gray-300 p-2 drop-shadow-xl"
-          >
-            <button
-              className="absolute top-[-10px] right-[-5px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500"
-              onClick={e => removeTask(e, idx)}
+      <motion.div layout className="mb-1 px-4 text-sm text-gray-600">
+        Subtasks
+      </motion.div>
+      <motion.div layout className="flex flex-col gap-4">
+        <AnimatePresence mode="wait">
+          {goal.subtasks?.map((subtask, idx) => (
+            <motion.div
+              layout
+              key={`subtask_${idx}`}
+              className="relative rounded-2xl bg-gray-300 p-2 drop-shadow-xl"
+              variants={formVariants}
+              initial="addInitial"
+              animate="default"
+              exit="remove"
             >
-              <CloseIcon className="m-auto h-full w-6 text-gray-200" />
-            </button>
-            <div className="flex flex-col gap-1">
-              <div className="relative">
-                <TextInput
-                  id={`subtask_title_${idx}`}
-                  value={subtask.title}
-                  setValue={(input: string) =>
-                    setGoal(prev => ({
-                      ...prev,
-                      subtasks: prev.subtasks?.map((task, index) =>
-                        index === idx ? { ...task, title: input } : task
-                      ),
-                    }))
-                  }
-                  inputName="task_title"
-                  label="Task title"
-                />
-              </div>
+              <button
+                className="absolute top-[-10px] right-[-5px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500"
+                onClick={e => removeTask(e, idx)}
+              >
+                <CloseIcon className="m-auto h-full w-6 text-gray-200" />
+              </button>
+              <div className="flex flex-col gap-1">
+                <div className="relative">
+                  <TextInput
+                    id={`subtask_title_${idx}`}
+                    value={subtask.title}
+                    setValue={(input: string) =>
+                      setGoal(prev => ({
+                        ...prev,
+                        subtasks: prev.subtasks?.map((task, index) =>
+                          index === idx ? { ...task, title: input } : task
+                        ),
+                      }))
+                    }
+                    inputName="task_title"
+                    label="Task title"
+                  />
+                </div>
 
-              <div className="relative">
-                <DurationInput
-                  id={`subtask_duration_${idx}`}
-                  duration={subtask.duration}
-                  setDuration={(input: string) =>
-                    setGoal(prev => ({
-                      ...prev,
-                      subtasks: prev.subtasks?.map((task, index) =>
-                        idx === index
-                          ? { ...task, duration: Number(input) }
-                          : task
-                      ),
-                    }))
-                  }
-                />
-              </div>
+                <div className="relative">
+                  <DurationInput
+                    id={`subtask_duration_${idx}`}
+                    duration={subtask.duration}
+                    setDuration={(hours: string, minutes: string) =>
+                      setGoal(prev => ({
+                        ...prev,
+                        subtasks: prev.subtasks?.map((task, index) =>
+                          idx === index
+                            ? {
+                                ...task,
+                                duration: {
+                                  hours: Number(hours),
+                                  minutes: Number(minutes),
+                                },
+                              }
+                            : task
+                        ),
+                      }))
+                    }
+                  />
+                </div>
 
-              {subtask.inputOrder.map(input => {
-                if (input === "priority")
+                {subtask.inputOrder.map(input => {
+                  if (input === "priority")
+                    return (
+                      <div
+                        key={`subtask_priority_${idx}}`}
+                        className="relative"
+                      >
+                        <PriorityInput
+                          id={`subtask_priority_${idx}`}
+                          value={subtask.priority}
+                          setValue={(input: PriorityType) =>
+                            setGoal(prev => ({
+                              ...prev,
+                              subtasks: prev.subtasks?.map((task, index) =>
+                                index === idx
+                                  ? { ...task, priority: input }
+                                  : task
+                              ),
+                            }))
+                          }
+                        />
+                      </div>
+                    )
                   return (
-                    <div key={`subtask_priority_${idx}}`} className="relative">
-                      <PriorityInput
-                        id={`subtask_priority_${idx}`}
-                        value={subtask.priority}
-                        setValue={(input: PriorityType) =>
+                    <div key={`subtask_deadline_${idx}}`} className="relative">
+                      <DateInput
+                        id={`subtask_deadline_${idx}`}
+                        value={subtask.deadline}
+                        setValue={(input: string) =>
                           setGoal(prev => ({
                             ...prev,
                             subtasks: prev.subtasks?.map((task, index) =>
                               index === idx
-                                ? { ...task, priority: input }
+                                ? { ...task, deadline: new Date(input) }
                                 : task
                             ),
                           }))
@@ -242,33 +288,16 @@ export function Subtasks({
                       />
                     </div>
                   )
-                return (
-                  <div key={`subtask_deadline_${idx}}`} className="relative">
-                    <DateInput
-                      id={`subtask_deadline_${idx}`}
-                      value={subtask.deadline}
-                      setValue={(input: string) =>
-                        setGoal(prev => ({
-                          ...prev,
-                          subtasks: prev.subtasks?.map((task, index) =>
-                            index === idx
-                              ? { ...task, deadline: new Date(input) }
-                              : task
-                          ),
-                        }))
-                      }
-                    />
-                  </div>
-                )
-              })}
+                })}
 
-              <div className="mb-1">
-                <AddTaskSections idx={idx} task={subtask} setGoal={setGoal} />
+                <div className="mb-1">
+                  <AddTaskSections idx={idx} task={subtask} setGoal={setGoal} />
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
     </>
   )
 }

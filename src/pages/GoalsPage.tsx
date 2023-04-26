@@ -4,6 +4,7 @@ import { ReactComponent as PlusIcon } from "../assets/plus.svg"
 import { ReactComponent as ArrowIcon } from "../assets/arrow.svg"
 import { ReactComponent as TimerStartIcon } from "../assets/timer_start.svg"
 import AddGoalModal from "../components/AddGoalModal/AddGoalModal"
+import AddGeneralModal from "../components/AddGeneralModal/AddGeneralModal"
 
 interface Task {
   title: string
@@ -61,6 +62,10 @@ function GoalsPage() {
           showModal={modalIsOpen}
           closeModal={() => setModalIsOpen(false)}
         />
+        {/* <AddGeneralModal
+          showModal={modalIsOpen}
+          closeModal={() => setModalIsOpen(false)}
+        /> */}
       </div>
     </div>
   )
@@ -87,6 +92,13 @@ function GoalsList({ goals }: { goals: Goal[] }) {
       {goals.map((goal, idx) => (
         <GoalItem goal={goal} key={idx} />
       ))}
+      {/* <WheelPicker
+        items={items}
+        value={value}
+        onChange={setValue}
+        containerHeight={210}
+        itemHeight={32}
+      /> */}
     </ul>
   )
 }
