@@ -1,10 +1,9 @@
 import { useState } from "react"
+import { AddNewModals, ModalState } from "../components/AddNewModals"
 import { ReactComponent as FilterIcon } from "../assets/filter.svg"
 import { ReactComponent as PlusIcon } from "../assets/plus.svg"
 import { ReactComponent as ArrowIcon } from "../assets/arrow.svg"
 import { ReactComponent as TimerStartIcon } from "../assets/timer_start.svg"
-import AddGoalModal from "../components/AddGoalModal/AddGoalModal"
-import AddGeneralModal from "../components/AddGeneralModal/AddGeneralModal"
 
 interface Task {
   title: string
@@ -51,27 +50,26 @@ const goals: Goal[] = [
 ]
 
 function GoalsPage() {
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modal, setModal] = useState<ModalState>({
+    showBackground: false,
+    isAddTaskModalOpen: false,
+  })
+
+  const openGeneralModal = () =>
+    setModal({ showBackground: true, isGeneralModalOpen: true })
 
   return (
     <div className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
       <div className="w-[650px]">
-        <GoalsHeader openAddGoalModal={() => setModalIsOpen(true)} />
+        <GoalsHeader openGeneralModal={openGeneralModal} />
         <GoalsList goals={goals} />
-        <AddGoalModal
-          showModal={modalIsOpen}
-          closeModal={() => setModalIsOpen(false)}
-        />
-        {/* <AddGeneralModal
-          showModal={modalIsOpen}
-          closeModal={() => setModalIsOpen(false)}
-        /> */}
+        <AddNewModals modal={modal} setModal={setModal} />
       </div>
     </div>
   )
 }
 
-function GoalsHeader({ openAddGoalModal }: { openAddGoalModal: () => void }) {
+function GoalsHeader({ openGeneralModal }: { openGeneralModal: () => void }) {
   return (
     <div className="mb-8 flex">
       <div className="flex cursor-pointer">
@@ -80,7 +78,7 @@ function GoalsHeader({ openAddGoalModal }: { openAddGoalModal: () => void }) {
       </div>
       <div className="mt-7 ml-auto flex space-x-4">
         <FilterIcon className="cursor-pointer" />
-        <PlusIcon className="cursor-pointer" onClick={openAddGoalModal} />
+        <PlusIcon className="cursor-pointer" onClick={openGeneralModal} />
       </div>
     </div>
   )

@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react"
-import Modal from "react-modal"
+import { useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { ReactComponent as BackIcon } from "../../assets/back.svg"
 import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
@@ -57,16 +56,6 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
   const [goal, setGoal] = useState<IGoal>(defaultGoal)
   const modalRef = useRef<HTMLDivElement | null>(null)
 
-  const handleClickOutside = (e: MouseEvent) =>
-    !modalRef.current?.contains(e.target as Node) && closeModal()
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
-
   return (
     <AnimatePresence>
       {showModal && (
@@ -81,7 +70,11 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
             key="add_modal"
             className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
           >
-            <motion.button layout onClick={closeModal}>
+            <motion.button
+              layout
+              onClick={closeModal}
+              whileTap={{ scale: 0.95 }}
+            >
               <BackIcon />
             </motion.button>
             <motion.div layout className="text-center text-5xl font-semibold">
@@ -91,20 +84,6 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
               <GoalForm goal={goal} setGoal={setGoal} modalRef={modalRef} />
             </div>
           </motion.div>
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 0.9,
-              transition: { duration: 0.2 },
-            }}
-            exit={{
-              opacity: 0,
-              transition: { duration: 0.2 },
-            }}
-            className="absolute inset-0 z-10 bg-gray-200"
-          />
         </>
       )}
     </AnimatePresence>
