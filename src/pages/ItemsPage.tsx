@@ -5,6 +5,7 @@ import { ReactComponent as FilterIcon } from "../assets/filter.svg"
 import { ReactComponent as PlusIcon } from "../assets/plus.svg"
 import { ReactComponent as ArrowIcon } from "../assets/arrow.svg"
 import { ReactComponent as TimerStartIcon } from "../assets/timer_start.svg"
+import { ReactComponent as PlusSmallIcon } from "../assets/plus_small.svg"
 import { capitalizeString } from "../helpers"
 
 interface Task {
@@ -90,6 +91,15 @@ const itemTypeMenuMotion = {
   },
 }
 
+const itemMotion = {
+  initial: { x: -40, opacity: 0 },
+  animate: {
+    x: 0,
+    opacity: 1,
+    transition: { staggerChildren: 0.1, ease: "easeInOut", duration: 0.2 },
+  },
+}
+
 function ItemsPage() {
   const [modal, setModal] = useState<ModalState>({
     showBackground: false,
@@ -110,7 +120,7 @@ function ItemsPage() {
           itemType={itemType}
           setItemType={setItemType}
         />
-        <ItemsList items={items} />
+        <ItemsList items={items} itemType={itemType} />
         <AddNewModals modal={modal} setModal={setModal} />
       </div>
     </div>
@@ -173,7 +183,7 @@ function ItemsTypeDropdown({
 
   return (
     <>
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false} mode="wait">
         <motion.div
           layout
           key={`header-type-${itemType}`}
@@ -207,7 +217,7 @@ function ItemsTypeDropdown({
             >
               <div role="none">
                 <button
-                  className="block w-full rounded-t-xl px-4 py-2 text-center text-xl font-bold text-gray-700 hover:bg-gray-200"
+                  className="block w-full rounded-t-xl border-b border-gray-200 px-4 py-2 text-center text-xl font-bold text-gray-700 hover:bg-gray-200"
                   role="menuitem"
                   tabIndex={-1}
                   id="menu-item-0"
@@ -239,13 +249,37 @@ function ItemsTypeDropdown({
   )
 }
 
-function ItemsList({ items }: { items: Goal[] }) {
+function ItemsList({ items, itemType }: { items: Goal[]; itemType: ItemType }) {
   return (
-    <ul className="space-y-3">
-      {items.map((item, idx) => (
-        <Item item={item} key={idx} />
-      ))}
-    </ul>
+    <>
+      {items.length ? (
+        <motion.ul
+          className="space-y-3"
+          variants={itemMotion}
+          initial="initial"
+          animate="animate"
+        >
+          {items.map((item, idx) => (
+            <Item item={item} key={idx} />
+          ))}
+        </motion.ul>
+      ) : (
+        <div className="mt-6 text-center">
+          <div>No {itemType.toLowerCase()} have been added.</div>
+          <button className="mt-8 font-bold">
+            <motion.div layout className="flex" whileHover={{ scale: 1.05 }}>
+              <PlusSmallIcon />
+              Add new{" "}
+              {itemType === "TASKS"
+                ? "task"
+                : itemType === "GOALS"
+                ? "goal"
+                : "dream"}
+            </motion.div>
+          </button>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -254,7 +288,7 @@ function Item({ item }: { item: Goal }) {
   const containsSublist = !!item.tasks.length
 
   return (
-    <li>
+    <motion.li variants={itemMotion}>
       <div
         onClick={() => setShowSublist(prev => !prev)}
         className="flex space-x-3"
@@ -274,7 +308,7 @@ function Item({ item }: { item: Goal }) {
         )}
       </div>
       {showSublist && <ItemSublist tasks={item.tasks} />}
-    </li>
+    </motion.li>
   )
 }
 
