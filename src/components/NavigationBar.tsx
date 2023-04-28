@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { ReactComponent as GoalsIcon } from "../assets/navigation_icons/goals.svg"
+import { ReactComponent as TasksIcon } from "../assets/navigation_icons/goals.svg"
 import { ReactComponent as CalendarIcon } from "../assets/navigation_icons/calendar.svg"
 import { ReactComponent as TimerIcon } from "../assets/navigation_icons/timer.svg"
 import { ReactComponent as WorldIcon } from "../assets/navigation_icons/world.svg"
@@ -19,7 +19,7 @@ function NavigationBar() {
         <TorchLogo className="h-12 w-6" />
       </div>
       <ul className="flex h-12 space-x-1 overflow-visible rounded-[16px] px-4">
-        <NavigationLink path={"goals"} Icon={GoalsIcon} linkName={"Goals"} />
+        <NavigationLink path={"items"} Icon={TasksIcon} linkName={"Tasks"} />
         <NavigationLink
           path="calendar"
           Icon={CalendarIcon}
@@ -58,7 +58,7 @@ function NavigationBar() {
         <ul className="divide-y divide-slate-200 px-4">
           <li className="py-1">
             <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
-              <GoalsIcon className="h-6 w-6 text-slate-800" />
+              <TasksIcon className="h-6 w-6 text-slate-800" />
               <div className="ml-5 flex items-center">Goals</div>
             </div>
           </li>
