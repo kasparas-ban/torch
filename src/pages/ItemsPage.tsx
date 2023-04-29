@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion, stagger, useAnimate } from "framer-motion"
 import { AddNewModals, ModalState } from "../components/AddNewModals"
 import { ReactComponent as FilterIcon } from "../assets/filter.svg"
 import { ReactComponent as PlusIcon } from "../assets/plus.svg"
@@ -88,15 +88,6 @@ const itemTypeMenuMotion = {
     opacity: 0,
     y: 20,
     transition: { duration: 0.1 },
-  },
-}
-
-const itemMotion = {
-  initial: { x: -40, opacity: 0 },
-  animate: {
-    x: 0,
-    opacity: 1,
-    transition: { staggerChildren: 0.1, ease: "easeInOut", duration: 0.2 },
   },
 }
 
@@ -249,15 +240,24 @@ function ItemsTypeDropdown({
 }
 
 function ItemsList({ items, itemType }: { items: Goal[]; itemType: ItemType }) {
+  const [scope, animate] = useAnimate()
+
+  useEffect(() => {
+    if (!scope.current) return
+    animate(
+      "li",
+      { x: [-40, 0], opacity: [0, 1] },
+      {
+        duration: 0.4,
+        delay: stagger(0.03),
+      }
+    )
+  }, [itemType])
+
   return (
     <>
       {items.length ? (
-        <motion.ul
-          className="space-y-3"
-          variants={itemMotion}
-          initial="initial"
-          animate="animate"
-        >
+        <motion.ul className="space-y-3" ref={scope}>
           {items.map((item, idx) => (
             <Item item={item} key={idx} />
           ))}
@@ -287,7 +287,7 @@ function Item({ item }: { item: Goal }) {
   const containsSublist = !!item.tasks.length
 
   return (
-    <motion.li variants={itemMotion}>
+    <motion.li>
       <div
         onClick={() => setShowSublist(prev => !prev)}
         className="flex space-x-3"
