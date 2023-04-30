@@ -42,6 +42,9 @@ const formVariants = {
 }
 
 function AddTaskModal({ showModal, closeModal }: IAddTaskModal) {
+  const defaultTask = { title: "", inputOrder: [] }
+  const [task, setTask] = useState<ITask>(defaultTask)
+
   return (
     <AnimatePresence>
       {showModal && (
@@ -66,7 +69,7 @@ function AddTaskModal({ showModal, closeModal }: IAddTaskModal) {
               New Task
             </motion.div>
             <div className="mx-auto">
-              <TaskForm />
+              <TaskForm task={task} setTask={setTask} />
             </div>
           </motion.div>
         </>
@@ -75,10 +78,13 @@ function AddTaskModal({ showModal, closeModal }: IAddTaskModal) {
   )
 }
 
-function TaskForm() {
-  const defaultTask = { title: "", inputOrder: [] }
-  const [task, setTask] = useState<ITask>(defaultTask)
-
+function TaskForm({
+  task,
+  setTask,
+}: {
+  task: ITask
+  setTask: React.Dispatch<React.SetStateAction<ITask>>
+}) {
   return (
     <div className="px-0 pb-2 sm:px-10">
       <form className="mt-6">
