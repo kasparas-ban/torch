@@ -6,10 +6,10 @@ import {
   PriorityInput,
   PriorityType,
   TextInput,
-} from "./Inputs"
-import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
-import { ReactComponent as MinusSmallIcon } from "../../assets/minus_small.svg"
-import { ReactComponent as CloseIcon } from "../../assets/close.svg"
+} from "../Inputs"
+import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
+import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
+import { ReactComponent as CloseIcon } from "../../../assets/close.svg"
 
 const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },

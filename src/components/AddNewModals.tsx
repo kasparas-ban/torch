@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import AddGoalModal from "./AddGoalModal/AddGoalModal"
-import AddGeneralModal from "./AddGeneralModal/AddGeneralModal"
+import AddGoalModal from "./Modals/AddGoalModal/AddGoalModal"
+import AddGeneralModal from "./Modals/AddGeneralModal/AddGeneralModal"
+import AddTaskModal from "./Modals/AddTaskModal/AddTaskModal"
 
 export interface ModalState {
   showBackground: boolean
@@ -47,6 +48,10 @@ export function AddNewModals({
         openAddTaskModal={openTaskModal}
         openAddGoalModal={openGoalModal}
         openAddDreamModal={openDreamModal}
+        closeModal={closeModal}
+      />
+      <AddTaskModal
+        showModal={!!modal?.isAddTaskModalOpen}
         closeModal={closeModal}
       />
       <AddGoalModal

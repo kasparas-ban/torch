@@ -1,33 +1,23 @@
 import { useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { ReactComponent as BackIcon } from "../../assets/back.svg"
-import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
-import { ReactComponent as MinusSmallIcon } from "../../assets/minus_small.svg"
-import { DateInput, PriorityInput, PriorityType, TextInput } from "./Inputs"
-import { Subtasks } from "./Subtasks"
-import "./inputStyles.css"
+import { DateInput, PriorityInput, PriorityType, TextInput } from "../Inputs"
+import { ReactComponent as BackIcon } from "../../../assets/back.svg"
+import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
+import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
+import "../inputStyles.css"
 
-interface IAddGoalModal {
+interface IAddTaskModal {
   showModal: boolean
   closeModal: () => void
 }
 
-export interface IGoal {
-  title: string
-  priority?: "LOW" | "MEDIUM" | "HIGH"
-  deadline?: Date | null
-  dream?: any | null
-  subtasks?: ITask[]
-  inputOrder: string[]
-}
-
-export interface ITask {
-  id: number
+interface ITask {
   title: string
   priority?: "LOW" | "MEDIUM" | "HIGH"
   duration?: { hours: number | null; minutes: number | null }
   deadline?: Date | null
   recurring?: boolean
+  goal?: any | null
   inputOrder: string[]
 }
 
@@ -51,24 +41,19 @@ const formVariants = {
   },
 }
 
-function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
-  const defaultGoal = { title: "", inputOrder: [] }
-  const [goal, setGoal] = useState<IGoal>(defaultGoal)
-  const modalRef = useRef<HTMLDivElement | null>(null)
-
+function AddTaskModal({ showModal, closeModal }: IAddTaskModal) {
   return (
     <AnimatePresence>
       {showModal && (
         <>
           <motion.div
             layout
+            key="add_task_modal"
+            className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
             variants={modalVariants}
             initial="initial"
             animate="default"
             exit="close"
-            ref={modalRef}
-            key="add_modal"
-            className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
           >
             <motion.button
               layout
@@ -78,10 +63,10 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
               <BackIcon />
             </motion.button>
             <motion.div layout className="text-center text-5xl font-semibold">
-              New Goal
+              New Task
             </motion.div>
             <div className="mx-auto">
-              <GoalForm goal={goal} setGoal={setGoal} modalRef={modalRef} />
+              <TaskForm />
             </div>
           </motion.div>
         </>
@@ -90,62 +75,34 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
   )
 }
 
-function GoalForm({
-  goal,
-  setGoal,
-  modalRef,
-}: {
-  goal: IGoal
-  setGoal: React.Dispatch<React.SetStateAction<IGoal>>
-  modalRef: React.MutableRefObject<HTMLDivElement | null>
-}) {
-  const subtaskIdRef = useRef(0)
-
-  const addSubtask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault()
-    setGoal(prev => ({
-      ...prev,
-      subtasks: [
-        ...(prev.subtasks ? prev.subtasks : []),
-        { id: ++subtaskIdRef.current, title: "", inputOrder: [] },
-      ],
-    }))
-
-    if (modalRef.current)
-      setTimeout(
-        () =>
-          modalRef.current?.scrollBy({
-            top: 1000,
-            behavior: "smooth",
-          }),
-        100
-      )
-  }
+function TaskForm() {
+  const defaultTask = { title: "", inputOrder: [] }
+  const [task, setTask] = useState<ITask>(defaultTask)
 
   return (
-    <div className="px-0 pt-4 pb-2 sm:px-10">
+    <div className="px-0 pb-2 sm:px-10">
       <form className="mt-6">
         <div className="flex flex-col gap-1">
           <AnimatePresence initial={false} mode="popLayout">
             <motion.div layout className="relative">
               <TextInput
-                id="goal_title"
-                value={goal.title}
+                id="task_title"
+                value={task.title}
                 setValue={(input: string) =>
-                  setGoal(prev => ({ ...prev, title: input }))
+                  setTask(prev => ({ ...prev, title: input }))
                 }
-                inputName="goal_title"
-                label="Goal title"
+                inputName="task_title"
+                label="Task title"
               />
             </motion.div>
 
-            {goal.inputOrder.map(input => {
-              if (input === "dream")
+            {task.inputOrder.map(input => {
+              if (input === "goal")
                 return (
-                  goal.dream !== undefined && (
+                  task.goal !== undefined && (
                     <motion.div
                       layout
-                      key="goal_dream"
+                      key="task_goal"
                       className="relative"
                       variants={formVariants}
                       initial="addInitial"
@@ -153,23 +110,23 @@ function GoalForm({
                       exit="remove"
                     >
                       <TextInput
-                        id="goal_dream"
-                        value={goal.dream}
+                        id="task_goal"
+                        value={task.goal}
                         setValue={(input: string) =>
-                          setGoal(prev => ({ ...prev, dream: input }))
+                          setTask(prev => ({ ...prev, goal: input }))
                         }
-                        inputName="goal_dream"
-                        label="Dream"
+                        inputName="task_goal"
+                        label="Goal"
                       />
                     </motion.div>
                   )
                 )
               if (input === "priority")
                 return (
-                  goal.priority && (
+                  task.priority && (
                     <motion.div
                       layout
-                      key="goal_priority"
+                      key="task_priority"
                       className="relative"
                       variants={formVariants}
                       initial="addInitial"
@@ -177,20 +134,20 @@ function GoalForm({
                       exit="remove"
                     >
                       <PriorityInput
-                        id="goal_priority"
-                        value={goal.priority}
+                        id="task_priority"
+                        value={task.priority}
                         setValue={(input: PriorityType) =>
-                          setGoal(prev => ({ ...prev, priority: input }))
+                          setTask(prev => ({ ...prev, priority: input }))
                         }
                       />
                     </motion.div>
                   )
                 )
               return (
-                goal.deadline !== undefined && (
+                task.deadline !== undefined && (
                   <motion.div
                     layout
-                    key="goal_deadline"
+                    key="task_deadline"
                     className="relative"
                     variants={formVariants}
                     initial="addInitial"
@@ -198,10 +155,10 @@ function GoalForm({
                     exit="remove"
                   >
                     <DateInput
-                      id="goal_deadline"
-                      value={goal.deadline}
+                      id="task_deadline"
+                      value={task.deadline}
                       setValue={(input: string) =>
-                        setGoal(prev => ({
+                        setTask(prev => ({
                           ...prev,
                           deadline: new Date(input),
                         }))
@@ -214,23 +171,7 @@ function GoalForm({
           </AnimatePresence>
         </div>
 
-        <AddGoalSections goal={goal} setGoal={setGoal} />
-
-        {!!goal.subtasks?.length && <Subtasks goal={goal} setGoal={setGoal} />}
-
-        <div className="relative mt-6 mb-5 flex justify-center">
-          <motion.button
-            layout
-            className="flex px-3 py-1 text-[15px] text-gray-500"
-            onClick={addSubtask}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="relative bottom-px">
-              <PlusSmallIcon />
-            </div>
-            Add Subtask
-          </motion.button>
-        </div>
+        <AddTaskSections task={task} setTask={setTask} />
 
         <div className="relative mb-2 flex justify-center">
           <motion.button
@@ -246,50 +187,50 @@ function GoalForm({
   )
 }
 
-function AddGoalSections({
-  goal,
-  setGoal,
+function AddTaskSections({
+  task,
+  setTask,
 }: {
-  goal: IGoal
-  setGoal: React.Dispatch<React.SetStateAction<IGoal>>
+  task: ITask
+  setTask: React.Dispatch<React.SetStateAction<ITask>>
 }) {
   const addDeadline = () =>
-    setGoal(prev => ({
+    setTask(prev => ({
       ...prev,
       deadline: null,
       inputOrder: [...prev.inputOrder, "deadline"],
     }))
   const removeDeadline = () =>
-    setGoal(prev => ({
+    setTask(prev => ({
       ...prev,
       deadline: undefined,
       inputOrder: prev.inputOrder.filter(input => input !== "deadline"),
     }))
 
   const addPriority = () =>
-    setGoal(prev => ({
+    setTask(prev => ({
       ...prev,
       priority: "MEDIUM",
       inputOrder: [...prev.inputOrder, "priority"],
     }))
   const removePriority = () =>
-    setGoal(prev => ({
+    setTask(prev => ({
       ...prev,
       priority: undefined,
       inputOrder: prev.inputOrder.filter(input => input !== "priority"),
     }))
 
-  const addDream = () =>
-    setGoal(prev => ({
+  const addGoal = () =>
+    setTask(prev => ({
       ...prev,
-      dream: null,
-      inputOrder: [...prev.inputOrder, "dream"],
+      goal: null,
+      inputOrder: [...prev.inputOrder, "goal"],
     }))
-  const removeDream = () =>
-    setGoal(prev => ({
+  const removeGoal = () =>
+    setTask(prev => ({
       ...prev,
-      dream: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "dream"),
+      goal: undefined,
+      inputOrder: prev.inputOrder.filter(input => input !== "goal"),
     }))
 
   return (
@@ -298,12 +239,12 @@ function AddGoalSections({
         className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
         onClick={e => {
           e.preventDefault()
-          goal.dream === undefined ? addDream() : removeDream()
+          task.goal === undefined ? addGoal() : removeGoal()
         }}
       >
-        Assign Dream
+        Assign Goal
         <div className="relative top-1 ml-0.5">
-          {goal.dream === undefined ? (
+          {task.goal === undefined ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
@@ -314,12 +255,12 @@ function AddGoalSections({
         className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
         onClick={e => {
           e.preventDefault()
-          goal.deadline === undefined ? addDeadline() : removeDeadline()
+          task.deadline === undefined ? addDeadline() : removeDeadline()
         }}
       >
         Deadline
         <div className="relative top-1 ml-0.5">
-          {goal.deadline === undefined ? (
+          {task.deadline === undefined ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
@@ -330,12 +271,12 @@ function AddGoalSections({
         className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
         onClick={e => {
           e.preventDefault()
-          goal.priority ? removePriority() : addPriority()
+          task.priority ? removePriority() : addPriority()
         }}
       >
         Priority
         <div className="relative top-1 ml-0.5">
-          {!goal.priority ? (
+          {!task.priority ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
@@ -346,4 +287,4 @@ function AddGoalSections({
   )
 }
 
-export default AddGoalModal
+export default AddTaskModal

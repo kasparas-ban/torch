@@ -90,7 +90,7 @@ export function DateInput({
   return (
     <>
       <label
-        htmlFor="goal_deadline"
+        htmlFor="deadline_input"
         className="cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:text-sm peer-focus:text-sm peer-focus:text-gray-600"
       >
         Deadline

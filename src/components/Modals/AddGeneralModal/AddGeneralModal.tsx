@@ -1,5 +1,5 @@
-import { ReactComponent as BackIcon } from "../../assets/back.svg"
 import { AnimatePresence, motion } from "framer-motion"
+import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 
 interface IAddGeneralModal {
   showModal: boolean
