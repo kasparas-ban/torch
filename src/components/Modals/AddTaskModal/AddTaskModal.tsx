@@ -1,6 +1,12 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { DateInput, PriorityInput, PriorityType, TextInput } from "../Inputs"
+import {
+  DateInput,
+  DurationInput,
+  PriorityInput,
+  PriorityType,
+  TextInput,
+} from "../Inputs"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
@@ -13,8 +19,8 @@ interface IAddTaskModal {
 
 interface ITask {
   title: string
+  duration: { hours: number | null; minutes: number | null }
   priority?: "LOW" | "MEDIUM" | "HIGH"
-  duration?: { hours: number | null; minutes: number | null }
   deadline?: Date | null
   recurring?: boolean
   goal?: any | null
@@ -42,7 +48,11 @@ const formVariants = {
 }
 
 function AddTaskModal({ showModal, closeModal }: IAddTaskModal) {
-  const defaultTask = { title: "", inputOrder: [] }
+  const defaultTask = {
+    title: "",
+    duration: { hours: 0, minutes: 30 },
+    inputOrder: [],
+  }
   const [task, setTask] = useState<ITask>(defaultTask)
 
   return (
@@ -99,6 +109,22 @@ function TaskForm({
                 }
                 inputName="task_title"
                 label="Task title"
+              />
+            </motion.div>
+
+            <motion.div layout key={`task_duration`} className="relative">
+              <DurationInput
+                id={`task_duration`}
+                duration={task.duration}
+                setDuration={(hours: string, minutes: string) =>
+                  setTask(prev => ({
+                    ...prev,
+                    duration: {
+                      hours: Number(hours),
+                      minutes: Number(minutes),
+                    },
+                  }))
+                }
               />
             </motion.div>
 
@@ -239,18 +265,47 @@ function AddTaskSections({
       inputOrder: prev.inputOrder.filter(input => input !== "goal"),
     }))
 
+  const addRecurring = () =>
+    setTask(prev => ({
+      ...prev,
+      recurring: true,
+    }))
+  const removeRecurring = () =>
+    setTask(prev => ({
+      ...prev,
+      recurring: undefined,
+    }))
+
   return (
     <motion.div layout className="my-4 flex flex-wrap justify-center gap-2">
+      <button
+        className={`flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600 ${
+          task.recurring ? "bg-blue-300" : ""
+        }`}
+        onClick={e => {
+          e.preventDefault()
+          task.recurring ? removeRecurring() : addRecurring()
+        }}
+      >
+        Recurring
+        <div className="relative top-1 ml-0.5">
+          {task.recurring ? (
+            <MinusSmallIcon className="h-4 w-4" />
+          ) : (
+            <PlusSmallIcon className="h-4 w-4" />
+          )}
+        </div>
+      </button>
       <button
         className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
         onClick={e => {
           e.preventDefault()
-          task.goal === undefined ? addGoal() : removeGoal()
+          task.priority ? removePriority() : addPriority()
         }}
       >
-        Assign Goal
+        Priority
         <div className="relative top-1 ml-0.5">
-          {task.goal === undefined ? (
+          {!task.priority ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
@@ -277,12 +332,12 @@ function AddTaskSections({
         className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
         onClick={e => {
           e.preventDefault()
-          task.priority ? removePriority() : addPriority()
+          task.goal === undefined ? addGoal() : removeGoal()
         }}
       >
-        Priority
+        Assign Goal
         <div className="relative top-1 ml-0.5">
-          {!task.priority ? (
+          {task.goal === undefined ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
