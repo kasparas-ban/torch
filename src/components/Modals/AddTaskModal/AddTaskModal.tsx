@@ -21,7 +21,7 @@ interface ITask {
   title: string
   duration: { hours: number | null; minutes: number | null }
   priority?: "LOW" | "MEDIUM" | "HIGH"
-  deadline?: Date | null
+  targetDate?: Date | null
   recurring?: boolean
   goal?: any | null
   inputOrder: string[]
@@ -176,10 +176,10 @@ function TaskForm({
                   )
                 )
               return (
-                task.deadline !== undefined && (
+                task.targetDate !== undefined && (
                   <motion.div
                     layout
-                    key="task_deadline"
+                    key="task_target_date"
                     className="relative"
                     variants={formVariants}
                     initial="addInitial"
@@ -187,12 +187,12 @@ function TaskForm({
                     exit="remove"
                   >
                     <DateInput
-                      id="task_deadline"
-                      value={task.deadline}
+                      id="task_target_date"
+                      value={task.targetDate}
                       setValue={(input: string) =>
                         setTask(prev => ({
                           ...prev,
-                          deadline: new Date(input),
+                          targetDate: new Date(input),
                         }))
                       }
                     />
@@ -226,17 +226,17 @@ function AddTaskSections({
   task: ITask
   setTask: React.Dispatch<React.SetStateAction<ITask>>
 }) {
-  const addDeadline = () =>
+  const addTargetDate = () =>
     setTask(prev => ({
       ...prev,
-      deadline: null,
-      inputOrder: [...prev.inputOrder, "deadline"],
+      targetDate: null,
+      inputOrder: [...prev.inputOrder, "targetDate"],
     }))
-  const removeDeadline = () =>
+  const removeTargetDate = () =>
     setTask(prev => ({
       ...prev,
-      deadline: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "deadline"),
+      targetDate: undefined,
+      inputOrder: prev.inputOrder.filter(input => input !== "targetDate"),
     }))
 
   const addPriority = () =>
@@ -316,12 +316,12 @@ function AddTaskSections({
         className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
         onClick={e => {
           e.preventDefault()
-          task.deadline === undefined ? addDeadline() : removeDeadline()
+          task.targetDate === undefined ? addTargetDate() : removeTargetDate()
         }}
       >
-        Deadline
+        Target date
         <div className="relative top-1 ml-0.5">
-          {task.deadline === undefined ? (
+          {task.targetDate === undefined ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />

@@ -55,28 +55,30 @@ export function AddTaskSections({
       ),
     }))
 
-  const addDeadline = () =>
+  const addTargetDate = () =>
     setGoal(prev => ({
       ...prev,
       subtasks: prev.subtasks?.map(task =>
         task.id === id
           ? {
               ...task,
-              deadline: null,
-              inputOrder: [...task.inputOrder, "deadline"],
+              targetDate: null,
+              inputOrder: [...task.inputOrder, "targetDate"],
             }
           : task
       ),
     }))
-  const removeDeadline = () =>
+  const removeTargetDate = () =>
     setGoal(prev => ({
       ...prev,
       subtasks: prev.subtasks?.map(task =>
         task.id === id
           ? {
               ...task,
-              deadline: undefined,
-              inputOrder: task.inputOrder.filter(input => input !== "deadline"),
+              targetDate: undefined,
+              inputOrder: task.inputOrder.filter(
+                input => input !== "targetDate"
+              ),
             }
           : task
       ),
@@ -133,12 +135,12 @@ export function AddTaskSections({
         className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600"
         onClick={e => {
           e.preventDefault()
-          task.deadline === undefined ? addDeadline() : removeDeadline()
+          task.targetDate === undefined ? addTargetDate() : removeTargetDate()
         }}
       >
-        Deadline
+        Target date
         <div className="relative top-1 ml-0.5">
-          {task.deadline === undefined ? (
+          {task.targetDate === undefined ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
@@ -295,7 +297,7 @@ export function Subtasks({
                     return (
                       <motion.div
                         layout
-                        key={`subtask_deadline_${subtask.id}}`}
+                        key={`subtask_target_date_${subtask.id}}`}
                         className="relative"
                         variants={formVariants}
                         initial="addInitial"
@@ -303,14 +305,14 @@ export function Subtasks({
                         exit="remove"
                       >
                         <DateInput
-                          id={`subtask_deadline_${subtask.id}`}
-                          value={subtask.deadline}
+                          id={`subtask_target_date_${subtask.id}`}
+                          value={subtask.targetDate}
                           setValue={(input: string) =>
                             setGoal(prev => ({
                               ...prev,
                               subtasks: prev.subtasks?.map(task =>
                                 task.id === subtask.id
-                                  ? { ...task, deadline: new Date(input) }
+                                  ? { ...task, targetDate: new Date(input) }
                                   : task
                               ),
                             }))

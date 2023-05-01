@@ -15,7 +15,7 @@ interface IAddGoalModal {
 export interface IGoal {
   title: string
   priority?: "LOW" | "MEDIUM" | "HIGH"
-  deadline?: Date | null
+  targetDate?: Date | null
   dream?: any | null
   subtasks?: ITask[]
   inputOrder: string[]
@@ -26,7 +26,7 @@ export interface ITask {
   title: string
   priority?: "LOW" | "MEDIUM" | "HIGH"
   duration?: { hours: number | null; minutes: number | null }
-  deadline?: Date | null
+  targetDate?: Date | null
   recurring?: boolean
   inputOrder: string[]
 }
@@ -187,10 +187,10 @@ function GoalForm({
                   )
                 )
               return (
-                goal.deadline !== undefined && (
+                goal.targetDate !== undefined && (
                   <motion.div
                     layout
-                    key="goal_deadline"
+                    key="goal_target_date"
                     className="relative"
                     variants={formVariants}
                     initial="addInitial"
@@ -198,12 +198,12 @@ function GoalForm({
                     exit="remove"
                   >
                     <DateInput
-                      id="goal_deadline"
-                      value={goal.deadline}
+                      id="goal_target_date"
+                      value={goal.targetDate}
                       setValue={(input: string) =>
                         setGoal(prev => ({
                           ...prev,
-                          deadline: new Date(input),
+                          targetDate: new Date(input),
                         }))
                       }
                     />
@@ -253,17 +253,17 @@ function AddGoalSections({
   goal: IGoal
   setGoal: React.Dispatch<React.SetStateAction<IGoal>>
 }) {
-  const addDeadline = () =>
+  const addTargetDate = () =>
     setGoal(prev => ({
       ...prev,
-      deadline: null,
-      inputOrder: [...prev.inputOrder, "deadline"],
+      targetDate: null,
+      inputOrder: [...prev.inputOrder, "targetDate"],
     }))
-  const removeDeadline = () =>
+  const removeTargetDate = () =>
     setGoal(prev => ({
       ...prev,
-      deadline: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "deadline"),
+      targetDate: undefined,
+      inputOrder: prev.inputOrder.filter(input => input !== "targetDate"),
     }))
 
   const addPriority = () =>
@@ -314,12 +314,12 @@ function AddGoalSections({
         className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
         onClick={e => {
           e.preventDefault()
-          goal.deadline === undefined ? addDeadline() : removeDeadline()
+          goal.targetDate === undefined ? addTargetDate() : removeTargetDate()
         }}
       >
-        Deadline
+        Target date
         <div className="relative top-1 ml-0.5">
-          {goal.deadline === undefined ? (
+          {goal.targetDate === undefined ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
