@@ -9,7 +9,7 @@ import "../inputStyles.css"
 
 interface IAddGoalModal {
   showModal: boolean
-  closeModal: () => void
+  handleBack: () => void
 }
 
 export interface IGoal {
@@ -51,7 +51,7 @@ const formVariants = {
   },
 }
 
-function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
+function AddGoalModal({ showModal, handleBack }: IAddGoalModal) {
   const defaultGoal = { title: "", inputOrder: [] }
   const [goal, setGoal] = useState<IGoal>(defaultGoal)
   const modalRef = useRef<HTMLDivElement | null>(null)
@@ -72,7 +72,7 @@ function AddGoalModal({ showModal, closeModal }: IAddGoalModal) {
           >
             <motion.button
               layout
-              onClick={closeModal}
+              onClick={handleBack}
               whileTap={{ scale: 0.95 }}
             >
               <BackIcon />

@@ -14,7 +14,7 @@ import "../inputStyles.css"
 
 interface IAddTaskModal {
   showModal: boolean
-  closeModal: () => void
+  handleBack: () => void
 }
 
 interface ITask {
@@ -47,7 +47,7 @@ const formVariants = {
   },
 }
 
-function AddTaskModal({ showModal, closeModal }: IAddTaskModal) {
+function AddTaskModal({ showModal, handleBack }: IAddTaskModal) {
   const defaultTask = {
     title: "",
     duration: { hours: 0, minutes: 30 },
@@ -70,7 +70,7 @@ function AddTaskModal({ showModal, closeModal }: IAddTaskModal) {
           >
             <motion.button
               layout
-              onClick={closeModal}
+              onClick={handleBack}
               whileTap={{ scale: 0.95 }}
             >
               <BackIcon />

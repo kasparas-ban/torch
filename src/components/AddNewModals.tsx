@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import AddGoalModal from "./Modals/AddGoalModal/AddGoalModal"
 import AddGeneralModal from "./Modals/AddGeneralModal/AddGeneralModal"
 import AddTaskModal from "./Modals/AddTaskModal/AddTaskModal"
+import AddDreamModal from "./Modals/AddDreamModal/AddDreamModal"
 
 export interface ModalState {
   showBackground: boolean
@@ -32,6 +33,8 @@ export function AddNewModals({
     }
   }, [])
 
+  const openGeneralModal = () =>
+    setModal({ showBackground: true, isGeneralModalOpen: true })
   const openTaskModal = () =>
     setModal({ showBackground: true, isAddTaskModalOpen: true })
   const openGoalModal = () =>
@@ -52,11 +55,15 @@ export function AddNewModals({
       />
       <AddTaskModal
         showModal={!!modal?.isAddTaskModalOpen}
-        closeModal={closeModal}
+        handleBack={openGeneralModal}
       />
       <AddGoalModal
         showModal={!!modal?.isAddGoalModalOpen}
-        closeModal={closeModal}
+        handleBack={openGeneralModal}
+      />
+      <AddDreamModal
+        showModal={!!modal?.isAddDreamModalOpen}
+        handleBack={openGeneralModal}
       />
       {modal.showBackground && (
         <motion.div
