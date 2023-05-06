@@ -313,7 +313,7 @@ function ItemsList({ items, itemType }: { items: Goal[]; itemType: ItemType }) {
         <div className="mt-6 text-center">
           <div>No {itemType.toLowerCase()} have been added.</div>
           <button className="mt-8 font-bold">
-            <motion.div layout className="flex" whileHover={{ scale: 1.05 }}>
+            <motion.div className="flex" whileHover={{ scale: 1.05 }}>
               <PlusSmallIcon />
               Add new{" "}
               {itemType === "TASKS"
@@ -346,7 +346,7 @@ function Item({ item }: { item: Goal }) {
             scale: 1.02,
           }}
         >
-          <div>{item.title}</div>
+          <div className="select-none">{item.title}</div>
           {containsSublist && (
             <motion.div
               animate={{
@@ -391,12 +391,12 @@ function ItemSublist({ tasks }: { tasks: Task[] }) {
             className="flex space-x-3"
             variants={subitemVariant}
           >
-            <div className="my-auto aspect-square w-4 rounded-full bg-gray-500"></div>
+            <div className="my-auto aspect-square w-4 rounded-full bg-gray-400"></div>
             <motion.div
               className="flex w-full cursor-pointer rounded-full bg-red-400 py-3 px-6"
               whileHover={{ scale: 1.02 }}
             >
-              <div>{task.title}</div>
+              <div className="select-none">{task.title}</div>
             </motion.div>
             <div className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400">
               <TimerStartIcon className="m-auto h-full" />
