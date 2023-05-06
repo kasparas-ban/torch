@@ -225,9 +225,17 @@ function ItemsTypeDropdown({
           exit="exit"
         >
           <div className="text-6xl font-bold">{capitalizeString(itemType)}</div>
-          <motion.div layout>
-            <ArrowIcon className="mx-2 mt-7" />
-          </motion.div>
+          <div className="mx-2 mt-7">
+            <motion.div
+              layout
+              animate={{
+                rotate: isDropdownOpen ? 180 : 0,
+                transition: { duration: 0.2, type: "tween" },
+              }}
+            >
+              <ArrowIcon />
+            </motion.div>
+          </div>
         </motion.div>
       </AnimatePresence>
       <div className="relative" ref={dropdownMenuRef}>
@@ -332,14 +340,25 @@ function Item({ item }: { item: Goal }) {
         onClick={() => setShowSublist(prev => !prev)}
         className="flex space-x-3"
       >
-        <div className="flex w-full cursor-pointer rounded-full bg-red-400 py-3 px-6">
+        <motion.div
+          className="flex w-full cursor-pointer rounded-full bg-red-400 py-3 px-6"
+          whileHover={{
+            scale: 1.02,
+          }}
+        >
           <div>{item.title}</div>
           {containsSublist && (
-            <ArrowIcon
-              className={`ml-auto ${showSublist ? "rotate-180" : ""}`}
-            />
+            <motion.div
+              animate={{
+                rotate: showSublist ? 180 : 0,
+                transition: { type: "tween" },
+              }}
+              className={`ml-auto`}
+            >
+              <ArrowIcon />
+            </motion.div>
           )}
-        </div>
+        </motion.div>
         {!containsSublist && (
           <div className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400">
             <TimerStartIcon className="m-auto h-full" />
@@ -373,9 +392,12 @@ function ItemSublist({ tasks }: { tasks: Task[] }) {
             variants={subitemVariant}
           >
             <div className="my-auto aspect-square w-4 rounded-full bg-gray-500"></div>
-            <div className="flex w-full cursor-pointer rounded-full bg-red-400 py-3 px-6">
+            <motion.div
+              className="flex w-full cursor-pointer rounded-full bg-red-400 py-3 px-6"
+              whileHover={{ scale: 1.02 }}
+            >
               <div>{task.title}</div>
-            </div>
+            </motion.div>
             <div className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400">
               <TimerStartIcon className="m-auto h-full" />
             </div>
