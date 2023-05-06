@@ -13,6 +13,7 @@ interface Task {
 }
 
 interface Goal {
+  id: number
   title: string
   tasks: Task[]
 }
@@ -21,6 +22,7 @@ type ItemType = "TASKS" | "GOALS" | "DREAMS"
 
 const goals: Goal[] = [
   {
+    id: 1,
     title: "Make a todo app",
     tasks: [
       {
@@ -35,6 +37,7 @@ const goals: Goal[] = [
     ],
   },
   {
+    id: 2,
     title: "Learn to play chess",
     tasks: [
       {
@@ -49,6 +52,7 @@ const goals: Goal[] = [
     ],
   },
   {
+    id: 3,
     title: 'Finish "The Shape of Space"',
     tasks: [],
   },
@@ -88,6 +92,39 @@ const itemTypeMenuMotion = {
     opacity: 0,
     y: 20,
     transition: { duration: 0.1 },
+  },
+}
+
+const sublistVariant = {
+  initial: { opacity: 0, height: 0, marginTop: 0 },
+  animate: {
+    opacity: 1,
+    height: "auto",
+    marginTop: 12,
+    transition: { staggerChildren: 0.1 },
+  },
+  exit: { opacity: 0, height: 0, marginTop: 0 },
+}
+
+const subitemVariant = {
+  initial: {
+    opacity: 0,
+    y: -30,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      staggerChildren: 0.01,
+      type: "spring",
+      bounce: 0.4,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -30,
+    transition: { duration: 0.4 },
   },
 }
 
@@ -246,10 +283,12 @@ function ItemsList({ items, itemType }: { items: Goal[]; itemType: ItemType }) {
     if (!scope.current) return
     animate(
       "li",
-      { x: [-40, 0], opacity: [0, 1] },
+      { y: [-40, 0], opacity: [0, 1] },
       {
-        duration: 0.4,
-        delay: stagger(0.03),
+        duration: 0.3,
+        type: "spring",
+        bounce: 0.4,
+        delay: stagger(0.025),
       }
     )
   }, [itemType])
@@ -287,8 +326,9 @@ function Item({ item }: { item: Goal }) {
   const containsSublist = !!item.tasks.length
 
   return (
-    <motion.li>
-      <div
+    <motion.li layout>
+      <motion.div
+        layout
         onClick={() => setShowSublist(prev => !prev)}
         className="flex space-x-3"
       >
@@ -305,18 +345,33 @@ function Item({ item }: { item: Goal }) {
             <TimerStartIcon className="m-auto h-full" />
           </div>
         )}
-      </div>
-      {showSublist && <ItemSublist tasks={item.tasks} />}
+      </motion.div>
+      <AnimatePresence initial={false}>
+        {showSublist && (
+          <ItemSublist key={`${item.id}_sublist`} tasks={item.tasks} />
+        )}
+      </AnimatePresence>
     </motion.li>
   )
 }
 
 function ItemSublist({ tasks }: { tasks: Task[] }) {
   return (
-    <div>
-      <ul className="mt-3 ml-6 space-y-3">
+    <motion.div
+      layout
+      variants={sublistVariant}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
+      <motion.ul layout className="ml-6 space-y-3">
         {tasks.map((task, idx) => (
-          <li key={idx} className="flex space-x-3">
+          <motion.li
+            layout
+            key={idx}
+            className="flex space-x-3"
+            variants={subitemVariant}
+          >
             <div className="my-auto aspect-square w-4 rounded-full bg-gray-500"></div>
             <div className="flex w-full cursor-pointer rounded-full bg-red-400 py-3 px-6">
               <div>{task.title}</div>
@@ -324,10 +379,10 @@ function ItemSublist({ tasks }: { tasks: Task[] }) {
             <div className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400">
               <TimerStartIcon className="m-auto h-full" />
             </div>
-          </li>
+          </motion.li>
         ))}
-      </ul>
-    </div>
+      </motion.ul>
+    </motion.div>
   )
 }
 
