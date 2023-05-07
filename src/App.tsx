@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import NavigationBar from "./components/NavigationBar"
 import TimerPage from "./pages/TimerPage"
-import ItemsPage from "./pages/ItemsPage"
+import ItemsPage from "./pages/ItemsPage/ItemsPage"
 import CalendarPage from "./pages/CalendarPage"
 import WorldPage from "./pages/WorldPage"
 import StatisticsPage from "./pages/StatisticsPage"
