@@ -43,6 +43,7 @@ const goals: Goal[] = [
 ]
 
 function ItemsPage() {
+  const [editMode, setEditMode] = useState(false)
   const [modal, setModal] = useState<ModalState>({
     showBackground: false,
     isAddTaskModalOpen: false,
@@ -61,6 +62,8 @@ function ItemsPage() {
           openGeneralModal={openGeneralModal}
           itemType={itemType}
           setItemType={setItemType}
+          editMode={editMode}
+          setEditMode={setEditMode}
         />
         <ItemsList items={items} itemType={itemType} />
         <AddNewModals modal={modal} setModal={setModal} />

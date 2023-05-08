@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { capitalizeString } from "../../helpers"
 import { ItemType } from "../../types"
 import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
+import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
 
@@ -47,15 +48,33 @@ export function ItemsHeader({
   openGeneralModal,
   itemType,
   setItemType,
+  editMode,
+  setEditMode,
 }: {
   openGeneralModal: () => void
   itemType: ItemType
   setItemType: (type: ItemType) => void
+  editMode: boolean
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   return (
     <div className="mb-8 flex">
       <ItemsTypeDropdown itemType={itemType} setItemType={setItemType} />
       <div className="mt-7 ml-auto flex space-x-4">
+        <motion.div
+          layout
+          whileHover={{ scale: 1.2 }}
+          onClick={() => setEditMode(prev => !prev)}
+          className="relative top-[-6px]"
+        >
+          <motion.div
+            className={`flex h-9 w-9 items-center justify-center rounded-full ${
+              editMode ? "bg-red-400" : ""
+            }`}
+          >
+            <EditIcon className="cursor-pointer" />
+          </motion.div>
+        </motion.div>
         <motion.div layout whileHover={{ scale: 1.2 }}>
           <FilterIcon className="cursor-pointer" />
         </motion.div>
