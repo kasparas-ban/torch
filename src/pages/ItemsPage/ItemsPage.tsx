@@ -1,48 +1,55 @@
 import { useState } from "react"
 import { AddNewModals, ModalState } from "../../components/AddNewModals"
-import { Goal, ItemType } from "../../types"
+import { Goal, ItemType, Task } from "../../types"
 import { ItemsHeader } from "./ItemsHeader"
 import ItemsList from "./ItemsList"
 
 const goals: Goal[] = [
   {
-    id: 1,
+    goalId: 1,
     title: "Make a todo app",
     tasks: [
       {
+        taskId: 1,
         title: "Make a Figma sketch",
       },
       {
+        taskId: 2,
         title: "Learn Next.js",
       },
       {
+        taskId: 3,
         title: "Make a timer app",
       },
     ],
   },
   {
-    id: 2,
+    goalId: 2,
     title: "Learn to play chess",
     tasks: [
       {
+        taskId: 4,
         title: "Learn chess rules",
       },
       {
+        taskId: 5,
         title: "Learn opening moves",
       },
       {
+        taskId: 6,
         title: "Play a match with dad",
       },
     ],
   },
   {
-    id: 3,
+    goalId: 3,
     title: 'Finish "The Shape of Space"',
     tasks: [],
   },
 ]
 
 function ItemsPage() {
+  const [editItem, setEditItem] = useState<Goal | Task | undefined>()
   const [editMode, setEditMode] = useState(false)
   const [modal, setModal] = useState<ModalState>({
     showBackground: false,
@@ -64,8 +71,15 @@ function ItemsPage() {
           setItemType={setItemType}
           editMode={editMode}
           setEditMode={setEditMode}
+          setEditItem={setEditItem}
         />
-        <ItemsList items={items} itemType={itemType} editMode={editMode} />
+        <ItemsList
+          items={items}
+          itemType={itemType}
+          editMode={editMode}
+          editItem={editItem}
+          setEditItem={setEditItem}
+        />
         <AddNewModals modal={modal} setModal={setModal} />
       </div>
     </div>

@@ -1,9 +1,10 @@
 export interface Task {
+  taskId: number
   title: string
 }
 
 export interface Goal {
-  id: number
+  goalId: number
   title: string
   tasks: Task[]
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { capitalizeString } from "../../helpers"
-import { ItemType } from "../../types"
+import { Goal, ItemType, Task } from "../../types"
 import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
 import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
@@ -50,13 +50,20 @@ export function ItemsHeader({
   setItemType,
   editMode,
   setEditMode,
+  setEditItem,
 }: {
   openGeneralModal: () => void
   itemType: ItemType
   setItemType: (type: ItemType) => void
   editMode: boolean
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>
+  setEditItem: React.Dispatch<React.SetStateAction<Goal | Task | undefined>>
 }) {
+  const toggleEditMode = () => {
+    if (editMode) setEditItem(undefined)
+    setEditMode(prev => !prev)
+  }
+
   return (
     <div className="mb-8 flex">
       <ItemsTypeDropdown itemType={itemType} setItemType={setItemType} />
@@ -64,15 +71,15 @@ export function ItemsHeader({
         <motion.div
           layout
           whileHover={{ scale: 1.2 }}
-          onClick={() => setEditMode(prev => !prev)}
+          onClick={toggleEditMode}
           className="relative top-[-6px]"
         >
           <motion.div
-            className={`flex h-9 w-9 items-center justify-center rounded-full ${
+            className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-full ${
               editMode ? "bg-red-400" : ""
             }`}
           >
-            <EditIcon className="cursor-pointer" />
+            <EditIcon />
           </motion.div>
         </motion.div>
         <motion.div layout whileHover={{ scale: 1.2 }}>
