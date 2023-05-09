@@ -56,7 +56,7 @@ function ItemsPage() {
     setModal({ showBackground: true, isGeneralModalOpen: true })
 
   return (
-    <div className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
+    <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">
       <div className="w-[650px]">
         <ItemsHeader
           openGeneralModal={openGeneralModal}
@@ -65,7 +65,7 @@ function ItemsPage() {
           editMode={editMode}
           setEditMode={setEditMode}
         />
-        <ItemsList items={items} itemType={itemType} />
+        <ItemsList items={items} itemType={itemType} editMode={editMode} />
         <AddNewModals modal={modal} setModal={setModal} />
       </div>
     </div>
