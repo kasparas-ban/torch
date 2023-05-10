@@ -8,42 +8,51 @@ const goals: Goal[] = [
   {
     goalId: 1,
     title: "Make a todo app",
+    progress: 30,
     tasks: [
       {
         taskId: 1,
         title: "Make a Figma sketch",
+        progress: 20,
       },
       {
         taskId: 2,
         title: "Learn Next.js",
+        progress: 30,
       },
       {
         taskId: 3,
         title: "Make a timer app",
+        progress: 40,
       },
     ],
   },
   {
     goalId: 2,
     title: "Learn to play chess",
+    progress: 67,
     tasks: [
       {
         taskId: 4,
         title: "Learn chess rules",
+        progress: 54,
       },
       {
         taskId: 5,
         title: "Learn opening moves",
+        progress: 89,
       },
       {
         taskId: 6,
         title: "Play a match with dad",
+        progress: 61,
       },
     ],
   },
   {
     goalId: 3,
     title: 'Finish "The Shape of Space"',
+    progress: 94,
     tasks: [],
   },
 ]

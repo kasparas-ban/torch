@@ -187,7 +187,7 @@ function Item({
       </motion.div>
       <AnimatePresence initial={false}>
         {showEditPanel && (
-          <ItemEditPanel key={`goal_${item.goalId}_edit_panel`} />
+          <ItemEditPanel key={`goal_${item.goalId}_edit_panel`} item={item} />
         )}
       </AnimatePresence>
       <AnimatePresence initial={false}>
@@ -205,11 +205,16 @@ function Item({
   )
 }
 
-function ItemEditPanel() {
+function ItemEditPanel({ item }: { item: Goal | Task }) {
+  const isGoal = !!(item as Goal)?.goalId
   return (
     <motion.div
       layout
-      className="mx-auto flex w-[400px] justify-between max-[500px]:w-full"
+      className={`mx-auto flex ${
+        isGoal
+          ? "w-[400px] max-[500px]:w-full"
+          : "w-[320px] max-[400px]:w-full max-[400px]:px-6"
+      } justify-between`}
       initial={{ height: 0, opacity: 0, marginTop: 0 }}
       animate={{ height: "auto", opacity: 1, marginTop: 12 }}
       exit={{ height: 0, opacity: 0, marginTop: 0 }}
@@ -221,13 +226,15 @@ function ItemEditPanel() {
         <TickIcon className="mx-auto" />
         Done
       </motion.div>
-      <motion.div
-        className="flex shrink-0 cursor-pointer select-none flex-col"
-        whileHover={{ scale: 1.1 }}
-      >
-        <AddItemIcon className="mx-auto" />
-        Add task
-      </motion.div>
+      {isGoal && (
+        <motion.div
+          className="flex shrink-0 cursor-pointer select-none flex-col"
+          whileHover={{ scale: 1.1 }}
+        >
+          <AddItemIcon className="mx-auto" />
+          Add task
+        </motion.div>
+      )}
       <motion.div
         className="flex shrink-0 cursor-pointer select-none flex-col"
         whileHover={{ scale: 1.1 }}
@@ -332,7 +339,10 @@ function ItemSublist({
             </motion.li>
             <AnimatePresence initial={false}>
               {showEditPanel(task) && (
-                <ItemEditPanel key={`task_${task.taskId}_edit_panel`} />
+                <ItemEditPanel
+                  key={`task_${task.taskId}_edit_panel`}
+                  item={task}
+                />
               )}
             </AnimatePresence>
           </>
