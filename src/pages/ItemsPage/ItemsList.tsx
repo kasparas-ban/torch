@@ -9,6 +9,7 @@ import { ReactComponent as TickIcon } from "../../assets/tick.svg"
 import { ReactComponent as AddItemIcon } from "../../assets/add_item.svg"
 import { ReactComponent as StatsIcon } from "../../assets/stats.svg"
 import { ReactComponent as DeleteIcon } from "../../assets/delete.svg"
+import ItemProgress from "./ProgressBar"
 
 const sublistVariant = {
   initial: { opacity: 0, height: 0, marginTop: 0 },
@@ -155,14 +156,15 @@ function Item({
         )}
         <motion.div
           layout
-          className={`flex w-full cursor-pointer rounded-full py-3 px-6 ${
-            editMode && !showEditPanel ? "bg-gray-300" : "bg-red-400"
+          className={`relative flex w-full cursor-pointer overflow-hidden rounded-full py-3 px-6 ${
+            editMode && !showEditPanel ? "bg-gray-300" : "bg-red-300"
           }`}
           whileHover={{
             scale: 1.02,
           }}
         >
-          <motion.div className="select-none">{item.title}</motion.div>
+          <ItemProgress progress={item.progress} />
+          <motion.div className="z-10 select-none">{item.title}</motion.div>
           {containsSublist && (
             <motion.div
               layout
@@ -317,14 +319,15 @@ function ItemSublist({
               )}
               <div className="my-auto aspect-square w-4 rounded-full bg-gray-400"></div>
               <motion.div
-                className={`flex w-full cursor-pointer rounded-full py-3 px-6 ${
+                className={`relative flex w-full cursor-pointer overflow-hidden rounded-full py-3 px-6 ${
                   editMode && !showEditPanel(task)
                     ? "bg-gray-300"
-                    : "bg-red-400"
+                    : "bg-red-300"
                 }`}
                 whileHover={{ scale: 1.02 }}
               >
-                <div className="select-none">{task.title}</div>
+                <ItemProgress progress={task.progress} />
+                <div className="z-10 select-none">{task.title}</div>
               </motion.div>
               {!editMode && (
                 <motion.div
