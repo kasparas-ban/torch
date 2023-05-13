@@ -75,11 +75,19 @@ export default function ItemsList({
 
   return (
     <>
-      {editMode && (
-        <motion.div layout className="mb-6 flex justify-center font-bold">
-          {`Select a goal/task to edit`}
-        </motion.div>
-      )}
+      <AnimatePresence mode="popLayout">
+        {editMode && (
+          <motion.div
+            layout
+            className="mb-6 flex justify-center font-bold"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {`Select a goal/task to edit`}
+          </motion.div>
+        )}
+      </AnimatePresence>
       {items.length ? (
         <motion.ul className="space-y-3" ref={scope}>
           {items.map((item, idx) => (

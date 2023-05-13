@@ -64,9 +64,18 @@ export function ItemsHeader({
     setEditMode(prev => !prev)
   }
 
+  const closeEditMode = () => {
+    setEditMode(false)
+    setEditItem(undefined)
+  }
+
   return (
     <div className="mb-8 flex">
-      <ItemsTypeDropdown itemType={itemType} setItemType={setItemType} />
+      <ItemsTypeDropdown
+        itemType={itemType}
+        setItemType={setItemType}
+        closeEditMode={closeEditMode}
+      />
       <div className="mt-7 ml-auto flex space-x-4">
         <motion.div
           layout
@@ -96,9 +105,11 @@ export function ItemsHeader({
 function ItemsTypeDropdown({
   itemType,
   setItemType,
+  closeEditMode,
 }: {
   itemType: ItemType
   setItemType: (type: ItemType) => void
+  closeEditMode: () => void
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownSelectRef = useRef<HTMLDivElement | null>(null)
@@ -171,6 +182,7 @@ function ItemsTypeDropdown({
                   tabIndex={-1}
                   id="menu-item-0"
                   onClick={() => {
+                    closeEditMode()
                     setItemType(typeOptions[0])
                     setIsDropdownOpen(false)
                   }}
@@ -183,6 +195,7 @@ function ItemsTypeDropdown({
                   tabIndex={-1}
                   id="menu-item-1"
                   onClick={() => {
+                    closeEditMode()
                     setItemType(typeOptions[1])
                     toggleDropdown()
                   }}
