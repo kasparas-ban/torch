@@ -1,29 +1,32 @@
 import { useState } from "react"
 import { AddNewModals, ModalState } from "../../components/AddNewModals"
-import { Goal, ItemType, Task } from "../../types"
+import { GeneralItem, Goal, ItemType } from "../../types"
 import { ItemsHeader } from "./ItemsHeader"
 import ItemsList from "./ItemsList"
 
-const goals: Goal[] = [
+const goalsData: Goal[] = [
   {
     goalId: 1,
     title: "Make a todo app",
     progress: 0.3,
     tasks: [
       {
-        taskId: 1,
+        taskId: 100,
         title: "Make a Figma sketch",
         progress: 0.2,
+        duration: { hours: 2, minutes: 0 },
       },
       {
-        taskId: 2,
+        taskId: 200,
         title: "Learn Next.js",
         progress: 0.3,
+        duration: { hours: 2, minutes: 0 },
       },
       {
-        taskId: 3,
+        taskId: 300,
         title: "Make a timer app",
         progress: 0.4,
+        duration: { hours: 2, minutes: 0 },
       },
     ],
   },
@@ -33,19 +36,22 @@ const goals: Goal[] = [
     progress: 0.67,
     tasks: [
       {
-        taskId: 4,
+        taskId: 400,
         title: "Learn chess rules",
         progress: 0.54,
+        duration: { hours: 2, minutes: 0 },
       },
       {
-        taskId: 5,
+        taskId: 500,
         title: "Learn opening moves",
         progress: 0.89,
+        duration: { hours: 2, minutes: 0 },
       },
       {
-        taskId: 6,
+        taskId: 600,
         title: "Play a match with dad",
         progress: 0.61,
+        duration: { hours: 2, minutes: 0 },
       },
     ],
   },
@@ -58,18 +64,28 @@ const goals: Goal[] = [
 ]
 
 function ItemsPage() {
-  const [editItem, setEditItem] = useState<Goal | Task | undefined>()
+  const [editItem, setEditItem] = useState<GeneralItem | undefined>()
   const [editMode, setEditMode] = useState(false)
   const [modal, setModal] = useState<ModalState>({
     showBackground: false,
     isAddTaskModalOpen: false,
   })
 
-  const [itemType, setItemType] = useState<ItemType>("GOALS")
-  const items = itemType === "TASKS" ? [] : itemType === "GOALS" ? goals : []
+  const [itemType, setItemType] = useState<ItemType>("GOAL")
+  const items = itemType === "TASK" ? [] : itemType === "GOAL" ? goalsData : []
 
   const openGeneralModal = () =>
     setModal({ showBackground: true, isGeneralModalOpen: true })
+
+  const openEditItemModal = (itemType: ItemType) =>
+    setModal({
+      showBackground: true,
+      ...(itemType === "TASK"
+        ? { isAddTaskModalOpen: true }
+        : itemType === "GOAL"
+        ? { isAddGoalModalOpen: true }
+        : { isAddDreamModalOpen: true }),
+    })
 
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">
@@ -88,8 +104,9 @@ function ItemsPage() {
           editMode={editMode}
           editItem={editItem}
           setEditItem={setEditItem}
+          openEditItemModal={openEditItemModal}
         />
-        <AddNewModals modal={modal} setModal={setModal} />
+        <AddNewModals modal={modal} setModal={setModal} editItem={editItem} />
       </div>
     </div>
   )

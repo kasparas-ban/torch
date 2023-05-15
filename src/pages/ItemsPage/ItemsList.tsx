@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { AnimatePresence, motion, stagger, useAnimate } from "framer-motion"
-import { Goal, ItemType, Task } from "../../types"
+import { GeneralItem, Goal, ItemType, Task } from "../../types"
 import { ReactComponent as TimerStartIcon } from "../../assets/timer_start.svg"
 import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
 import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
@@ -50,12 +50,14 @@ export default function ItemsList({
   editMode,
   editItem,
   setEditItem,
+  openEditItemModal,
 }: {
   items: Goal[]
   itemType: ItemType
   editMode: boolean
-  editItem: Goal | Task | undefined
-  setEditItem: React.Dispatch<React.SetStateAction<Goal | Task | undefined>>
+  editItem?: GeneralItem
+  setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
+  openEditItemModal: (itemType: ItemType) => void
 }) {
   const [scope, animate] = useAnimate()
 
@@ -97,6 +99,7 @@ export default function ItemsList({
               editMode={editMode}
               editItem={editItem}
               setEditItem={setEditItem}
+              openEditItemModal={openEditItemModal}
             />
           ))}
         </motion.ul>
@@ -107,9 +110,9 @@ export default function ItemsList({
             <motion.div className="flex" whileHover={{ scale: 1.05 }}>
               <PlusSmallIcon />
               Add new{" "}
-              {itemType === "TASKS"
+              {itemType === "TASK"
                 ? "task"
-                : itemType === "GOALS"
+                : itemType === "GOAL"
                 ? "goal"
                 : "dream"}
             </motion.div>
@@ -125,11 +128,13 @@ function Item({
   editMode,
   editItem,
   setEditItem,
+  openEditItemModal,
 }: {
   item: Goal
   editMode: boolean
-  editItem: Goal | Task | undefined
-  setEditItem: React.Dispatch<React.SetStateAction<Goal | Task | undefined>>
+  editItem?: GeneralItem
+  setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
+  openEditItemModal: (itemType: ItemType) => void
 }) {
   const [showSublist, setShowSublist] = useState(true)
   const containsSublist = !!item.tasks.length
@@ -197,7 +202,11 @@ function Item({
       </motion.div>
       <AnimatePresence initial={false}>
         {showEditPanel && (
-          <ItemEditPanel key={`goal_${item.goalId}_edit_panel`} item={item} />
+          <ItemEditPanel
+            key={`goal_${item.goalId}_edit_panel`}
+            item={item}
+            openEditItemModal={openEditItemModal}
+          />
         )}
       </AnimatePresence>
       <AnimatePresence initial={false}>
@@ -208,6 +217,7 @@ function Item({
             editMode={editMode}
             editItem={editItem}
             setEditItem={setEditItem}
+            openEditItemModal={openEditItemModal}
           />
         )}
       </AnimatePresence>
@@ -215,7 +225,13 @@ function Item({
   )
 }
 
-function ItemEditPanel({ item }: { item: Goal | Task }) {
+function ItemEditPanel({
+  item,
+  openEditItemModal,
+}: {
+  item: Goal | Task
+  openEditItemModal: (itemType: ItemType) => void
+}) {
   const isGoal = !!(item as Goal)?.goalId
   return (
     <motion.div
@@ -255,6 +271,7 @@ function ItemEditPanel({ item }: { item: Goal | Task }) {
       <motion.div
         className="flex shrink-0 cursor-pointer select-none flex-col"
         whileHover={{ scale: 1.1 }}
+        onClick={() => openEditItemModal("TASK")}
       >
         <EditIcon className="mx-auto" />
         Edit
@@ -275,11 +292,13 @@ function ItemSublist({
   editMode,
   editItem,
   setEditItem,
+  openEditItemModal,
 }: {
   tasks: Task[]
   editMode: boolean
-  editItem: Goal | Task | undefined
-  setEditItem: React.Dispatch<React.SetStateAction<Goal | Task | undefined>>
+  editItem?: GeneralItem
+  setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
+  openEditItemModal: (itemType: ItemType) => void
 }) {
   const showEditPanel = (task: Task) =>
     editMode && task.taskId === (editItem as Task)?.taskId
@@ -301,11 +320,10 @@ function ItemSublist({
       exit="exit"
     >
       <motion.ul layout className="space-y-3">
-        {tasks.map((task, idx) => (
-          <>
+        {tasks.map(task => (
+          <Fragment key={task.taskId}>
             <motion.li
               layout
-              key={idx}
               className={`flex space-x-3 ${editMode ? "" : "ml-6"}`}
               variants={subitemVariant}
             >
@@ -353,10 +371,11 @@ function ItemSublist({
                 <ItemEditPanel
                   key={`task_${task.taskId}_edit_panel`}
                   item={task}
+                  openEditItemModal={openEditItemModal}
                 />
               )}
             </AnimatePresence>
-          </>
+          </Fragment>
         ))}
       </motion.ul>
     </motion.div>

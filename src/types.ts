@@ -2,6 +2,11 @@ export interface Task {
   taskId: number
   title: string
   progress: number
+  duration: { hours: number | null; minutes: number | null }
+  priority?: "LOW" | "MEDIUM" | "HIGH"
+  targetDate?: Date | null
+  recurring?: boolean
+  goal?: any | null
 }
 
 export interface Goal {
@@ -11,4 +16,15 @@ export interface Goal {
   tasks: Task[]
 }
 
-export type ItemType = "TASKS" | "GOALS" | "DREAMS"
+export interface Dream {
+  dreamId: number
+  title: string
+  progress: number
+  goals: Goal[]
+}
+
+export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
+
+export type ItemType = "TASK" | "GOAL" | "DREAM"
+
+export type GeneralItem = Task | Goal | Dream

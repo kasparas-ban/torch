@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import {
   DateInput,
@@ -7,6 +7,7 @@ import {
   PriorityType,
   TextInput,
 } from "../Inputs"
+import { Task } from "../../../types"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
@@ -15,6 +16,7 @@ import "../inputStyles.css"
 interface IAddTaskModal {
   showModal: boolean
   handleBack: () => void
+  initialTask?: Task
 }
 
 interface ITask {
@@ -47,13 +49,31 @@ const formVariants = {
   },
 }
 
-function AddTaskModal({ showModal, handleBack }: IAddTaskModal) {
+function AddTaskModal({ showModal, handleBack, initialTask }: IAddTaskModal) {
+  const inputOrder = initialTask
+    ? Object.keys(initialTask).filter(
+        key =>
+          initialTask?.[key as keyof Task] !== undefined &&
+          key !== "taskId" &&
+          key !== "progress"
+      )
+    : []
+
   const defaultTask = {
-    title: "",
-    duration: { hours: 0, minutes: 30 },
-    inputOrder: [],
+    title: initialTask?.title || "",
+    duration: initialTask?.duration || { hours: 0, minutes: 30 },
+    priority: initialTask?.priority,
+    targetDate: initialTask?.targetDate,
+    recurring: initialTask?.recurring,
+    goal: initialTask?.goal,
+    inputOrder: inputOrder,
   }
+
   const [task, setTask] = useState<ITask>(defaultTask)
+
+  useEffect(() => {
+    setTask(defaultTask)
+  }, [initialTask])
 
   return (
     <AnimatePresence>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { capitalizeString } from "../../helpers"
-import { Goal, ItemType, Task } from "../../types"
+import { GeneralItem, ItemType, ItemTypeLabel } from "../../types"
 import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
 import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
@@ -57,7 +57,7 @@ export function ItemsHeader({
   setItemType: (type: ItemType) => void
   editMode: boolean
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>
-  setEditItem: React.Dispatch<React.SetStateAction<Goal | Task | undefined>>
+  setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
 }) {
   const toggleEditMode = () => {
     if (editMode) setEditItem(undefined)
@@ -116,9 +116,17 @@ function ItemsTypeDropdown({
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null)
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev)
 
-  const typeOptions = ["TASKS", "GOALS", "DREAMS"].filter(
-    type => type !== itemType
-  ) as ItemType[]
+  const selectedLabel =
+    itemType === "TASK" ? "Tasks" : itemType === "GOAL" ? "Goals" : "Dreams"
+  const typeOptions = ["Tasks", "Goals", "Dreams"].filter(
+    type => type !== selectedLabel
+  ) as ItemTypeLabel[]
+
+  const handleTypeChange = (type: ItemTypeLabel) => {
+    const selectedType =
+      type === "Tasks" ? "TASK" : type === "Goals" ? "GOAL" : "DREAM"
+    setItemType(selectedType)
+  }
 
   useEffect(() => {
     if (!dropdownMenuRef.current) return
@@ -183,7 +191,7 @@ function ItemsTypeDropdown({
                   id="menu-item-0"
                   onClick={() => {
                     closeEditMode()
-                    setItemType(typeOptions[0])
+                    handleTypeChange(typeOptions[0])
                     setIsDropdownOpen(false)
                   }}
                 >
@@ -196,7 +204,7 @@ function ItemsTypeDropdown({
                   id="menu-item-1"
                   onClick={() => {
                     closeEditMode()
-                    setItemType(typeOptions[1])
+                    handleTypeChange(typeOptions[1])
                     toggleDropdown()
                   }}
                 >

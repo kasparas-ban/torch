@@ -4,6 +4,7 @@ import AddGoalModal from "./Modals/AddGoalModal/AddGoalModal"
 import AddGeneralModal from "./Modals/AddGeneralModal/AddGeneralModal"
 import AddTaskModal from "./Modals/AddTaskModal/AddTaskModal"
 import AddDreamModal from "./Modals/AddDreamModal/AddDreamModal"
+import { GeneralItem, Task } from "../types"
 
 export interface ModalState {
   showBackground: boolean
@@ -16,9 +17,11 @@ export interface ModalState {
 export function AddNewModals({
   modal,
   setModal,
+  editItem,
 }: {
   modal: ModalState
   setModal: React.Dispatch<React.SetStateAction<ModalState>>
+  editItem?: GeneralItem
 }) {
   const backgroundRef = useRef<HTMLDivElement | null>(null)
 
@@ -56,6 +59,7 @@ export function AddNewModals({
       <AddTaskModal
         showModal={!!modal?.isAddTaskModalOpen}
         handleBack={openGeneralModal}
+        initialTask={editItem as Task}
       />
       <AddGoalModal
         showModal={!!modal?.isAddGoalModalOpen}
