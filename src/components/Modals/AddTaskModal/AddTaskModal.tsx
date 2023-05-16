@@ -318,7 +318,9 @@ function AddTaskSections({
         </div>
       </button>
       <button
-        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        className={`flex rounded-xl ${
+          task.priority ? "bg-[#d0d0d0]" : "bg-gray-200"
+        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
           task.priority ? removePriority() : addPriority()
@@ -334,7 +336,9 @@ function AddTaskSections({
         </div>
       </button>
       <button
-        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        className={`flex rounded-xl ${
+          task.targetDate !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
+        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
           task.targetDate === undefined ? addTargetDate() : removeTargetDate()
@@ -350,13 +354,15 @@ function AddTaskSections({
         </div>
       </button>
       <button
-        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        className={`flex rounded-xl ${
+          task.goal !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
+        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
           task.goal === undefined ? addGoal() : removeGoal()
         }}
       >
-        Assign Goal
+        Assign goal
         <div className="relative top-1 ml-0.5">
           {task.goal === undefined ? (
             <PlusSmallIcon className="h-4 w-4" />
