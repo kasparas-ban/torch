@@ -91,11 +91,17 @@ export function ItemsHeader({
             <EditIcon />
           </motion.div>
         </motion.div>
-        <motion.div layout whileHover={{ scale: 1.2 }}>
+        <motion.div layout whileHover={{ scale: 1.2 }} onClick={closeEditMode}>
           <FilterIcon className="cursor-pointer" />
         </motion.div>
         <motion.div layout whileHover={{ scale: 1.2 }}>
-          <PlusIcon className="cursor-pointer" onClick={openGeneralModal} />
+          <PlusIcon
+            className="cursor-pointer"
+            onClick={() => {
+              closeEditMode()
+              openGeneralModal()
+            }}
+          />
         </motion.div>
       </div>
     </div>

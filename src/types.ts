@@ -14,6 +14,9 @@ export interface Goal {
   title: string
   progress: number
   tasks: Task[]
+  dream?: Dream
+  targetDate?: Date | null
+  priority?: "LOW" | "MEDIUM" | "HIGH"
 }
 
 export interface Dream {

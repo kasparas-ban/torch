@@ -176,7 +176,10 @@ function Item({
             scale: 1.02,
           }}
         >
-          <ItemProgress progress={item.progress} />
+          <ItemProgress
+            progress={item.progress}
+            inEditMode={editMode && !showEditPanel}
+          />
           <motion.div className="z-10 select-none">{item.title}</motion.div>
           {containsSublist && (
             <motion.div
@@ -352,7 +355,10 @@ function ItemSublist({
                 }`}
                 whileHover={{ scale: 1.02 }}
               >
-                <ItemProgress progress={task.progress} />
+                <ItemProgress
+                  progress={task.progress}
+                  inEditMode={editMode && !showEditPanel(task)}
+                />
                 <div className="z-10 select-none">{task.title}</div>
               </motion.div>
               {!editMode && (

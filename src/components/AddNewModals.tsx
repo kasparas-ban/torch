@@ -18,10 +18,12 @@ export function AddNewModals({
   modal,
   setModal,
   editItem,
+  setEditItem,
 }: {
   modal: ModalState
   setModal: React.Dispatch<React.SetStateAction<ModalState>>
   editItem?: GeneralItem
+  setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
 }) {
   const backgroundRef = useRef<HTMLDivElement | null>(null)
 
@@ -45,7 +47,10 @@ export function AddNewModals({
   const openDreamModal = () =>
     setModal({ showBackground: true, isAddDreamModalOpen: true })
 
-  const closeModal = () => setModal({ showBackground: false })
+  const closeModal = () => {
+    setEditItem(undefined)
+    setModal({ showBackground: false })
+  }
 
   return (
     <>
@@ -58,8 +63,8 @@ export function AddNewModals({
       />
       <AddTaskModal
         showModal={!!modal?.isAddTaskModalOpen}
-        handleBack={openGeneralModal}
-        initialTask={editItem as Task}
+        handleBack={editItem ? closeModal : openGeneralModal}
+        initialTask={editItem as Task | undefined}
       />
       <AddGoalModal
         showModal={!!modal?.isAddGoalModalOpen}

@@ -7,26 +7,31 @@ import ItemsList from "./ItemsList"
 const goalsData: Goal[] = [
   {
     goalId: 1,
-    title: "Make a todo app",
+    title: "Make a todo/timer app",
     progress: 0.3,
+    targetDate: new Date("2023-09-01"),
+    priority: "HIGH",
     tasks: [
       {
         taskId: 100,
         title: "Make a Figma sketch",
         progress: 0.2,
         duration: { hours: 2, minutes: 0 },
+        priority: "HIGH",
       },
       {
         taskId: 200,
         title: "Learn Next.js",
         progress: 0.3,
         duration: { hours: 2, minutes: 0 },
+        priority: "LOW",
       },
       {
         taskId: 300,
-        title: "Make a timer app",
+        title: "Code frontend",
         progress: 0.4,
         duration: { hours: 2, minutes: 0 },
+        priority: "HIGH",
       },
     ],
   },
@@ -34,6 +39,7 @@ const goalsData: Goal[] = [
     goalId: 2,
     title: "Learn to play chess",
     progress: 0.67,
+    priority: "LOW",
     tasks: [
       {
         taskId: 400,
@@ -49,9 +55,10 @@ const goalsData: Goal[] = [
       },
       {
         taskId: 600,
-        title: "Play a match with dad",
+        title: "Play a match with someone",
         progress: 0.61,
         duration: { hours: 2, minutes: 0 },
+        recurring: true,
       },
     ],
   },
@@ -60,6 +67,7 @@ const goalsData: Goal[] = [
     title: 'Finish "The Shape of Space"',
     progress: 0.94,
     tasks: [],
+    priority: "MEDIUM",
   },
 ]
 
@@ -106,7 +114,12 @@ function ItemsPage() {
           setEditItem={setEditItem}
           openEditItemModal={openEditItemModal}
         />
-        <AddNewModals modal={modal} setModal={setModal} editItem={editItem} />
+        <AddNewModals
+          modal={modal}
+          setModal={setModal}
+          editItem={editItem}
+          setEditItem={setEditItem}
+        />
       </div>
     </div>
   )

@@ -96,7 +96,7 @@ function AddTaskModal({ showModal, handleBack, initialTask }: IAddTaskModal) {
               <BackIcon />
             </motion.button>
             <motion.div layout className="text-center text-5xl font-semibold">
-              New Task
+              {initialTask ? "Edit Task" : "New Task"}
             </motion.div>
             <div className="mx-auto">
               <TaskForm task={task} setTask={setTask} />
@@ -196,6 +196,7 @@ function TaskForm({
                   )
                 )
               return (
+                input === "targetDate" &&
                 task.targetDate !== undefined && (
                   <motion.div
                     layout
