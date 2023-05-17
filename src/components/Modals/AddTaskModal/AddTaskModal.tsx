@@ -5,9 +5,10 @@ import {
   DurationInput,
   PriorityInput,
   PriorityType,
+  SelectInput,
   TextInput,
 } from "../Inputs"
-import { Task } from "../../../types"
+import { Dream, Goal, Task } from "../../../types"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
@@ -161,13 +162,12 @@ function TaskForm({
                       animate="default"
                       exit="remove"
                     >
-                      <TextInput
+                      <SelectInput
                         id="task_goal"
                         value={task.goal}
-                        setValue={(input: string) =>
-                          setTask(prev => ({ ...prev, goal: input }))
+                        setValue={(value: Goal | Dream | null) =>
+                          setTask(prev => ({ ...prev, goal: value }))
                         }
-                        inputName="task_goal"
                         label="Goal"
                       />
                     </motion.div>

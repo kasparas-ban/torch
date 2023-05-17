@@ -1,4 +1,6 @@
 import { useRef } from "react"
+import SelectField from "./SelectInput"
+import { Dream, Goal } from "../../types"
 import { ReactComponent as EditIcon } from "../../assets/edit.svg"
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
 import { ReactComponent as MinusIcon } from "../../assets/minus.svg"
@@ -160,6 +162,71 @@ export function TextInput({
       >
         <EditIcon />
       </div>
+    </div>
+  )
+}
+
+type SelectOption =
+  | ({
+      label: string
+      value: number
+    } & Dream)
+  | ({
+      label: string
+      value: number
+    } & Goal)
+
+export function SelectInput({
+  id,
+  value,
+  setValue,
+  label,
+}: {
+  id: string
+  value?: Goal | Dream
+  setValue: (value: Goal | Dream | null) => void
+  label?: string
+}) {
+  const testGoal: SelectOption = {
+    goalId: 2,
+    title: "Test",
+    progress: 0.4,
+    tasks: [],
+    label: "Test",
+    value: 2,
+  }
+
+  const selectedOption = value
+    ? {
+        ...value,
+        label: value.title,
+        value: (value as Goal).goalId || (value as Dream).dreamId,
+      }
+    : null
+
+  return (
+    <div className="relative w-full">
+      {label && (
+        <label
+          htmlFor={id}
+          className="cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:text-sm peer-focus:text-sm peer-focus:text-gray-600"
+        >
+          {label}
+        </label>
+      )}
+      <SelectField
+        value={selectedOption}
+        onChange={option => {
+          if (option) {
+            const { label, value, ...item } = option
+            setValue(item)
+          } else {
+            setValue(option)
+          }
+        }}
+        options={[testGoal]}
+        isClearable
+      />
     </div>
   )
 }
