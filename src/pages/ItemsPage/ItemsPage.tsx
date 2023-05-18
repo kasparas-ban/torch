@@ -31,6 +31,7 @@ const goalsData: Goal[] = [
         title: "Code frontend",
         progress: 0.4,
         duration: { hours: 2, minutes: 0 },
+        targetDate: new Date("2023-08-01"),
         priority: "HIGH",
       },
     ],
@@ -114,12 +115,7 @@ function ItemsPage() {
           setEditItem={setEditItem}
           openEditItemModal={openEditItemModal}
         />
-        <AddNewModals
-          modal={modal}
-          setModal={setModal}
-          editItem={editItem}
-          setEditItem={setEditItem}
-        />
+        <AddNewModals modal={modal} setModal={setModal} editItem={editItem} />
       </div>
     </div>
   )

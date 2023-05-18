@@ -386,7 +386,7 @@ function TimerInput({
         <div className="flex h-9 flex-grow flex-row max-[420px]:basis-full">
           <button
             data-action="decrement"
-            className="h-full cursor-pointer rounded-l-xl bg-gray-300 px-2.5 text-gray-500 outline-none drop-shadow-sm hover:bg-gray-400 hover:text-gray-100"
+            className="h-full cursor-pointer rounded-l-xl bg-gray-400 px-2.5 text-gray-500 outline-none drop-shadow-sm hover:bg-gray-400 hover:text-gray-100"
             onClick={e => {
               e.preventDefault()
               setDuration(
@@ -414,7 +414,7 @@ function TimerInput({
           ></input>
           <button
             data-action="increment"
-            className="h-full cursor-pointer rounded-r-xl bg-gray-300 px-2 text-gray-500 drop-shadow-sm hover:bg-gray-400 hover:text-gray-100"
+            className="h-full cursor-pointer rounded-r-xl bg-gray-400 px-2 text-gray-500 drop-shadow-sm hover:bg-gray-400 hover:text-gray-100"
             onClick={e => {
               e.preventDefault()
               setDuration(
@@ -434,7 +434,7 @@ function TimerInput({
         <div className="flex h-9 flex-grow flex-row">
           <button
             data-action="decrement"
-            className="h-full cursor-pointer rounded-l-xl bg-gray-300 px-1 text-gray-500 drop-shadow-sm hover:bg-gray-400 hover:text-gray-100"
+            className="h-full cursor-pointer rounded-l-xl bg-gray-400 px-1 text-gray-500 drop-shadow-sm hover:bg-gray-400 hover:text-gray-100"
             onClick={e => {
               e.preventDefault()
               setDuration(
@@ -462,7 +462,7 @@ function TimerInput({
           ></input>
           <button
             data-action="increment"
-            className="h-full cursor-pointer rounded-r-xl bg-gray-300 px-2 text-gray-500 drop-shadow-sm hover:bg-gray-400 hover:text-gray-100"
+            className="h-full cursor-pointer rounded-r-xl bg-gray-400 px-2 text-gray-500 drop-shadow-sm hover:bg-gray-400 hover:text-gray-100"
             onClick={e => {
               e.preventDefault()
               setDuration(

@@ -1,15 +1,17 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { DateInput, PriorityInput, PriorityType, TextInput } from "../Inputs"
 import { Subtasks } from "./Subtasks"
+import { Goal } from "../../../types"
 import "../inputStyles.css"
 
 interface IAddGoalModal {
   showModal: boolean
   handleBack: () => void
+  initialGoal?: Goal
 }
 
 export interface IGoal {
@@ -51,10 +53,43 @@ const formVariants = {
   },
 }
 
-function AddGoalModal({ showModal, handleBack }: IAddGoalModal) {
-  const defaultGoal = { title: "", inputOrder: [] }
+function AddGoalModal({ showModal, handleBack, initialGoal }: IAddGoalModal) {
+  const inputOrder = initialGoal
+    ? [
+        ...(initialGoal.priority ? ["priority"] : []),
+        ...(initialGoal.targetDate ? ["targetDate"] : []),
+        ...(initialGoal.dream ? ["dream"] : []),
+      ]
+    : []
+
+  const defaultGoal: IGoal = {
+    title: initialGoal?.title || "",
+    ...(initialGoal?.priority ? { priority: initialGoal?.priority } : {}),
+    ...(initialGoal?.targetDate ? { targetDate: initialGoal?.targetDate } : {}),
+    ...(initialGoal?.dream ? { dream: initialGoal?.dream } : {}),
+    subtasks:
+      initialGoal?.tasks?.map((task, idx) => ({
+        id: idx,
+        title: task.title,
+        ...(task.priority ? { priority: task.priority } : {}),
+        ...(task.duration ? { duration: task.duration } : {}),
+        ...(task.targetDate ? { targetDate: task.targetDate } : {}),
+        ...(task.recurring ? { recurring: task.recurring } : {}),
+        inputOrder: [
+          ...(task.priority ? ["priority"] : []),
+          ...(task.duration ? ["duration"] : []),
+          ...(task.targetDate ? ["targetDate"] : []),
+        ],
+      })) ?? [],
+    inputOrder,
+  }
+
   const [goal, setGoal] = useState<IGoal>(defaultGoal)
   const modalRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    setGoal(defaultGoal)
+  }, [initialGoal])
 
   return (
     <AnimatePresence>
@@ -78,7 +113,7 @@ function AddGoalModal({ showModal, handleBack }: IAddGoalModal) {
               <BackIcon />
             </motion.button>
             <motion.div layout className="text-center text-5xl font-semibold">
-              New Goal
+              {initialGoal ? "Edit Goal" : "New Goal"}
             </motion.div>
             <div className="mx-auto">
               <GoalForm goal={goal} setGoal={setGoal} modalRef={modalRef} />
@@ -99,7 +134,7 @@ function GoalForm({
   setGoal: React.Dispatch<React.SetStateAction<IGoal>>
   modalRef: React.MutableRefObject<HTMLDivElement | null>
 }) {
-  const subtaskIdRef = useRef(0)
+  const subtaskIdRef = useRef(goal.subtasks?.length || 0)
 
   const addSubtask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
@@ -295,7 +330,9 @@ function AddGoalSections({
   return (
     <motion.div layout className="my-4 flex flex-wrap justify-center gap-2">
       <button
-        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        className={`flex rounded-xl ${
+          goal.dream !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
+        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
           goal.dream === undefined ? addDream() : removeDream()
@@ -311,7 +348,9 @@ function AddGoalSections({
         </div>
       </button>
       <button
-        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        className={`flex rounded-xl ${
+          goal.targetDate !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
+        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
           goal.targetDate === undefined ? addTargetDate() : removeTargetDate()
@@ -327,7 +366,9 @@ function AddGoalSections({
         </div>
       </button>
       <button
-        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        className={`flex rounded-xl ${
+          goal.priority !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
+        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
           goal.priority ? removePriority() : addPriority()

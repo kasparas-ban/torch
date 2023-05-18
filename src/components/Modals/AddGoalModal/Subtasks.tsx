@@ -267,7 +267,7 @@ export function Subtasks({
                   </motion.div>
 
                   {subtask.inputOrder.map(input => {
-                    if (input === "priority")
+                    if (input === "priority") {
                       return (
                         <motion.div
                           layout
@@ -294,32 +294,35 @@ export function Subtasks({
                           />
                         </motion.div>
                       )
-                    return (
-                      <motion.div
-                        layout
-                        key={`subtask_target_date_${subtask.id}}`}
-                        className="relative"
-                        variants={formVariants}
-                        initial="addInitial"
-                        animate="default"
-                        exit="remove"
-                      >
-                        <DateInput
-                          id={`subtask_target_date_${subtask.id}`}
-                          value={subtask.targetDate}
-                          setValue={(input: string) =>
-                            setGoal(prev => ({
-                              ...prev,
-                              subtasks: prev.subtasks?.map(task =>
-                                task.id === subtask.id
-                                  ? { ...task, targetDate: new Date(input) }
-                                  : task
-                              ),
-                            }))
-                          }
-                        />
-                      </motion.div>
-                    )
+                    }
+                    if (input === "targetDate") {
+                      return (
+                        <motion.div
+                          layout
+                          key={`subtask_target_date_${subtask.id}}`}
+                          className="relative"
+                          variants={formVariants}
+                          initial="addInitial"
+                          animate="default"
+                          exit="remove"
+                        >
+                          <DateInput
+                            id={`subtask_target_date_${subtask.id}`}
+                            value={subtask.targetDate}
+                            setValue={(input: string) =>
+                              setGoal(prev => ({
+                                ...prev,
+                                subtasks: prev.subtasks?.map(task =>
+                                  task.id === subtask.id
+                                    ? { ...task, targetDate: new Date(input) }
+                                    : task
+                                ),
+                              }))
+                            }
+                          />
+                        </motion.div>
+                      )
+                    }
                   })}
 
                   <motion.div layout className="mb-1">

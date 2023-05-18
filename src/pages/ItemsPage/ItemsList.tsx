@@ -274,7 +274,7 @@ function ItemEditPanel({
       <motion.div
         className="flex shrink-0 cursor-pointer select-none flex-col"
         whileHover={{ scale: 1.1 }}
-        onClick={() => openEditItemModal("TASK")}
+        onClick={() => openEditItemModal(isGoal ? "GOAL" : "TASK")}
       >
         <EditIcon className="mx-auto" />
         Edit
