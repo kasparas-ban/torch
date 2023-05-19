@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import AddGoalModal from "./Modals/AddGoalModal/AddGoalModal"
 import AddGeneralModal from "./Modals/AddGeneralModal/AddGeneralModal"
 import AddTaskModal from "./Modals/AddTaskModal/AddTaskModal"
@@ -12,6 +12,7 @@ export interface ModalState {
   isAddTaskModalOpen?: boolean
   isAddGoalModalOpen?: boolean
   isAddDreamModalOpen?: boolean
+  addNewSubItem?: boolean
 }
 
 export function AddNewModals({
@@ -49,27 +50,32 @@ export function AddNewModals({
 
   return (
     <>
-      <AddGeneralModal
-        showModal={!!modal?.isGeneralModalOpen}
-        openAddTaskModal={openTaskModal}
-        openAddGoalModal={openGoalModal}
-        openAddDreamModal={openDreamModal}
-        closeModal={closeModal}
-      />
-      <AddTaskModal
-        showModal={!!modal?.isAddTaskModalOpen}
-        handleBack={editItem ? closeModal : openGeneralModal}
-        initialTask={editItem as Task}
-      />
-      <AddGoalModal
-        showModal={!!modal?.isAddGoalModalOpen}
-        handleBack={openGeneralModal}
-        initialGoal={editItem as Goal}
-      />
-      <AddDreamModal
-        showModal={!!modal?.isAddDreamModalOpen}
-        handleBack={openGeneralModal}
-      />
+      <AnimatePresence>
+        {!!modal?.isGeneralModalOpen && (
+          <AddGeneralModal
+            openAddTaskModal={openTaskModal}
+            openAddGoalModal={openGoalModal}
+            openAddDreamModal={openDreamModal}
+            closeModal={closeModal}
+          />
+        )}
+        {!!modal?.isAddTaskModalOpen && (
+          <AddTaskModal
+            handleBack={editItem ? closeModal : openGeneralModal}
+            initialTask={editItem as Task}
+          />
+        )}
+        {!!modal?.isAddGoalModalOpen && (
+          <AddGoalModal
+            handleBack={editItem ? closeModal : openGeneralModal}
+            initialGoal={editItem as Goal}
+            addTaskOnOpen={!!modal.addNewSubItem}
+          />
+        )}
+        {!!modal?.isAddDreamModalOpen && (
+          <AddDreamModal handleBack={openGeneralModal} />
+        )}
+      </AnimatePresence>
       {modal.showBackground && (
         <motion.div
           ref={backgroundRef}

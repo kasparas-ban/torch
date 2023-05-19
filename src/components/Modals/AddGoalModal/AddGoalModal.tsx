@@ -3,15 +3,21 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
-import { DateInput, PriorityInput, PriorityType, TextInput } from "../Inputs"
+import {
+  DateInput,
+  PriorityInput,
+  PriorityType,
+  SelectInput,
+  TextInput,
+} from "../Inputs"
 import { Subtasks } from "./Subtasks"
-import { Goal } from "../../../types"
+import { Dream, Goal } from "../../../types"
 import "../inputStyles.css"
 
 interface IAddGoalModal {
-  showModal: boolean
   handleBack: () => void
   initialGoal?: Goal
+  addTaskOnOpen?: boolean
 }
 
 export interface IGoal {
@@ -53,7 +59,11 @@ const formVariants = {
   },
 }
 
-function AddGoalModal({ showModal, handleBack, initialGoal }: IAddGoalModal) {
+function AddGoalModal({
+  handleBack,
+  initialGoal,
+  addTaskOnOpen,
+}: IAddGoalModal) {
   const inputOrder = initialGoal
     ? [
         ...(initialGoal.priority ? ["priority"] : []),
@@ -91,37 +101,41 @@ function AddGoalModal({ showModal, handleBack, initialGoal }: IAddGoalModal) {
     setGoal(defaultGoal)
   }, [initialGoal])
 
+  useEffect(() => {
+    if (addTaskOnOpen && modalRef.current) {
+      const addTaskButton = document.getElementById("add_subtask_button")
+      addTaskButton?.click()
+
+      setTimeout(() => {
+        const taskTitleInput = document.getElementById(
+          `subtask_title_${goal.subtasks ? goal.subtasks.length + 1 : 0}`
+        )
+        taskTitleInput?.focus()
+      }, 1000)
+    }
+  }, [addTaskOnOpen])
+
   return (
-    <AnimatePresence>
-      {showModal && (
-        <>
-          <motion.div
-            layout
-            ref={modalRef}
-            key="add_goal_modal"
-            className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
-            variants={modalVariants}
-            initial="initial"
-            animate="default"
-            exit="close"
-          >
-            <motion.button
-              layout
-              onClick={handleBack}
-              whileTap={{ scale: 0.95 }}
-            >
-              <BackIcon />
-            </motion.button>
-            <motion.div layout className="text-center text-5xl font-semibold">
-              {initialGoal ? "Edit Goal" : "New Goal"}
-            </motion.div>
-            <div className="mx-auto">
-              <GoalForm goal={goal} setGoal={setGoal} modalRef={modalRef} />
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+    <motion.div
+      layout
+      ref={modalRef}
+      key="add_goal_modal"
+      className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
+      variants={modalVariants}
+      initial="initial"
+      animate="default"
+      exit="close"
+    >
+      <motion.button layout onClick={handleBack} whileTap={{ scale: 0.95 }}>
+        <BackIcon />
+      </motion.button>
+      <motion.div layout className="text-center text-5xl font-semibold">
+        {initialGoal ? "Edit Goal" : "New Goal"}
+      </motion.div>
+      <div className="mx-auto">
+        <GoalForm goal={goal} setGoal={setGoal} modalRef={modalRef} />
+      </div>
+    </motion.div>
   )
 }
 
@@ -134,7 +148,7 @@ function GoalForm({
   setGoal: React.Dispatch<React.SetStateAction<IGoal>>
   modalRef: React.MutableRefObject<HTMLDivElement | null>
 }) {
-  const subtaskIdRef = useRef(goal.subtasks?.length || 0)
+  const subtaskIdRef = useRef(goal.subtasks ? goal.subtasks.length : 0)
 
   const addSubtask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
@@ -187,13 +201,12 @@ function GoalForm({
                       animate="default"
                       exit="remove"
                     >
-                      <TextInput
+                      <SelectInput
                         id="goal_dream"
                         value={goal.dream}
-                        setValue={(input: string) =>
-                          setGoal(prev => ({ ...prev, dream: input }))
+                        setValue={(value: Goal | Dream | null) =>
+                          setGoal(prev => ({ ...prev, dream: value }))
                         }
-                        inputName="goal_dream"
                         label="Dream"
                       />
                     </motion.div>
@@ -259,6 +272,7 @@ function GoalForm({
             className="flex px-3 py-1 text-[15px] text-gray-500"
             onClick={addSubtask}
             whileTap={{ scale: 0.95 }}
+            id="add_subtask_button"
           >
             <div className="relative bottom-px">
               <PlusSmallIcon />

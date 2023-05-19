@@ -57,7 +57,7 @@ export default function ItemsList({
   editMode: boolean
   editItem?: GeneralItem
   setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
-  openEditItemModal: (itemType: ItemType) => void
+  openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
 }) {
   const [scope, animate] = useAnimate()
 
@@ -134,7 +134,7 @@ function Item({
   editMode: boolean
   editItem?: GeneralItem
   setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
-  openEditItemModal: (itemType: ItemType) => void
+  openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
 }) {
   const [showSublist, setShowSublist] = useState(true)
   const containsSublist = !!item.tasks.length
@@ -233,7 +233,7 @@ function ItemEditPanel({
   openEditItemModal,
 }: {
   item: Goal | Task
-  openEditItemModal: (itemType: ItemType) => void
+  openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
 }) {
   const isGoal = !!(item as Goal)?.goalId
   return (
@@ -259,6 +259,7 @@ function ItemEditPanel({
         <motion.div
           className="flex shrink-0 cursor-pointer select-none flex-col"
           whileHover={{ scale: 1.1 }}
+          onClick={() => openEditItemModal("GOAL", true)}
         >
           <AddItemIcon className="mx-auto" />
           Add task

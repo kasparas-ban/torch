@@ -15,7 +15,6 @@ import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.sv
 import "../inputStyles.css"
 
 interface IAddTaskModal {
-  showModal: boolean
   handleBack: () => void
   initialTask?: Task
 }
@@ -50,7 +49,7 @@ const formVariants = {
   },
 }
 
-function AddTaskModal({ showModal, handleBack, initialTask }: IAddTaskModal) {
+function AddTaskModal({ handleBack, initialTask }: IAddTaskModal) {
   const inputOrder = initialTask
     ? Object.keys(initialTask).filter(
         key =>
@@ -77,35 +76,25 @@ function AddTaskModal({ showModal, handleBack, initialTask }: IAddTaskModal) {
   }, [initialTask])
 
   return (
-    <AnimatePresence>
-      {showModal && (
-        <>
-          <motion.div
-            layout
-            key="add_task_modal"
-            className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
-            variants={modalVariants}
-            initial="initial"
-            animate="default"
-            exit="close"
-          >
-            <motion.button
-              layout
-              onClick={handleBack}
-              whileTap={{ scale: 0.95 }}
-            >
-              <BackIcon />
-            </motion.button>
-            <motion.div layout className="text-center text-5xl font-semibold">
-              {initialTask ? "Edit Task" : "New Task"}
-            </motion.div>
-            <div className="mx-auto">
-              <TaskForm task={task} setTask={setTask} />
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+    <motion.div
+      layout
+      key="add_task_modal"
+      className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
+      variants={modalVariants}
+      initial="initial"
+      animate="default"
+      exit="close"
+    >
+      <motion.button layout onClick={handleBack} whileTap={{ scale: 0.95 }}>
+        <BackIcon />
+      </motion.button>
+      <motion.div layout className="text-center text-5xl font-semibold">
+        {initialTask ? "Edit Task" : "New Task"}
+      </motion.div>
+      <div className="mx-auto">
+        <TaskForm task={task} setTask={setTask} />
+      </div>
+    </motion.div>
   )
 }
 

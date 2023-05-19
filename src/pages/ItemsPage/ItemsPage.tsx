@@ -86,13 +86,13 @@ function ItemsPage() {
   const openGeneralModal = () =>
     setModal({ showBackground: true, isGeneralModalOpen: true })
 
-  const openEditItemModal = (itemType: ItemType) =>
+  const openEditItemModal = (itemType: ItemType, addNewSubItem?: boolean) =>
     setModal({
       showBackground: true,
       ...(itemType === "TASK"
         ? { isAddTaskModalOpen: true }
         : itemType === "GOAL"
-        ? { isAddGoalModalOpen: true }
+        ? { isAddGoalModalOpen: true, addNewSubItem: !!addNewSubItem }
         : { isAddDreamModalOpen: true }),
     })
 

@@ -7,7 +7,6 @@ import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.sv
 import "../inputStyles.css"
 
 interface IAddDreamModal {
-  showModal: boolean
   handleBack: () => void
 }
 
@@ -38,7 +37,7 @@ const formVariants = {
   },
 }
 
-function AddDreamModal({ showModal, handleBack }: IAddDreamModal) {
+function AddDreamModal({ handleBack }: IAddDreamModal) {
   const defaultDream = {
     title: "",
     inputOrder: [],
@@ -46,35 +45,25 @@ function AddDreamModal({ showModal, handleBack }: IAddDreamModal) {
   const [dream, setDream] = useState<IDream>(defaultDream)
 
   return (
-    <AnimatePresence>
-      {showModal && (
-        <>
-          <motion.div
-            layout
-            key="add_dream_modal"
-            className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
-            variants={modalVariants}
-            initial="initial"
-            animate="default"
-            exit="close"
-          >
-            <motion.button
-              layout
-              onClick={handleBack}
-              whileTap={{ scale: 0.95 }}
-            >
-              <BackIcon />
-            </motion.button>
-            <motion.div layout className="text-center text-5xl font-semibold">
-              New Dream
-            </motion.div>
-            <div className="mx-auto">
-              <DreamForm dream={dream} setDream={setDream} />
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+    <motion.div
+      layout
+      key="add_dream_modal"
+      className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
+      variants={modalVariants}
+      initial="initial"
+      animate="default"
+      exit="close"
+    >
+      <motion.button layout onClick={handleBack} whileTap={{ scale: 0.95 }}>
+        <BackIcon />
+      </motion.button>
+      <motion.div layout className="text-center text-5xl font-semibold">
+        New Dream
+      </motion.div>
+      <div className="mx-auto">
+        <DreamForm dream={dream} setDream={setDream} />
+      </div>
+    </motion.div>
   )
 }
 
