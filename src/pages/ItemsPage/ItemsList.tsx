@@ -52,7 +52,7 @@ export default function ItemsList({
   setEditItem,
   openEditItemModal,
 }: {
-  items: Goal[]
+  items: Task[] | Goal[]
   itemType: ItemType
   editMode: boolean
   editItem?: GeneralItem
@@ -60,6 +60,8 @@ export default function ItemsList({
   openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
 }) {
   const [scope, animate] = useAnimate()
+
+  const isItemGoal = (item: Task | Goal) => !!(item as Goal)?.goalId
 
   useEffect(() => {
     if (!scope.current) return
@@ -74,6 +76,8 @@ export default function ItemsList({
       }
     )
   }, [itemType])
+
+  const handleAddItem = () => openEditItemModal(itemType)
 
   return (
     <>
@@ -95,7 +99,11 @@ export default function ItemsList({
           {items.map((item, idx) => (
             <Item
               item={item}
-              key={idx}
+              key={
+                isItemGoal(item)
+                  ? `goals_${(item as Goal).goalId}`
+                  : `tasks_${(item as Task).taskId}`
+              }
               editMode={editMode}
               editItem={editItem}
               setEditItem={setEditItem}
@@ -105,8 +113,8 @@ export default function ItemsList({
         </motion.ul>
       ) : (
         <div className="mt-6 text-center">
-          <div>No {itemType.toLowerCase()} have been added.</div>
-          <button className="mt-8 font-bold">
+          <div>No {itemType.toLowerCase()}s have been added.</div>
+          <button className="mt-8 font-bold" onClick={handleAddItem}>
             <motion.div className="flex" whileHover={{ scale: 1.05 }}>
               <PlusSmallIcon />
               Add new{" "}
@@ -130,15 +138,21 @@ function Item({
   setEditItem,
   openEditItemModal,
 }: {
-  item: Goal
+  item: Task | Goal
   editMode: boolean
   editItem?: GeneralItem
   setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
   openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
 }) {
   const [showSublist, setShowSublist] = useState(true)
-  const containsSublist = !!item.tasks.length
-  const showEditPanel = editMode && item.goalId === (editItem as Goal)?.goalId
+  const containsSublist = !!(item as Goal)?.tasks?.length
+  const isGoal = !!(item as Goal)?.goalId
+  const itemId = isGoal ? (item as Goal)?.goalId : (item as Task)?.taskId
+  const showEditPanel =
+    editMode &&
+    (isGoal
+      ? itemId === (editItem as Goal)?.goalId
+      : itemId === (editItem as Task)?.taskId)
 
   const toggleEditClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation()
@@ -206,17 +220,17 @@ function Item({
       <AnimatePresence initial={false}>
         {showEditPanel && (
           <ItemEditPanel
-            key={`goal_${item.goalId}_edit_panel`}
+            key={`goal_${itemId}_edit_panel`}
             item={item}
             openEditItemModal={openEditItemModal}
           />
         )}
       </AnimatePresence>
       <AnimatePresence initial={false}>
-        {showSublist && (
+        {isGoal && showSublist && (
           <ItemSublist
-            key={`${item.goalId}_sublist`}
-            tasks={item.tasks}
+            key={`${itemId}_sublist`}
+            tasks={(item as Goal).tasks || []}
             editMode={editMode}
             editItem={editItem}
             setEditItem={setEditItem}

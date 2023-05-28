@@ -163,7 +163,9 @@ function ItemsTypeDropdown({
           animate="animate"
           exit="exit"
         >
-          <div className="text-6xl font-bold">{capitalizeString(itemType)}</div>
+          <div className="text-6xl font-bold">{`${capitalizeString(
+            itemType
+          )}s`}</div>
           <div className="mx-2 mt-7">
             <motion.div
               layout

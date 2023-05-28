@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { AddNewModals, ModalState } from "../../components/AddNewModals"
-import { GeneralItem, Goal, ItemType } from "../../types"
+import { GeneralItem, Goal, ItemType, Task } from "../../types"
 import { ItemsHeader } from "./ItemsHeader"
 import ItemsList from "./ItemsList"
 
@@ -80,8 +80,14 @@ function ItemsPage() {
     isAddTaskModalOpen: false,
   })
 
+  // TODO: Remove this
+  const tasksData = goalsData.reduce((list, goal) => {
+    return [...list, ...goal.tasks]
+  }, [] as Task[])
+
   const [itemType, setItemType] = useState<ItemType>("GOAL")
-  const items = itemType === "TASK" ? [] : itemType === "GOAL" ? goalsData : []
+  const items =
+    itemType === "TASK" ? tasksData : itemType === "GOAL" ? goalsData : []
 
   const openGeneralModal = () =>
     setModal({ showBackground: true, isGeneralModalOpen: true })
