@@ -5,6 +5,7 @@ import AddGeneralModal from "./Modals/AddGeneralModal/AddGeneralModal"
 import AddTaskModal from "./Modals/AddTaskModal/AddTaskModal"
 import AddDreamModal from "./Modals/AddDreamModal/AddDreamModal"
 import { GeneralItem, Goal, Task } from "../types"
+import ConfirmModal from "./Modals/ConfirmModal/ConfirmModal"
 
 export interface ModalState {
   showBackground: boolean
@@ -12,7 +13,9 @@ export interface ModalState {
   isAddTaskModalOpen?: boolean
   isAddGoalModalOpen?: boolean
   isAddDreamModalOpen?: boolean
+  isConfirmModalOpen?: boolean
   addNewSubItem?: boolean
+  confirmModalData?: { title: string; confirmFn: () => Promise<void> }
 }
 
 export function AddNewModals({
@@ -74,6 +77,13 @@ export function AddNewModals({
         )}
         {!!modal?.isAddDreamModalOpen && (
           <AddDreamModal handleBack={openGeneralModal} />
+        )}
+        {!!modal?.isConfirmModalOpen && (
+          <ConfirmModal
+            modalTitle={modal.confirmModalData?.title}
+            handleBack={closeModal}
+            handleConfirm={modal.confirmModalData?.confirmFn}
+          />
         )}
       </AnimatePresence>
       {modal.showBackground && (

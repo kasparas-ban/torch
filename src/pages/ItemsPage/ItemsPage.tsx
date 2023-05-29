@@ -102,6 +102,13 @@ function ItemsPage() {
         : { isAddDreamModalOpen: true }),
     })
 
+  const openConfirmModal = (title: string, confirmFn: () => Promise<void>) =>
+    setModal({
+      showBackground: true,
+      isConfirmModalOpen: true,
+      confirmModalData: { title, confirmFn },
+    })
+
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">
       <div className="w-[650px]">
@@ -120,6 +127,7 @@ function ItemsPage() {
           editItem={editItem}
           setEditItem={setEditItem}
           openEditItemModal={openEditItemModal}
+          openConfirmModal={openConfirmModal}
         />
         <AddNewModals modal={modal} setModal={setModal} editItem={editItem} />
       </div>
