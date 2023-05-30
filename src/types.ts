@@ -31,3 +31,5 @@ export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
 export type ItemType = "TASK" | "GOAL" | "DREAM"
 
 export type GeneralItem = Task | Goal | Dream
+
+export type OptionType = { value: number; label: string }

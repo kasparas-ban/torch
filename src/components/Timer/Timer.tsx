@@ -1,5 +1,12 @@
 import { useState, useEffect, useReducer } from "react"
+import { motion } from "framer-motion"
 import { TimerShape } from "./TimerShape"
+import {
+  SelectTypeFirstField,
+  SelectTypeSecondField,
+} from "../Modals/SelectInput"
+import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
+import { OptionType } from "../../types"
 
 interface ITimer {
   initialTime: number
@@ -87,6 +94,7 @@ function Timer({ initialTime }: ITimer) {
   return (
     <>
       <div className="max-[320px]:mx-2">
+        <TimerSettings />
         <div className="m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border border-rose-800">
           <TimerShape initialTime={initialTime} currentTime={state.time} />
           <div className="text-center text-8xl font-thin tabular-nums max-[300px]:text-7xl">
@@ -129,6 +137,43 @@ function Timer({ initialTime }: ITimer) {
         )}
       </div>
     </>
+  )
+}
+
+type FocusType = "ALL" | "TASKS" | "GOALS" | "DREAMS"
+
+const focusTypeOptions = [
+  { label: "All", value: "ALL" as FocusType },
+  { label: "Tasks", value: "TASKS" as FocusType },
+  { label: "Goals", value: "GOALS" as FocusType },
+  { label: "Dreams", value: "DREAMS" as FocusType },
+]
+
+function TimerSettings() {
+  const [focusOn, setFocusOn] = useState<OptionType | null>()
+  const [focusType, setFocusType] = useState<FocusType | null>(
+    focusTypeOptions[0].value
+  )
+
+  return (
+    <div className="mx-auto mt-8 max-w-sm">
+      <div className="mb-1 ml-2">Focus on</div>
+      <div className="flex [&>div:first-child]:w-full">
+        <SelectTypeFirstField
+          value={null}
+          onChange={option => setFocusOn(option)}
+          options={[]}
+          isClearable
+        />
+        <SelectTypeSecondField
+          value={focusTypeOptions.find(option => option.value === focusType)}
+          onChange={option => option && setFocusType(option.value)}
+          options={focusTypeOptions.filter(
+            option => option.value !== focusType
+          )}
+        />
+      </div>
+    </div>
   )
 }
 

@@ -166,43 +166,21 @@ export function TextInput({
   )
 }
 
-type SelectOption =
-  | ({
-      label: string
-      value: number
-    } & Dream)
-  | ({
-      label: string
-      value: number
-    } & Goal)
-
 export function SelectInput({
   id,
-  value,
+  item,
   setValue,
   label,
 }: {
   id: string
-  value?: Goal | Dream
-  setValue: (value: Goal | Dream | null) => void
+  item?: { label: string; value: number }
+  setValue: (item: { label: string; value: number } | null) => void
   label?: string
 }) {
-  const testGoal: SelectOption = {
-    goalId: 2,
-    title: "Test",
-    progress: 0.4,
-    tasks: [],
+  const testGoal = {
     label: "Test",
     value: 2,
   }
-
-  const selectedOption = value
-    ? {
-        ...value,
-        label: value.title,
-        value: (value as Goal).goalId || (value as Dream).dreamId,
-      }
-    : null
 
   return (
     <div className="relative w-full">
@@ -215,15 +193,8 @@ export function SelectInput({
         </label>
       )}
       <SelectField
-        value={selectedOption}
-        onChange={option => {
-          if (option) {
-            const { label, value, ...item } = option
-            setValue(item)
-          } else {
-            setValue(option)
-          }
-        }}
+        value={item}
+        onChange={option => setValue(option)}
         options={[testGoal]}
         isClearable
       />

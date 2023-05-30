@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "../Inputs"
 import { Subtasks } from "./Subtasks"
-import { Dream, Goal } from "../../../types"
+import { Goal } from "../../../types"
 import "../inputStyles.css"
 
 interface IAddGoalModal {
@@ -21,10 +21,11 @@ interface IAddGoalModal {
 }
 
 export interface IGoal {
+  goalId?: number
   title: string
   priority?: "LOW" | "MEDIUM" | "HIGH"
   targetDate?: Date | null
-  dream?: any | null
+  dream?: { label: string; value: number } | null
   subtasks?: ITask[]
   inputOrder: string[]
 }
@@ -76,7 +77,14 @@ function AddGoalModal({
     title: initialGoal?.title || "",
     ...(initialGoal?.priority ? { priority: initialGoal?.priority } : {}),
     ...(initialGoal?.targetDate ? { targetDate: initialGoal?.targetDate } : {}),
-    ...(initialGoal?.dream ? { dream: initialGoal?.dream } : {}),
+    ...(initialGoal?.dream
+      ? {
+          dream: {
+            label: initialGoal?.dream.title,
+            value: initialGoal?.dream.dreamId,
+          },
+        }
+      : {}),
     subtasks:
       initialGoal?.tasks?.map((task, idx) => ({
         id: idx,
@@ -203,10 +211,17 @@ function GoalForm({
                     >
                       <SelectInput
                         id="goal_dream"
-                        value={goal.dream}
-                        setValue={(value: Goal | Dream | null) =>
-                          setGoal(prev => ({ ...prev, dream: value }))
+                        item={
+                          goal.dream
+                            ? {
+                                label: goal.dream.label,
+                                value: goal.dream.value,
+                              }
+                            : undefined
                         }
+                        setValue={(
+                          item: { label: string; value: number } | null
+                        ) => setGoal(prev => ({ ...prev, dream: item }))}
                         label="Dream"
                       />
                     </motion.div>
