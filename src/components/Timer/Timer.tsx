@@ -1,5 +1,5 @@
 import { useState, useEffect, useReducer } from "react"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { TimerShape } from "./TimerShape"
 import {
   SelectTypeFirstField,
@@ -7,6 +7,7 @@ import {
 } from "../Modals/SelectInput"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
 import { OptionType } from "../../types"
+import TimerSettingsModal from "./TimerSettingsModal"
 
 interface ITimer {
   initialTime: number
@@ -150,6 +151,7 @@ const focusTypeOptions = [
 ]
 
 function TimerSettings() {
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false)
   const [focusOn, setFocusOn] = useState<OptionType | null>()
   const [focusType, setFocusType] = useState<FocusType | null>(
     focusTypeOptions[0].value
@@ -173,6 +175,21 @@ function TimerSettings() {
           )}
         />
       </div>
+      <div className="mt-4 flex justify-center">
+        <motion.button
+          className="flex items-center rounded-xl bg-gray-200 px-3 py-1"
+          whileHover={{ scale: 1.06 }}
+          onClick={() => setSettingsModalOpen(true)}
+        >
+          <SettingsIcon className="mr-1 h-4 w-4" />
+          Settings
+        </motion.button>
+      </div>
+      <AnimatePresence>
+        {settingsModalOpen && (
+          <TimerSettingsModal closeModal={() => setSettingsModalOpen(false)} />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
