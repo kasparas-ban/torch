@@ -13,7 +13,7 @@ export const TimerShape = ({
   const size = 318
   const { path } = getPathProps(size, 5, "counterclockwise")
   const strokeWidth = fractionComplete ? 5 : 0
-  const stroke = "red"
+  const stroke = "#E11D48"
   const strokeLinecap = "round"
 
   return (

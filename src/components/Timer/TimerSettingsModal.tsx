@@ -160,7 +160,7 @@ function NumberInput({
         type="number"
         min={0}
         max={99}
-        className={`peer h-10 w-full rounded-2xl bg-gray-200 px-4 text-gray-900 focus:bg-white focus:outline-2 focus:outline-blue-500/50`}
+        className="peer h-10 w-full rounded-2xl bg-gray-200 px-4 text-gray-900 focus:bg-white focus:outline-2 focus:outline-blue-500/50"
         placeholder={placeholder ?? "0"}
         value={value ? Number(value) : ""}
         onChange={e => setValue(Number(e.target.value).toString())}
