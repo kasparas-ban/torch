@@ -6,6 +6,8 @@ import {
   SelectTypeSecondField,
 } from "../Modals/SelectInput"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
+import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
+import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import { OptionType } from "../../types"
 import TimerSettingsModal from "./TimerSettingsModal"
 
@@ -99,13 +101,14 @@ function useTimer(initialTime: number) {
 
 function Timer({ initialTime }: ITimer) {
   const { state, dispatch } = useTimer(initialTime)
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false)
   const minutes = Math.floor(state.time / 60)
   const seconds = state.time - minutes * 60
 
   return (
     <>
       <div className="max-[320px]:mx-2">
-        <TimerSettings />
+        <TimerSettings timerState={state.timerState} />
         <div
           className={`m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border ${
             state.timerState === "idle" ? "border-rose-600" : ""
@@ -117,33 +120,54 @@ function Timer({ initialTime }: ITimer) {
           </div>
         </div>
         <AnimatePresence mode="popLayout">
+          <motion.div
+            layout
+            className="mt-2 flex justify-center"
+            animate={{
+              opacity: state.timerState !== "running" ? 1 : 0,
+              height: state.timerState !== "running" ? "auto" : 0,
+            }}
+          >
+            <motion.button
+              className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+              whileHover={{ scale: 1.06 }}
+              onClick={() => setSettingsModalOpen(true)}
+            >
+              <SettingsIcon className="mr-1 h-4 w-4" />
+              Settings
+            </motion.button>
+          </motion.div>
           {state.timerState === "idle" ? (
             <motion.button
               layout
               type="submit"
               onClick={() => dispatch({ type: "start" })}
-              className="m-auto mt-8 flex h-8 w-24 rounded-full bg-rose-400"
+              className="m-auto mt-4 flex h-8 w-24 rounded-full bg-rose-400"
               whileHover={{ scale: 1.06 }}
               variants={buttonVariants}
               initial="initial"
               animate="default"
               exit="close"
             >
-              <div className="m-auto tracking-wide">Start</div>
+              <div className="m-auto font-semibold tracking-wide text-gray-800">
+                Start
+              </div>
             </motion.button>
           ) : state.timerState === "running" ? (
             <motion.button
               layout
               type="submit"
               onClick={() => dispatch({ type: "pause" })}
-              className="m-auto mt-8 flex h-8 w-24 rounded-full bg-rose-400"
+              className="m-auto mt-4 flex h-8 w-24 rounded-full bg-rose-400"
               whileHover={{ scale: 1.06 }}
               variants={buttonVariants}
               initial="initial"
               animate="default"
               exit="close"
             >
-              <div className="m-auto tracking-wide">Pause</div>
+              <div className="m-auto font-semibold tracking-wide text-gray-800">
+                Pause
+              </div>
             </motion.button>
           ) : (
             <div className="flex justify-center space-x-3">
@@ -151,14 +175,16 @@ function Timer({ initialTime }: ITimer) {
                 layout
                 type="submit"
                 onClick={() => dispatch({ type: "start" })}
-                className="mt-8 flex h-8 w-24 rounded-full bg-rose-400"
+                className="mt-4 flex h-8 w-24 rounded-full bg-rose-400"
                 whileHover={{ scale: 1.06 }}
                 variants={buttonVariants}
                 initial="initial"
                 animate="default"
                 exit="close"
               >
-                <div className="m-auto tracking-wide">Continue</div>
+                <div className="m-auto font-semibold tracking-wide">
+                  Continue
+                </div>
               </motion.button>
               <motion.button
                 layout
@@ -166,16 +192,25 @@ function Timer({ initialTime }: ITimer) {
                 onClick={() =>
                   dispatch({ type: "reset", newTime: initialTime })
                 }
-                className="mt-8 flex h-8 w-24 rounded-full bg-rose-400"
+                className="mt-4 flex h-8 w-24 rounded-full bg-rose-400"
                 whileHover={{ scale: 1.06 }}
                 variants={buttonVariants}
                 initial="initial"
                 animate="default"
                 exit="close"
               >
-                <div className="m-auto tracking-wide">Stop</div>
+                <div className="m-auto font-semibold tracking-wide text-gray-800">
+                  Stop
+                </div>
               </motion.button>
             </div>
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {settingsModalOpen && (
+            <TimerSettingsModal
+              closeModal={() => setSettingsModalOpen(false)}
+            />
           )}
         </AnimatePresence>
       </div>
@@ -192,44 +227,76 @@ const focusTypeOptions = [
   { label: "Dreams", value: "DREAMS" as FocusType },
 ]
 
-function TimerSettings() {
-  const [settingsModalOpen, setSettingsModalOpen] = useState(false)
+function TimerSettings({ timerState }: { timerState: TimerState }) {
   const [focusOn, setFocusOn] = useState<OptionType | null>()
   const [focusType, setFocusType] = useState<FocusType | null>(
     focusTypeOptions[0].value
   )
 
+  const getFocusOptions = (inputValue: string) =>
+    new Promise<OptionType[]>(resolve => {
+      setTimeout(() => {
+        resolve([{ label: "Test", value: 123 }])
+      }, 1000)
+    })
+
   return (
-    <div className="mx-auto mt-8 max-w-sm">
-      <div className="mb-1 ml-2">Focus on</div>
-      <div className="flex [&>div:first-child]:w-full">
-        <SelectTypeFirstField
-          value={null}
-          onChange={option => setFocusOn(option)}
-          options={[]}
-          isClearable
-        />
-        <SelectTypeSecondField
-          value={focusTypeOptions.find(option => option.value === focusType)}
-          onChange={option => option && setFocusType(option.value)}
-          options={focusTypeOptions.filter(
-            option => option.value !== focusType
-          )}
-        />
-      </div>
-      <div className="mt-4 flex justify-center">
-        <motion.button
-          className="flex items-center rounded-xl bg-gray-200 px-3 py-1"
-          whileHover={{ scale: 1.06 }}
-          onClick={() => setSettingsModalOpen(true)}
-        >
-          <SettingsIcon className="mr-1 h-4 w-4" />
-          Settings
-        </motion.button>
-      </div>
-      <AnimatePresence>
-        {settingsModalOpen && (
-          <TimerSettingsModal closeModal={() => setSettingsModalOpen(false)} />
+    <div className="mx-auto mt-8 max-w-sm max-[400px]:mx-4 max-[320px]:mx-0">
+      <motion.div
+        animate={{
+          opacity: timerState !== "running" ? 1 : 0,
+          height: timerState !== "running" ? "auto" : 0,
+        }}
+      >
+        <div className="mb-1 ml-2">Focus on</div>
+        <div className="flex [&>div:first-child]:w-full">
+          <SelectTypeFirstField
+            value={focusOn}
+            onChange={option => setFocusOn(option)}
+            options={[]}
+            loadOptions={getFocusOptions}
+            defaultOptions
+            isClearable
+            cacheOptions
+          />
+          <SelectTypeSecondField
+            value={focusTypeOptions.find(option => option.value === focusType)}
+            onChange={option => option && setFocusType(option.value)}
+            options={focusTypeOptions.filter(
+              option => option.value !== focusType
+            )}
+          />
+        </div>
+      </motion.div>
+      <AnimatePresence mode="popLayout">
+        {focusOn && (
+          <motion.div
+            layout
+            className="mt-4 flex flex-col justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.25, delay: 0.1 },
+            }}
+            exit={{ opacity: 0, y: 0, transition: { duration: 0.04 } }}
+            transition={{ type: "tween" }}
+          >
+            <div className="text-center text-xl font-semibold">
+              {focusOn.label}
+            </div>
+            <div className="flex justify-center">
+              <div className="text-6xl font-bold">45%</div>
+              <div className="mt-1.5 ml-1.5 flex flex-col gap-1">
+                <div className="flex gap-2">
+                  <TimerBoldIcon /> 6 h spent
+                </div>
+                <div className="flex gap-2">
+                  <TimerIcon /> 4.5 h left
+                </div>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

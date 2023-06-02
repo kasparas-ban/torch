@@ -2,12 +2,19 @@ import classNames from "classnames"
 import createCache from "@emotion/cache"
 import { CacheProvider } from "@emotion/react"
 import Select, { Props, GroupBase } from "react-select"
+import AsyncSelect, { AsyncProps } from "react-select/async"
 
 type SelectProps<
   Option,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>
 > = Props<Option, IsMulti, Group>
+
+type AsyncSelectProps<
+  Option,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>
+> = AsyncProps<Option, IsMulti, Group>
 
 const cache = createCache({
   key: "with-tailwind",
@@ -53,11 +60,11 @@ export const SelectTypeFirstField = <
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>
 >(
-  props: SelectProps<Option, IsMulti, Group>
+  props: AsyncSelectProps<Option, IsMulti, Group>
 ) => {
   return (
     <CacheProvider value={cache}>
-      <Select
+      <AsyncSelect
         {...props}
         classNames={{
           control: ({ isFocused }) =>
@@ -87,7 +94,7 @@ export const SelectTypeSecondField = <
         classNames={{
           control: ({ isFocused }) =>
             classNames(
-              "w-28 h-10 rounded-l-none rounded-r-2xl bg-gray-200 px-2 text-gray-900 border-none",
+              "w-28 h-10 rounded-l-none rounded-r-2xl bg-gray-200 text-gray-900 border-none",
               isFocused && "!shadow-none !border-none bg-gray-100"
             ),
           indicatorSeparator: () => classNames("hidden"),
