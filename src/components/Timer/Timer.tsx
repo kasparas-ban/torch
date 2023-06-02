@@ -106,8 +106,14 @@ function Timer({ initialTime }: ITimer) {
   const seconds = state.time - minutes * 60
 
   return (
-    <>
-      <div className="max-[320px]:mx-2">
+    <AnimatePresence>
+      <motion.div
+        key="timer_component"
+        className="max-[320px]:mx-2"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "tween" }}
+      >
         <TimerSettings timerState={state.timerState} />
         <div
           className={`m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border ${
@@ -122,6 +128,7 @@ function Timer({ initialTime }: ITimer) {
         <AnimatePresence mode="popLayout">
           <motion.div
             layout
+            key="timer_settings"
             className="mt-2 flex justify-center"
             animate={{
               opacity: state.timerState !== "running" ? 1 : 0,
@@ -209,12 +216,13 @@ function Timer({ initialTime }: ITimer) {
         <AnimatePresence>
           {settingsModalOpen && (
             <TimerSettingsModal
+              key="timer_settings_modal"
               closeModal={() => setSettingsModalOpen(false)}
             />
           )}
         </AnimatePresence>
-      </div>
-    </>
+      </motion.div>
+    </AnimatePresence>
   )
 }
 
@@ -289,10 +297,14 @@ function TimerSettings({ timerState }: { timerState: TimerState }) {
               <div className="text-6xl font-bold">45%</div>
               <div className="mt-1.5 ml-1.5 flex flex-col gap-1">
                 <div className="flex gap-2">
-                  <TimerBoldIcon /> 6 h spent
+                  <TimerBoldIcon />
+                  <span className="font-semibold">6 h</span>
+                  spent
                 </div>
                 <div className="flex gap-2">
-                  <TimerIcon /> 4.5 h left
+                  <TimerIcon />
+                  <span className="font-semibold">4.5 h</span>
+                  left
                 </div>
               </div>
             </div>

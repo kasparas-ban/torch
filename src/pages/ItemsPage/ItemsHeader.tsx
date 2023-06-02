@@ -183,7 +183,7 @@ function ItemsTypeDropdown({
         <AnimatePresence>
           {isDropdownOpen && (
             <motion.div
-              className="absolute top-14 right-1 z-50 mt-2 w-48 origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+              className="absolute top-14 right-1 z-20 mt-2 w-48 origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
               role="menu"
               tabIndex={-1}
               variants={itemTypeMenuMotion}

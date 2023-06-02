@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { ReactComponent as TasksIcon } from "../assets/navigation_icons/goals.svg"
 import { ReactComponent as CalendarIcon } from "../assets/navigation_icons/calendar.svg"
@@ -9,9 +9,11 @@ import { ReactComponent as MenuIcon } from "../assets/navigation_icons/menu.svg"
 import { ReactComponent as TorchLogo } from "../assets/torch_logo.svg"
 import { ReactComponent as UserIcon } from "../assets/user.svg"
 import { ReactComponent as CloseIcon } from "../assets/close.svg"
+import { AnimatePresence, motion } from "framer-motion"
 
 function NavigationBar() {
   const [showModalMenu, setShowModalMenu] = useState(false)
+  const [showAccountDropdown, setShowAccountDropdown] = useState(true)
 
   return (
     <nav className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
@@ -29,13 +31,40 @@ function NavigationBar() {
         <NavigationLink path="world" Icon={WorldIcon} linkName={"World"} />
         <NavigationLink path="stats" Icon={StatsIcon} linkName={"Stats"} />
       </ul>
-      <div className="group flex items-center hover:cursor-pointer max-[400px]:hidden">
-        <UserIcon className="h-8" />
-        <div className="relative hidden translate-y-5 group-hover:block">
-          <div className="absolute -translate-x-11 -translate-y-0.5 rounded-lg bg-red-200 p-1">
-            Account
+      <div
+        id="accountDropdownButton"
+        className="group flex items-center max-[400px]:hidden"
+      >
+        <UserIcon
+          id="userIcon"
+          className="h-8 hover:cursor-pointer"
+          onClick={() => setShowAccountDropdown(prev => !prev)}
+        />
+        {!showAccountDropdown && (
+          <div className="relative hidden translate-y-5 group-hover:block">
+            <div className="absolute -translate-x-11 -translate-y-0.5 rounded-lg bg-red-200 p-1">
+              Account
+            </div>
           </div>
-        </div>
+        )}
+        <AnimatePresence>
+          {showAccountDropdown && (
+            <motion.div
+              className="relative z-30 translate-y-5 group-hover:block"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 18 }}
+              exit={{ opacity: 0, y: 24 }}
+              transition={{ type: "tween" }}
+            >
+              <div className="absolute -translate-x-40 -translate-y-0.5">
+                <AccountDropdown
+                  showAccountDropdown={showAccountDropdown}
+                  setShowAccountDropdown={setShowAccountDropdown}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <div className="group hidden items-center hover:cursor-pointer max-[400px]:flex">
         {showModalMenu ? (
@@ -51,7 +80,7 @@ function NavigationBar() {
         )}
       </div>
       <div
-        className={`fixed top-20 left-0 z-10 h-full w-full bg-white ${
+        className={`fixed top-20 left-0 z-30 h-full w-full bg-white ${
           showModalMenu ? "visible" : "hidden"
         }`}
       >
@@ -87,6 +116,12 @@ function NavigationBar() {
             </div>
           </li>
         </ul>
+        <motion.div
+          className="fixed bottom-8 w-full text-center"
+          whileTap={{ scale: 0.96 }}
+        >
+          <div className="mx-auto w-fit px-8 py-2 text-lg">Sign Out</div>
+        </motion.div>
       </div>
     </nav>
   )
@@ -122,6 +157,56 @@ function NavigationLink({
         </div>
       </div>
     </Link>
+  )
+}
+
+function AccountDropdown({
+  showAccountDropdown,
+  setShowAccountDropdown,
+}: {
+  showAccountDropdown: boolean
+  setShowAccountDropdown: React.Dispatch<React.SetStateAction<boolean>>
+}) {
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      const userIconElement = document.getElementById("userIcon")
+      if (!userIconElement?.contains(e.target as Node))
+        showAccountDropdown && setShowAccountDropdown(false)
+    }
+
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [])
+
+  return (
+    <div
+      id="dropdownInformation"
+      ref={dropdownRef}
+      className="z-10 w-44 divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700"
+    >
+      <div className="rounded-t-lg px-4 py-3 text-sm text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white">
+        <div>Bonnie Green</div>
+        <div className="truncate font-medium">name@email.com</div>
+        <div className="mx-2 mt-2 truncate rounded-lg bg-gray-300 py-1 text-center text-xs font-medium text-gray-700">
+          Free account
+        </div>
+      </div>
+      <ul
+        className="py-2 text-sm text-gray-700 dark:text-gray-200"
+        aria-labelledby="accountDropdownButton"
+      >
+        <li>
+          <a
+            href="#"
+            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+          >
+            Sign out
+          </a>
+        </li>
+      </ul>
+    </div>
   )
 }
 
