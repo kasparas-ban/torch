@@ -126,37 +126,41 @@ function Timer({ initialTime }: ITimer) {
           </div>
         </div>
         <AnimatePresence mode="popLayout">
-          <motion.div
-            layout
-            key="timer_settings"
-            className="mt-2 flex justify-center"
-            animate={{
-              opacity: state.timerState !== "running" ? 1 : 0,
-              height: state.timerState !== "running" ? "auto" : 0,
-            }}
-          >
-            <motion.button
-              className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
-              whileHover={{ scale: 1.06 }}
-              onClick={() => setSettingsModalOpen(true)}
+          {state.timerState !== "running" && (
+            <motion.div
+              layout
+              key="timer_settings"
+              className="mt-2 flex justify-center"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{
+                opacity: 1,
+                height: "auto",
+              }}
+              exit={{ opacity: 0, height: 0, transition: { duration: 0.01 } }}
             >
-              <SettingsIcon className="mr-1 h-4 w-4" />
-              Settings
-            </motion.button>
-          </motion.div>
+              <motion.button
+                className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                whileHover={{ scale: 1.06 }}
+                onClick={() => setSettingsModalOpen(true)}
+              >
+                <SettingsIcon className="mr-1 h-4 w-4" />
+                Settings
+              </motion.button>
+            </motion.div>
+          )}
           {state.timerState === "idle" ? (
             <motion.button
               layout
               type="submit"
               onClick={() => dispatch({ type: "start" })}
-              className="m-auto mt-4 flex h-8 w-24 rounded-full bg-rose-400"
+              className="m-auto mt-4 flex h-8 w-24 rounded-full bg-gradient-to-r from-orange-500 to-rose-500 px-5 py-2.5 text-center font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
               whileHover={{ scale: 1.06 }}
               variants={buttonVariants}
               initial="initial"
               animate="default"
               exit="close"
             >
-              <div className="m-auto font-semibold tracking-wide text-gray-800">
+              <div className="m-auto flex h-full items-center font-medium tracking-wide text-white">
                 Start
               </div>
             </motion.button>
@@ -165,14 +169,14 @@ function Timer({ initialTime }: ITimer) {
               layout
               type="submit"
               onClick={() => dispatch({ type: "pause" })}
-              className="m-auto mt-4 flex h-8 w-24 rounded-full bg-rose-400"
+              className="m-auto mt-4 flex h-8 w-24 rounded-full border border-gray-400"
               whileHover={{ scale: 1.06 }}
               variants={buttonVariants}
               initial="initial"
               animate="default"
               exit="close"
             >
-              <div className="m-auto font-semibold tracking-wide text-gray-800">
+              <div className="m-auto font-semibold tracking-wide text-gray-600">
                 Pause
               </div>
             </motion.button>
@@ -182,14 +186,14 @@ function Timer({ initialTime }: ITimer) {
                 layout
                 type="submit"
                 onClick={() => dispatch({ type: "start" })}
-                className="mt-4 flex h-8 w-24 rounded-full bg-rose-400"
+                className="relative mt-4 flex h-8 w-24 rounded-full bg-gradient-to-r from-orange-500 to-rose-500 px-5 py-2.5 text-center font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
                 whileHover={{ scale: 1.06 }}
                 variants={buttonVariants}
                 initial="initial"
                 animate="default"
                 exit="close"
               >
-                <div className="m-auto font-semibold tracking-wide">
+                <div className="absolute top-1 right-[13px] font-medium tracking-wide text-white">
                   Continue
                 </div>
               </motion.button>
@@ -199,14 +203,14 @@ function Timer({ initialTime }: ITimer) {
                 onClick={() =>
                   dispatch({ type: "reset", newTime: initialTime })
                 }
-                className="mt-4 flex h-8 w-24 rounded-full bg-rose-400"
+                className="mt-4 flex h-8 w-24 rounded-full border border-gray-400"
                 whileHover={{ scale: 1.06 }}
                 variants={buttonVariants}
                 initial="initial"
                 animate="default"
                 exit="close"
               >
-                <div className="m-auto font-semibold tracking-wide text-gray-800">
+                <div className="m-auto font-semibold tracking-wide text-gray-600">
                   Stop
                 </div>
               </motion.button>

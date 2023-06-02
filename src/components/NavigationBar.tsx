@@ -13,7 +13,7 @@ import { AnimatePresence, motion } from "framer-motion"
 
 function NavigationBar() {
   const [showModalMenu, setShowModalMenu] = useState(false)
-  const [showAccountDropdown, setShowAccountDropdown] = useState(true)
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false)
 
   return (
     <nav className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
@@ -21,7 +21,7 @@ function NavigationBar() {
         <TorchLogo className="h-12 w-6" />
       </div>
       <ul className="flex h-12 space-x-1 overflow-visible rounded-[16px] px-4">
-        <NavigationLink path={"items"} Icon={TasksIcon} linkName={"Tasks"} />
+        <NavigationLink path="items" Icon={TasksIcon} linkName={"Tasks"} />
         <NavigationLink
           path="calendar"
           Icon={CalendarIcon}
@@ -86,34 +86,59 @@ function NavigationBar() {
       >
         <ul className="divide-y divide-slate-200 px-4">
           <li className="py-1">
-            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
-              <TasksIcon className="h-6 w-6 text-slate-800" />
-              <div className="ml-5 flex items-center">Goals</div>
-            </div>
+            <Link to="items" onClick={() => setShowModalMenu(false)}>
+              <motion.div
+                className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
+                whileTap={{ scale: 0.98 }}
+              >
+                <TasksIcon className="h-6 w-6 text-slate-800" />
+                <div className="ml-5 flex items-center">Goals</div>
+              </motion.div>
+            </Link>
           </li>
           <li className="py-1">
-            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
-              <CalendarIcon className="h-6 w-6 text-slate-800" />
-              <div className="ml-5 flex items-center">Calendar</div>
-            </div>
+            <Link to="calendar" onClick={() => setShowModalMenu(false)}>
+              <motion.div
+                className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
+                whileTap={{ scale: 0.98 }}
+              >
+                <CalendarIcon className="h-6 w-6 text-slate-800" />
+                <div className="ml-5 flex items-center">Calendar</div>
+              </motion.div>
+            </Link>
           </li>
           <li className="py-1">
-            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
-              <WorldIcon className="h-6 w-6 text-slate-800" />
-              <div className="ml-5 flex items-center">World</div>
-            </div>
+            <Link to="world" onClick={() => setShowModalMenu(false)}>
+              <motion.div
+                className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
+                whileTap={{ scale: 0.98 }}
+              >
+                <WorldIcon className="h-6 w-6 text-slate-800" />
+                <div className="ml-5 flex items-center">World</div>
+              </motion.div>
+            </Link>
           </li>
           <li className="py-1">
-            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
-              <StatsIcon className="h-6 w-6 text-slate-800" />
-              <div className="ml-5 flex items-center">Statistics</div>
-            </div>
+            <Link to="stats" onClick={() => setShowModalMenu(false)}>
+              <motion.div
+                className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
+                whileTap={{ scale: 0.98 }}
+              >
+                <StatsIcon className="h-6 w-6 text-slate-800" />
+                <div className="ml-5 flex items-center">Statistics</div>
+              </motion.div>
+            </Link>
           </li>
           <li className="py-1">
-            <div className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200">
-              <UserIcon className="h-6 w-6 text-slate-800" />
-              <div className="ml-5 flex items-center">Account</div>
-            </div>
+            <Link to="account" onClick={() => setShowModalMenu(false)}>
+              <motion.div
+                className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
+                whileTap={{ scale: 0.98 }}
+              >
+                <UserIcon className="h-6 w-6 text-slate-800" />
+                <div className="ml-5 flex items-center">Account</div>
+              </motion.div>
+            </Link>
           </li>
         </ul>
         <motion.div
@@ -143,7 +168,7 @@ function NavigationLink({
   return (
     <Link to={path} className="flex flex-col items-center justify-center">
       {highlight ? (
-        <div className="peer mx-2 rounded-full bg-red-400 py-2 px-2 hover:cursor-pointer hover:bg-rose-500">
+        <div className="peer mx-2 rounded-full bg-gradient-to-br from-orange-200 via-rose-300 to-rose-500 py-2 px-2 hover:cursor-pointer hover:from-orange-300 hover:via-rose-400 hover:to-rose-500">
           <Icon className="mx-auto h-8 w-8 text-slate-800" />
         </div>
       ) : (
