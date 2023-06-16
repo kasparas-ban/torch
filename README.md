@@ -6,6 +6,10 @@ An app that helps you track the time you spend pursuing your goals.
 ✅ Get visual feedback on your progress.\
 ✅ Use Pomodoro timer to track your time.
 
+<p align="center">
+  <img alt="Light" src="./images/screenshot_1.png" width="60%">
+</p>
+
 ## TODO
 
 - [x] Tasks/Goals/Dreams list page
