@@ -1,7 +1,10 @@
-export interface Task {
-  taskId: number
+export type Item = {
   title: string
   progress: number
+}
+
+export type Task = Item & {
+  taskId: number
   duration: { hours: number | null; minutes: number | null }
   priority?: "LOW" | "MEDIUM" | "HIGH"
   targetDate?: Date | null
@@ -9,20 +12,16 @@ export interface Task {
   goal?: any | null
 }
 
-export interface Goal {
+export type Goal = Item & {
   goalId: number
-  title: string
-  progress: number
   tasks: Task[]
   dream?: Dream
   targetDate?: Date | null
   priority?: "LOW" | "MEDIUM" | "HIGH"
 }
 
-export interface Dream {
+export type Dream = Item & {
   dreamId: number
-  title: string
-  progress: number
   goals: Goal[]
 }
 

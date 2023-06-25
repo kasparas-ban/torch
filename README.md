@@ -1,4 +1,5 @@
 # Torch
+
 An app that helps you track the time you spend pursuing your goals.
 
 ✅ Create tasks, goals, or dreams according to their size and scope.\
@@ -16,6 +17,7 @@ An app that helps you track the time you spend pursuing your goals.
 - [x] Task form modal
 - [x] Goal form modal
 - [x] Dream form modal
+- [ ] Implement `prefers-reduced-motion` media query
 - [ ] Refactor the modal component (if possible)
 - [ ] Redo duration input to match what's in the Android timer
 - [ ] Make so that a user may work towards a goal when it has subtasks
