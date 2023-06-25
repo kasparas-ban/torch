@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "../Inputs"
 import { Subtasks } from "./Subtasks"
-import { Goal } from "../../../types"
+import { Dream, Goal } from "../../../types"
 import "../inputStyles.css"
 
 interface IAddGoalModal {
@@ -25,7 +25,7 @@ export interface IGoal {
   title: string
   priority?: "LOW" | "MEDIUM" | "HIGH"
   targetDate?: Date | null
-  dream?: { label: string; value: number } | null
+  dream?: Dream | null
   subtasks?: ITask[]
   inputOrder: string[]
 }
@@ -77,14 +77,7 @@ function AddGoalModal({
     title: initialGoal?.title || "",
     ...(initialGoal?.priority ? { priority: initialGoal?.priority } : {}),
     ...(initialGoal?.targetDate ? { targetDate: initialGoal?.targetDate } : {}),
-    ...(initialGoal?.dream
-      ? {
-          dream: {
-            label: initialGoal?.dream.title,
-            value: initialGoal?.dream.dreamId,
-          },
-        }
-      : {}),
+    ...(initialGoal?.dream ? { dream: initialGoal?.dream } : {}),
     subtasks:
       initialGoal?.tasks?.map((task, idx) => ({
         id: idx,
@@ -209,20 +202,21 @@ function GoalForm({
                       animate="default"
                       exit="remove"
                     >
-                      <SelectInput
+                      <SelectInput<Dream>
                         id="goal_dream"
                         item={
                           goal.dream
                             ? {
-                                label: goal.dream.label,
-                                value: goal.dream.value,
+                                label: goal.dream.title,
+                                value: goal.dream,
                               }
-                            : undefined
+                            : null
                         }
-                        setValue={(
-                          item: { label: string; value: number } | null
-                        ) => setGoal(prev => ({ ...prev, dream: item }))}
+                        setItem={(
+                          item: { label: string; value: Dream } | null
+                        ) => setGoal(prev => ({ ...prev, dream: item?.value }))}
                         label="Dream"
+                        options={[]}
                       />
                     </motion.div>
                   )

@@ -25,7 +25,7 @@ interface ITask {
   priority?: "LOW" | "MEDIUM" | "HIGH"
   targetDate?: Date | null
   recurring?: boolean
-  goal?: any | null
+  goal?: Goal | null
   inputOrder: string[]
 }
 
@@ -151,13 +151,24 @@ function TaskForm({
                       animate="default"
                       exit="remove"
                     >
-                      <SelectInput
+                      <SelectInput<Goal>
                         id="task_goal"
-                        value={task.goal}
-                        setValue={(value: Goal | Dream | null) =>
-                          setTask(prev => ({ ...prev, goal: value }))
+                        item={
+                          task.goal
+                            ? {
+                                label: task.goal.title,
+                                value: task.goal,
+                              }
+                            : null
+                        }
+                        setItem={(
+                          goal: { label: string; value: Goal } | null
+                        ) =>
+                          goal &&
+                          setTask(prev => ({ ...prev, goal: goal.value }))
                         }
                         label="Goal"
+                        options={[]}
                       />
                     </motion.div>
                   )

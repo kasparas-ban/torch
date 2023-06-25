@@ -166,22 +166,19 @@ export function TextInput({
   )
 }
 
-export function SelectInput({
+export function SelectInput<T>({
   id,
   item,
-  setValue,
+  setItem,
   label,
+  options = [],
 }: {
   id: string
-  item?: { label: string; value: number }
-  setValue: (item: { label: string; value: number } | null) => void
+  item: { label: string; value: T } | null
+  setItem: (item: { label: string; value: T } | null) => void
   label?: string
+  options: { label: string; value: T }[]
 }) {
-  const testGoal = {
-    label: "Test",
-    value: 2,
-  }
-
   return (
     <div className="relative w-full">
       {label && (
@@ -194,8 +191,8 @@ export function SelectInput({
       )}
       <SelectField
         value={item}
-        onChange={option => setValue(option)}
-        options={[testGoal]}
+        onChange={option => setItem(option)}
+        options={options}
         isClearable
       />
     </div>
