@@ -1,9 +1,11 @@
 import { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { DateInput, PriorityInput, PriorityType, TextInput } from "../Inputs"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
+import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
+import TextInput from "../../Inputs/TextInput"
+import DateInput from "../../Inputs/DateInput"
 import "../inputStyles.css"
 
 interface IAddDreamModal {

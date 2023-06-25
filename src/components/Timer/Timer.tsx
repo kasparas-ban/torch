@@ -5,7 +5,7 @@ import { TimerShape } from "./TimerShape"
 import {
   SelectTypeFirstField,
   SelectTypeSecondField,
-} from "../Modals/SelectInput"
+} from "../Inputs/SelectField"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
 import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"

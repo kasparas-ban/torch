@@ -3,15 +3,12 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
-import {
-  DateInput,
-  PriorityInput,
-  PriorityType,
-  SelectInput,
-  TextInput,
-} from "../Inputs"
 import { Subtasks } from "./Subtasks"
 import { Dream, Goal } from "../../../types"
+import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
+import SelectInput from "../../Inputs/SelectInput"
+import TextInput from "../../Inputs/TextInput"
+import DateInput from "../../Inputs/DateInput"
 import "../inputStyles.css"
 
 interface IAddGoalModal {

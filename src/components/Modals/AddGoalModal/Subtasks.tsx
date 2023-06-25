@@ -1,15 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { IGoal, ITask } from "./AddGoalModal"
-import {
-  DateInput,
-  DurationInput,
-  PriorityInput,
-  PriorityType,
-  TextInput,
-} from "../Inputs"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { ReactComponent as CloseIcon } from "../../../assets/close.svg"
+import TextInput from "../../Inputs/TextInput"
+import DurationInput from "../../Inputs/DurationInput"
+import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
+import DateInput from "../../Inputs/DateInput"
 
 const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
