@@ -30,6 +30,8 @@ export default function PriorityInput({
           <label
             htmlFor={`${id}_low`}
             className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-300 peer-checked:bg-blue-300 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+            tabIndex={0}
+            onKeyDown={e => e.key === "Enter" && setValue("LOW")}
           >
             Low
           </label>
@@ -46,6 +48,8 @@ export default function PriorityInput({
           <label
             htmlFor={`${id}_medium`}
             className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-300 peer-checked:bg-blue-300 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+            tabIndex={0}
+            onKeyDown={e => e.key === "Enter" && setValue("MEDIUM")}
           >
             Medium
           </label>
@@ -58,10 +62,15 @@ export default function PriorityInput({
             checked={value === "HIGH"}
             className="peer hidden"
             readOnly
+            tabIndex={0}
           />
           <label
             htmlFor={`${id}_high`}
-            className="inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 text-gray-500 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-300 peer-checked:bg-blue-300 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500"
+            className={`inline-flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 bg-gray-200 py-1.5 shadow-sm hover:border-gray-300 hover:bg-gray-300 hover:text-gray-600 peer-checked:border-blue-300 peer-checked:bg-blue-300 peer-checked:shadow-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:peer-checked:text-blue-500 ${
+              value === "HIGH" ? "text-gray-700" : "text-gray-500"
+            }`}
+            tabIndex={0}
+            onKeyDown={e => e.key === "Enter" && setValue("HIGH")}
           >
             High
           </label>
