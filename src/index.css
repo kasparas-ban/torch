@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-multi-color {
+  background: linear-gradient(60deg,#f79533,#f37055,#ef4e7b, #ff234f);
+  animation: animatedgradient 4s ease infinite alternate;
+  background-size: 300% 300%;
+}
+
+.bg-multi-color-delay {
+  animation-delay: 1000ms;
+}
+
+@keyframes animatedgradient {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}

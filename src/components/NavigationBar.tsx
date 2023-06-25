@@ -168,7 +168,7 @@ function NavigationLink({
   return (
     <Link to={path} className="flex flex-col items-center justify-center">
       {highlight ? (
-        <div className="peer mx-2 rounded-full bg-gradient-to-br from-orange-200 via-rose-300 to-rose-500 py-2 px-2 hover:cursor-pointer hover:from-orange-300 hover:via-rose-400 hover:to-rose-500">
+        <div className="bg-multi-color bg-multi-color-delay peer mx-2 rounded-full brightness-150 py-2 px-2 hover:cursor-pointer hover:brightness-100">
           <Icon className="mx-auto h-8 w-8 text-slate-800" />
         </div>
       ) : (

@@ -154,14 +154,14 @@ function Timer({ initialTime }: ITimer) {
               layout
               type="submit"
               onClick={() => dispatch({ type: "start" })}
-              className="m-auto mt-4 flex h-8 w-24 rounded-full bg-gradient-to-r from-orange-500 to-rose-500 px-5 py-2.5 text-center font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
+              className="bg-multi-color m-auto mt-4 flex h-8 w-24 rounded-full px-5 py-2.5 text-center focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
               whileHover={{ scale: 1.06 }}
               variants={buttonVariants}
               initial="initial"
               animate="default"
               exit="close"
             >
-              <div className="m-auto flex h-full items-center font-medium tracking-wide text-white">
+              <div className="m-auto flex h-full items-center font-medium tracking-wider text-white">
                 Start
               </div>
             </motion.button>
@@ -187,7 +187,7 @@ function Timer({ initialTime }: ITimer) {
                 layout
                 type="submit"
                 onClick={() => dispatch({ type: "start" })}
-                className="relative mt-4 flex h-8 w-24 rounded-full bg-gradient-to-r from-orange-500 to-rose-500 px-5 py-2.5 text-center font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
+                className="bg-multi-color relative mt-4 flex h-8 w-24 rounded-full px-5 py-2.5 text-center focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
                 whileHover={{ scale: 1.06 }}
                 variants={buttonVariants}
                 initial="initial"
@@ -252,7 +252,7 @@ function TimerSettings({ timerState }: { timerState: TimerState }) {
   const getFocusOptions = (inputValue: string) =>
     new Promise<OptionType[]>(resolve => {
       setTimeout(() => {
-        resolve([{ label: "Test", value: 123 }])
+        resolve([{ label: 'Finish reading "The Shape of Space"', value: 123 }])
       }, 1000)
     })
 
@@ -369,7 +369,7 @@ function TimerHistory() {
 
   return (
     <motion.div
-      className="mt-8 flex"
+      className="mt-8 mb-4 flex"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.1 } }}
