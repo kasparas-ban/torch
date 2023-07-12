@@ -342,10 +342,8 @@ function ItemSublist<T extends Task | Goal>({
     subitem: T
   ) => {
     e.stopPropagation()
-    setEditItem(showEditPanel(subitem) ? undefined : (subitem as any)) // TODO: need to fix types
+    setEditItem(showEditPanel(subitem) ? undefined : subitem)
   }
-
-  console.log("Edit item", subitems, editItem?.type)
 
   return (
     <motion.div
