@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import useEditItem from "../pages/ItemsPage/useEditItem"
 import AddGoalModal from "./Modals/AddGoalModal/AddGoalModal"
 import AddGeneralModal from "./Modals/AddGeneralModal/AddGeneralModal"
 import AddTaskModal from "./Modals/AddTaskModal/AddTaskModal"
 import AddDreamModal from "./Modals/AddDreamModal/AddDreamModal"
-import { GeneralItem, Goal, Task } from "../types"
 import ConfirmModal from "./Modals/ConfirmModal/ConfirmModal"
+import { Goal, Task } from "../types"
 
 export interface ModalState {
   showBackground: boolean
@@ -21,12 +22,11 @@ export interface ModalState {
 export function AddNewModals({
   modal,
   setModal,
-  editItem,
 }: {
   modal: ModalState
   setModal: React.Dispatch<React.SetStateAction<ModalState>>
-  editItem?: GeneralItem
 }) {
+  const { editItem } = useEditItem()
   const backgroundRef = useRef<HTMLDivElement | null>(null)
 
   const handleClickOutside = (e: MouseEvent) => {

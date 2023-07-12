@@ -6,7 +6,6 @@ import { ItemsHeader } from "./ItemsHeader"
 import ItemsList from "./ItemsList"
 
 function ItemsPage() {
-  const [editItem, setEditItem] = useState<GeneralItem | undefined>()
   const [editMode, setEditMode] = useState(false)
   const [modal, setModal] = useState<ModalState>({
     showBackground: false,
@@ -50,18 +49,15 @@ function ItemsPage() {
           setItemType={setItemType}
           editMode={editMode}
           setEditMode={setEditMode}
-          setEditItem={setEditItem}
         />
         <ItemsList<GeneralItem>
           items={items}
           itemType={itemType}
           editMode={editMode}
-          editItem={editItem}
-          setEditItem={setEditItem}
           openEditItemModal={openEditItemModal}
           openConfirmModal={openConfirmModal}
         />
-        <AddNewModals modal={modal} setModal={setModal} editItem={editItem} />
+        <AddNewModals modal={modal} setModal={setModal} />
       </div>
     </div>
   )

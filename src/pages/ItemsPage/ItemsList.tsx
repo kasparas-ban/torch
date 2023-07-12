@@ -10,6 +10,7 @@ import { ReactComponent as AddItemIcon } from "../../assets/add_item.svg"
 import { ReactComponent as StatsIcon } from "../../assets/stats.svg"
 import { ReactComponent as DeleteIcon } from "../../assets/delete.svg"
 import ItemProgress from "./ProgressBar"
+import useEditItem from "./useEditItem"
 
 const sublistVariant = {
   initial: { opacity: 0, height: 0, marginTop: 0 },
@@ -48,16 +49,12 @@ export default function ItemsList<T extends GeneralItem>({
   items,
   itemType,
   editMode,
-  editItem,
-  setEditItem,
   openEditItemModal,
   openConfirmModal,
 }: {
   items: T[]
   itemType: ItemType
   editMode: boolean
-  editItem?: T
-  setEditItem: React.Dispatch<React.SetStateAction<T | undefined>>
   openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
   openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
 }) {
@@ -101,8 +98,6 @@ export default function ItemsList<T extends GeneralItem>({
               item={item}
               key={item.id}
               editMode={editMode}
-              editItem={editItem}
-              setEditItem={setEditItem}
               openEditItemModal={openEditItemModal}
               openConfirmModal={openConfirmModal}
             />
@@ -131,18 +126,15 @@ export default function ItemsList<T extends GeneralItem>({
 function Item<T extends GeneralItem>({
   item,
   editMode,
-  editItem,
-  setEditItem,
   openEditItemModal,
   openConfirmModal,
 }: {
   item: T
   editMode: boolean
-  editItem?: T
-  setEditItem: React.Dispatch<React.SetStateAction<T | undefined>>
   openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
   openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
 }) {
+  const { editItem, setEditItem } = useEditItem()
   const [showSublist, setShowSublist] = useState(true)
 
   const itemSublist =

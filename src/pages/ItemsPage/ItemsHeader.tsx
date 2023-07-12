@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import useEditItem from "./useEditItem"
 import { capitalizeString } from "../../helpers"
-import { GeneralItem, ItemType, ItemTypeLabel } from "../../types"
+import { ItemType, ItemTypeLabel } from "../../types"
 import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
 import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
@@ -50,15 +51,15 @@ export function ItemsHeader({
   setItemType,
   editMode,
   setEditMode,
-  setEditItem,
 }: {
   openGeneralModal: () => void
   itemType: ItemType
   setItemType: (type: ItemType) => void
   editMode: boolean
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>
-  setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
 }) {
+  const { setEditItem } = useEditItem()
+
   const toggleEditMode = () => {
     if (editMode) setEditItem(undefined)
     setEditMode(prev => !prev)
