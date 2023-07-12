@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .bg-multi-color {
   background: linear-gradient(60deg,#f79533,#f37055,#ef4e7b, #ff234f);
   animation: animatedgradient 4s ease infinite alternate;

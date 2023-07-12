@@ -52,7 +52,7 @@ function ItemsPage() {
           setEditMode={setEditMode}
           setEditItem={setEditItem}
         />
-        <ItemsList
+        <ItemsList<GeneralItem>
           items={items}
           itemType={itemType}
           editMode={editMode}

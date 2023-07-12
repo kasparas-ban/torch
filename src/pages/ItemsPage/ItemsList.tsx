@@ -44,7 +44,7 @@ const subitemVariant = {
   },
 }
 
-export default function ItemsList({
+export default function ItemsList<T extends GeneralItem>({
   items,
   itemType,
   editMode,
@@ -53,17 +53,15 @@ export default function ItemsList({
   openEditItemModal,
   openConfirmModal,
 }: {
-  items: Task[] | Goal[]
+  items: T[]
   itemType: ItemType
   editMode: boolean
-  editItem?: GeneralItem
-  setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
+  editItem?: T
+  setEditItem: React.Dispatch<React.SetStateAction<T | undefined>>
   openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
   openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
 }) {
   const [scope, animate] = useAnimate()
-
-  const isItemGoal = (item: Task | Goal) => !!(item as Goal)?.goalId
 
   useEffect(() => {
     if (!scope.current) return
@@ -98,14 +96,10 @@ export default function ItemsList({
       </AnimatePresence>
       {items.length ? (
         <motion.ul className="space-y-3" ref={scope}>
-          {items.map((item, idx) => (
-            <Item
+          {items.map(item => (
+            <Item<T>
               item={item}
-              key={
-                isItemGoal(item)
-                  ? `goals_${(item as Goal).goalId}`
-                  : `tasks_${(item as Task).taskId}`
-              }
+              key={item.id}
               editMode={editMode}
               editItem={editItem}
               setEditItem={setEditItem}
@@ -134,7 +128,7 @@ export default function ItemsList({
   )
 }
 
-function Item({
+function Item<T extends GeneralItem>({
   item,
   editMode,
   editItem,
@@ -142,22 +136,24 @@ function Item({
   openEditItemModal,
   openConfirmModal,
 }: {
-  item: Task | Goal
+  item: T
   editMode: boolean
-  editItem?: GeneralItem
-  setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
+  editItem?: T
+  setEditItem: React.Dispatch<React.SetStateAction<T | undefined>>
   openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
   openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
 }) {
   const [showSublist, setShowSublist] = useState(true)
-  const containsSublist = !!(item as Goal)?.tasks?.length
-  const isGoal = !!(item as Goal)?.goalId
-  const itemId = isGoal ? (item as Goal)?.goalId : (item as Task)?.taskId
-  const showEditPanel =
-    editMode &&
-    (isGoal
-      ? itemId === (editItem as Goal)?.goalId
-      : itemId === (editItem as Task)?.taskId)
+
+  const itemSublist =
+    item.type === "GOAL"
+      ? item.tasks
+      : item.type === "DREAM"
+      ? item.goals
+      : undefined
+  const containsSublist = !!itemSublist?.length
+
+  const showEditPanel = editMode && editItem?.id === item.id
 
   const toggleEditClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation()
@@ -177,7 +173,7 @@ function Item({
               showEditPanel
                 ? "selected border-red-400 bg-red-400"
                 : "border-gray-400"
-            } hover:border-red-500 hover:bg-red-500`}
+            } hover:border-red-400 hover:bg-red-400`}
             whileHover={{ scale: 1.1 }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -224,8 +220,8 @@ function Item({
       </motion.div>
       <AnimatePresence initial={false}>
         {showEditPanel && (
-          <ItemEditPanel
-            key={`goal_${itemId}_edit_panel`}
+          <ItemEditPanel<T>
+            key={`goal_${item.id}_edit_panel`}
             item={item}
             openEditItemModal={openEditItemModal}
             openConfirmModal={openConfirmModal}
@@ -233,13 +229,17 @@ function Item({
         )}
       </AnimatePresence>
       <AnimatePresence initial={false}>
-        {isGoal && showSublist && (
-          <ItemSublist
-            key={`${itemId}_sublist`}
-            tasks={(item as Goal).tasks || []}
+        {containsSublist && showSublist && (
+          <ItemSublist<(typeof itemSublist)[number]>
+            key={`${item.id}_sublist`}
+            subitems={itemSublist || []}
             editMode={editMode}
-            editItem={editItem}
-            setEditItem={setEditItem}
+            editItem={editItem as (typeof itemSublist)[number] | undefined}
+            setEditItem={
+              setEditItem as React.Dispatch<
+                React.SetStateAction<(typeof itemSublist)[number] | undefined>
+              >
+            }
             openEditItemModal={openEditItemModal}
             openConfirmModal={openConfirmModal}
           />
@@ -249,17 +249,15 @@ function Item({
   )
 }
 
-function ItemEditPanel({
+function ItemEditPanel<T extends GeneralItem>({
   item,
   openEditItemModal,
   openConfirmModal,
 }: {
-  item: Goal | Task
+  item: T
   openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
   openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
 }) {
-  const isGoal = !!(item as Goal)?.goalId
-
   const doneFn = async () => console.log("Marking this item as done")
   const removeFn = async () => console.log("Removing this item")
 
@@ -267,7 +265,7 @@ function ItemEditPanel({
     <motion.div
       layout
       className={`mx-auto flex ${
-        isGoal
+        item.type === "GOAL" || item.type === "DREAM"
           ? "w-[400px] max-[500px]:w-full"
           : "w-[320px] max-[400px]:w-full max-[400px]:px-6"
       } justify-between`}
@@ -283,7 +281,7 @@ function ItemEditPanel({
         <TickIcon className="mx-auto" />
         Done
       </motion.div>
-      {isGoal && (
+      {item.type === "GOAL" && (
         <motion.div
           className="flex shrink-0 cursor-pointer select-none flex-col"
           whileHover={{ scale: 1.1 }}
@@ -303,7 +301,9 @@ function ItemEditPanel({
       <motion.div
         className="flex shrink-0 cursor-pointer select-none flex-col"
         whileHover={{ scale: 1.1 }}
-        onClick={() => openEditItemModal(isGoal ? "GOAL" : "TASK")}
+        onClick={() =>
+          openEditItemModal(item.type === "GOAL" ? "GOAL" : "TASK")
+        }
       >
         <EditIcon className="mx-auto" />
         Edit
@@ -320,31 +320,32 @@ function ItemEditPanel({
   )
 }
 
-function ItemSublist({
-  tasks,
+function ItemSublist<T extends Task | Goal>({
+  subitems,
   editMode,
   editItem,
   setEditItem,
   openEditItemModal,
   openConfirmModal,
 }: {
-  tasks: Task[]
+  subitems: T[]
   editMode: boolean
-  editItem?: GeneralItem
-  setEditItem: React.Dispatch<React.SetStateAction<GeneralItem | undefined>>
+  editItem?: T
+  setEditItem: React.Dispatch<React.SetStateAction<T | undefined>>
   openEditItemModal: (itemType: ItemType) => void
   openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
 }) {
-  const showEditPanel = (task: Task) =>
-    editMode && task.taskId === (editItem as Task)?.taskId
+  const showEditPanel = (subitem: T) => editMode && subitem.id === editItem?.id
 
   const toggleEditClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    task: Task
+    subitem: T
   ) => {
     e.stopPropagation()
-    setEditItem(showEditPanel(task) ? undefined : task)
+    setEditItem(showEditPanel(subitem) ? undefined : (subitem as any)) // TODO: need to fix types
   }
+
+  console.log("Edit item", subitems, editItem?.type)
 
   return (
     <motion.div
@@ -355,8 +356,8 @@ function ItemSublist({
       exit="exit"
     >
       <motion.ul layout className="space-y-3">
-        {tasks.map(task => (
-          <Fragment key={task.taskId}>
+        {subitems.map(subitem => (
+          <Fragment key={subitem.id}>
             <motion.li
               layout
               className={`flex space-x-3 ${editMode ? "" : "ml-6"}`}
@@ -365,15 +366,15 @@ function ItemSublist({
               {editMode && (
                 <motion.div
                   className={`group my-auto aspect-square w-12 cursor-pointer rounded-full border-2 ${
-                    showEditPanel(task)
+                    showEditPanel(subitem)
                       ? "selected border-red-400 bg-red-400"
                       : "border-gray-400"
-                  } hover:border-red-500 hover:bg-red-500`}
+                  } hover:border-red-400 hover:bg-red-400`}
                   whileHover={{ scale: 1.1 }}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0, transition: { duration: 0.1 } }}
-                  onClick={e => toggleEditClick(e, task)}
+                  onClick={e => toggleEditClick(e, subitem)}
                 >
                   <EditIcon className="m-auto h-full text-gray-500 group-hover:text-gray-700 group-[.selected]:text-gray-700" />
                 </motion.div>
@@ -381,17 +382,17 @@ function ItemSublist({
               <div className="my-auto aspect-square w-4 rounded-full bg-gray-400"></div>
               <motion.div
                 className={`relative flex w-full cursor-pointer overflow-hidden rounded-full py-3 px-6 ${
-                  editMode && !showEditPanel(task)
+                  editMode && !showEditPanel(subitem)
                     ? "bg-gray-300"
                     : "bg-red-300"
                 }`}
                 whileHover={{ scale: 1.02 }}
               >
                 <ItemProgress
-                  progress={task.progress}
-                  inEditMode={editMode && !showEditPanel(task)}
+                  progress={subitem.progress}
+                  inEditMode={editMode && !showEditPanel(subitem)}
                 />
-                <div className="z-10 select-none">{task.title}</div>
+                <div className="z-10 select-none">{subitem.title}</div>
               </motion.div>
               {!editMode && (
                 <motion.div
@@ -405,10 +406,10 @@ function ItemSublist({
               )}
             </motion.li>
             <AnimatePresence initial={false}>
-              {showEditPanel(task) && (
-                <ItemEditPanel
-                  key={`task_${task.taskId}_edit_panel`}
-                  item={task}
+              {showEditPanel(subitem) && (
+                <ItemEditPanel<T>
+                  key={`task_${subitem.id}_edit_panel`}
+                  item={subitem}
                   openEditItemModal={openEditItemModal}
                   openConfirmModal={openConfirmModal}
                 />

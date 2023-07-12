@@ -1,34 +1,39 @@
-export type Item = {
+export type GeneralItem = Task | Goal | Dream
+
+export type Task = {
+  id: number
   title: string
   progress: number
-}
-
-export type Task = Item & {
-  taskId: number
+  type: 'TASK'
   duration: { hours: number | null; minutes: number | null }
   priority?: "LOW" | "MEDIUM" | "HIGH"
   targetDate?: Date | null
   recurring?: boolean
-  goal?: any | null
+  goal?: Goal | null
 }
 
-export type Goal = Item & {
-  goalId: number
+export type Goal = {
+  id: number
+  title: string
+  progress: number
+  type: 'GOAL'
   tasks: Task[]
   dream?: Dream
   targetDate?: Date | null
   priority?: "LOW" | "MEDIUM" | "HIGH"
 }
 
-export type Dream = Item & {
-  dreamId: number
+export type Dream = {
+  id: number
+  title: string
+  progress: number
+  type: 'DREAM'
   goals: Goal[]
+  targetDate?: Date | null
 }
 
 export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
 
 export type ItemType = "TASK" | "GOAL" | "DREAM"
-
-export type GeneralItem = Task | Goal | Dream
 
 export type OptionType = { value: number; label: string }
