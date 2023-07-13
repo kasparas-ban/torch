@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { GeneralItem } from '../../types'
 
 type EditItemState = {
-  editItem: GeneralItem | undefined
+  editItem?: GeneralItem
   setEditItem: (newEditItem: GeneralItem | undefined) => void
 }
 

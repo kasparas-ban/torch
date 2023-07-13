@@ -1,5 +1,7 @@
 import { Fragment, useEffect, useState } from "react"
 import { AnimatePresence, motion, stagger, useAnimate } from "framer-motion"
+import useConfirmModal from "../../components/Modals/ConfirmModal/useConfirmModal"
+import useModal from "../../components/Modals/useModal"
 import { GeneralItem, Goal, ItemType, Task } from "../../types"
 import { ReactComponent as TimerStartIcon } from "../../assets/timer_start.svg"
 import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
@@ -49,15 +51,12 @@ export default function ItemsList<T extends GeneralItem>({
   items,
   itemType,
   editMode,
-  openEditItemModal,
-  openConfirmModal,
 }: {
   items: T[]
   itemType: ItemType
   editMode: boolean
-  openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
-  openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
 }) {
+  const { openTaskModal, openGoalModal, openDreamModal } = useModal()
   const [scope, animate] = useAnimate()
 
   useEffect(() => {
@@ -74,7 +73,12 @@ export default function ItemsList<T extends GeneralItem>({
     )
   }, [itemType])
 
-  const handleAddItem = () => openEditItemModal(itemType)
+  const handleAddItem = () =>
+    itemType === "TASK"
+      ? openTaskModal()
+      : itemType === "GOAL"
+      ? openGoalModal()
+      : openDreamModal()
 
   return (
     <>
@@ -94,13 +98,7 @@ export default function ItemsList<T extends GeneralItem>({
       {items.length ? (
         <motion.ul className="space-y-3" ref={scope}>
           {items.map(item => (
-            <Item<T>
-              item={item}
-              key={item.id}
-              editMode={editMode}
-              openEditItemModal={openEditItemModal}
-              openConfirmModal={openConfirmModal}
-            />
+            <Item<T> item={item} key={item.id} editMode={editMode} />
           ))}
         </motion.ul>
       ) : (
@@ -126,13 +124,9 @@ export default function ItemsList<T extends GeneralItem>({
 function Item<T extends GeneralItem>({
   item,
   editMode,
-  openEditItemModal,
-  openConfirmModal,
 }: {
   item: T
   editMode: boolean
-  openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
-  openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
 }) {
   const { editItem, setEditItem } = useEditItem()
   const [showSublist, setShowSublist] = useState(true)
@@ -212,12 +206,7 @@ function Item<T extends GeneralItem>({
       </motion.div>
       <AnimatePresence initial={false}>
         {showEditPanel && (
-          <ItemEditPanel<T>
-            key={`goal_${item.id}_edit_panel`}
-            item={item}
-            openEditItemModal={openEditItemModal}
-            openConfirmModal={openConfirmModal}
-          />
+          <ItemEditPanel<T> key={`goal_${item.id}_edit_panel`} item={item} />
         )}
       </AnimatePresence>
       <AnimatePresence initial={false}>
@@ -232,8 +221,6 @@ function Item<T extends GeneralItem>({
                 React.SetStateAction<(typeof itemSublist)[number] | undefined>
               >
             }
-            openEditItemModal={openEditItemModal}
-            openConfirmModal={openConfirmModal}
           />
         )}
       </AnimatePresence>
@@ -241,17 +228,19 @@ function Item<T extends GeneralItem>({
   )
 }
 
-function ItemEditPanel<T extends GeneralItem>({
-  item,
-  openEditItemModal,
-  openConfirmModal,
-}: {
-  item: T
-  openEditItemModal: (itemType: ItemType, addNewSubItem?: boolean) => void
-  openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
-}) {
+function ItemEditPanel<T extends GeneralItem>({ item }: { item: T }) {
+  const { openTaskModal, openGoalModal, openDreamModal } = useModal()
+  const { openModal: openConfirmModal } = useConfirmModal()
+
   const doneFn = async () => console.log("Marking this item as done")
   const removeFn = async () => console.log("Removing this item")
+
+  const openEditItemModal = (item: T) =>
+    item.type === "TASK"
+      ? openTaskModal(item)
+      : item.type === "GOAL"
+      ? openGoalModal(item)
+      : openDreamModal(item)
 
   return (
     <motion.div
@@ -268,7 +257,7 @@ function ItemEditPanel<T extends GeneralItem>({
       <motion.div
         className="flex shrink-0 cursor-pointer select-none flex-col"
         whileHover={{ scale: 1.1 }}
-        onClick={() => openConfirmModal("Mark as done?", doneFn)}
+        onClick={() => openConfirmModal(doneFn, "Mark as done?")}
       >
         <TickIcon className="mx-auto" />
         Done
@@ -277,7 +266,7 @@ function ItemEditPanel<T extends GeneralItem>({
         <motion.div
           className="flex shrink-0 cursor-pointer select-none flex-col"
           whileHover={{ scale: 1.1 }}
-          onClick={() => openEditItemModal("GOAL", true)}
+          onClick={() => openEditItemModal(item)} // TODO: need to fix this
         >
           <AddItemIcon className="mx-auto" />
           Add task
@@ -293,9 +282,7 @@ function ItemEditPanel<T extends GeneralItem>({
       <motion.div
         className="flex shrink-0 cursor-pointer select-none flex-col"
         whileHover={{ scale: 1.1 }}
-        onClick={() =>
-          openEditItemModal(item.type === "GOAL" ? "GOAL" : "TASK")
-        }
+        onClick={() => openEditItemModal(item)}
       >
         <EditIcon className="mx-auto" />
         Edit
@@ -303,7 +290,7 @@ function ItemEditPanel<T extends GeneralItem>({
       <motion.div
         className="flex shrink-0 cursor-pointer select-none flex-col"
         whileHover={{ scale: 1.1 }}
-        onClick={() => openConfirmModal("Remove item?", removeFn)}
+        onClick={() => openConfirmModal(removeFn, "Remove item?")}
       >
         <DeleteIcon className="mx-auto" />
         Remove
@@ -317,15 +304,11 @@ function ItemSublist<T extends Task | Goal>({
   editMode,
   editItem,
   setEditItem,
-  openEditItemModal,
-  openConfirmModal,
 }: {
   subitems: T[]
   editMode: boolean
   editItem?: T
   setEditItem: React.Dispatch<React.SetStateAction<T | undefined>>
-  openEditItemModal: (itemType: ItemType) => void
-  openConfirmModal: (title: string, confirmFn: () => Promise<void>) => void
 }) {
   const showEditPanel = (subitem: T) => editMode && subitem.id === editItem?.id
 
@@ -400,8 +383,6 @@ function ItemSublist<T extends Task | Goal>({
                 <ItemEditPanel<T>
                   key={`task_${subitem.id}_edit_panel`}
                   item={subitem}
-                  openEditItemModal={openEditItemModal}
-                  openConfirmModal={openConfirmModal}
                 />
               )}
             </AnimatePresence>

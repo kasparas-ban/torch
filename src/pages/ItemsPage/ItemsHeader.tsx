@@ -7,6 +7,7 @@ import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
 import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
+import useModal from "../../components/Modals/useModal"
 
 const itemTypeMotion = {
   initial: {
@@ -46,19 +47,18 @@ const itemTypeMenuMotion = {
 }
 
 export function ItemsHeader({
-  openGeneralModal,
   itemType,
   setItemType,
   editMode,
   setEditMode,
 }: {
-  openGeneralModal: () => void
   itemType: ItemType
   setItemType: (type: ItemType) => void
   editMode: boolean
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   const { setEditItem } = useEditItem()
+  const { openGeneralModal } = useModal()
 
   const toggleEditMode = () => {
     if (editMode) setEditItem(undefined)
