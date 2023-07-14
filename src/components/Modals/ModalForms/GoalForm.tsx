@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useLayoutEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Subtasks } from "./Subtasks"
 import useModal from "../useModal"
@@ -42,7 +42,7 @@ const formVariants = {
 }
 
 function GoalForm() {
-  const { editItem, addTaskOnOpen } = useModal()
+  const { editItem, addTaskOnOpen, modalKey } = useModal()
   const initialGoal = editItem as Goal
 
   const inputOrder = initialGoal
@@ -76,16 +76,18 @@ function GoalForm() {
   }
 
   const [goal, setGoal] = useState<IGoal>(defaultGoal)
-  const modalRef = useRef<HTMLDivElement | null>(null)
+  const modalRef = useRef<HTMLElement | null>(null)
+  const initialized = useRef(false)
 
-  useEffect(() => {
-    setGoal(defaultGoal)
-  }, [initialGoal])
+  useLayoutEffect(() => {
+    modalRef.current = document.getElementById(modalKey)
+    if (!initialized.current && addTaskOnOpen && modalRef.current) {
+      initialized.current = true
 
-  useEffect(() => {
-    if (addTaskOnOpen && modalRef.current) {
-      const addTaskButton = document.getElementById("add_subtask_button")
-      addTaskButton?.click()
+      setTimeout(() => {
+        const addTaskButton = document.getElementById("add_subtask_button")
+        addTaskButton?.click()
+      }, 100)
 
       setTimeout(() => {
         const taskTitleInput = document.getElementById(
@@ -94,7 +96,7 @@ function GoalForm() {
         taskTitleInput?.focus()
       }, 1000)
     }
-  }, [addTaskOnOpen])
+  }, [])
 
   const subtaskIdRef = useRef(goal.subtasks ? goal.subtasks.length : 0)
 

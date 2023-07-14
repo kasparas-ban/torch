@@ -26,6 +26,7 @@ function GeneralModal() {
           <React.Fragment key="general_modal">
             <motion.div
               layout
+              id={modalKey}
               key={modalKey}
               className="absolute inset-0 z-20 m-auto mx-auto w-full overflow-auto border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges] sm:h-fit sm:max-h-[80vh] sm:max-w-xl sm:rounded-lg sm:border"
               variants={modalVariants}

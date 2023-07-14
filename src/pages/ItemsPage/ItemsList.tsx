@@ -235,11 +235,11 @@ function ItemEditPanel<T extends GeneralItem>({ item }: { item: T }) {
   const doneFn = async () => console.log("Marking this item as done")
   const removeFn = async () => console.log("Removing this item")
 
-  const openEditItemModal = (item: T) =>
+  const openEditItemModal = (item: T, createTaskOnOpen = false) =>
     item.type === "TASK"
       ? openTaskModal(item)
       : item.type === "GOAL"
-      ? openGoalModal(item)
+      ? openGoalModal(item, undefined, createTaskOnOpen)
       : openDreamModal(item)
 
   return (
@@ -266,7 +266,7 @@ function ItemEditPanel<T extends GeneralItem>({ item }: { item: T }) {
         <motion.div
           className="flex shrink-0 cursor-pointer select-none flex-col"
           whileHover={{ scale: 1.1 }}
-          onClick={() => openEditItemModal(item)} // TODO: need to fix this
+          onClick={() => openEditItemModal(item, true)}
         >
           <AddItemIcon className="mx-auto" />
           Add task
