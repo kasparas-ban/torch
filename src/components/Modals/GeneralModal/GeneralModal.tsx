@@ -1,7 +1,7 @@
 import React from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import useModal from "../useModal"
-import ModalBackground from "./ModalBackground"
+import ModalBackground from "../ModalBackground"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import "../inputStyles.css"
 

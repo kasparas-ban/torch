@@ -1,10 +1,10 @@
 import React from "react"
 import { create } from "zustand"
 import { Dream, GeneralItem, Goal, Task } from "../../types"
-import GeneralForm from "./GeneralModal/GeneralForm"
-import TaskForm from "./GeneralModal/TaskForm"
-import GoalForm from "./GeneralModal/GoalForm"
-import DreamForm from "./GeneralModal/DreamForm"
+import GeneralForm from "./ModalForms/GeneralForm"
+import TaskForm from "./ModalForms/TaskForm"
+import GoalForm from "./ModalForms/GoalForm"
+import DreamForm from "./ModalForms/DreamForm"
 
 type ModalState = {
   title: string
