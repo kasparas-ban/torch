@@ -1,21 +1,22 @@
+import ReactDOM from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import useConfirmModal from "./useConfirmModal"
 import ModalBackground from "../ModalBackground"
 
 const modalVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
-  initial: { opacity: 0, scale: 0.95 },
+  initial: { opacity: 0, scale: 0.8 },
   close: {
     opacity: 0,
-    scale: 0.95,
-    transition: { duration: 0.2 },
+    scale: 0.5,
+    transition: { duration: 0.1 },
   },
 }
 
 function ConfirmModal() {
   const { isOpen, title, handleSubmit, closeModal } = useConfirmModal()
 
-  return (
+  return ReactDOM.createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -58,7 +59,8 @@ function ConfirmModal() {
           <ModalBackground closeModal={closeModal} />
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.getElementById("root") as HTMLElement
   )
 }
 
