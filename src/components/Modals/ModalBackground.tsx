@@ -18,14 +18,17 @@ function ModalBackground({ closeModal }: { closeModal: () => void }) {
     <motion.div
       ref={backgroundRef}
       initial={{
-        opacity: 0,
+        backgroundColor: "rgba(0, 0, 0, 0)",
+        backdropFilter: "none",
       }}
       animate={{
-        opacity: 0.9,
+        backgroundColor: "rgba(80, 80, 80, 0.1)",
+        backdropFilter: "blur(4px)",
         transition: { duration: 0.2 },
       }}
       exit={{
-        opacity: 0,
+        backgroundColor: "rgba(0, 0, 0, 0)",
+        backdropFilter: "none",
         transition: { duration: 0.2 },
       }}
       className="absolute inset-0 z-10 bg-gray-200"
