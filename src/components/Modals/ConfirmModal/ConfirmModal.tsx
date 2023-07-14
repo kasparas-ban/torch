@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import useConfirmModal from "./useConfirmModal"
-import "../inputStyles.css"
+import ModalBackground from "../GeneralModal/ModalBackground"
 
 const modalVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
@@ -18,10 +18,11 @@ function ConfirmModal() {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <>
+          <motion.dialog
           layout
           key="confirm_modal"
-          className="absolute inset-0 z-20 m-auto mx-auto flex h-fit w-full max-w-fit justify-center overflow-auto rounded-lg border border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges]"
+            className="absolute inset-0 z-20 m-auto mx-auto flex h-fit w-full max-w-fit justify-center overflow-auto rounded-lg border border-gray-200 bg-white p-5 [scrollbar-gutter:stable_both-edges]"
           variants={modalVariants}
           initial="initial"
           animate="default"
@@ -53,7 +54,9 @@ function ConfirmModal() {
               </motion.button>
             </div>
           </div>
-        </motion.div>
+          </motion.dialog>
+          <ModalBackground closeModal={closeModal} />
+        </>
       )}
     </AnimatePresence>
   )

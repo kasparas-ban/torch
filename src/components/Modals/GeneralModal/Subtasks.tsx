@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion"
-import { IGoal, ITask } from "./AddGoalModal"
+import { IGoal, ITask } from "./GoalForm"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { ReactComponent as CloseIcon } from "../../../assets/close.svg"

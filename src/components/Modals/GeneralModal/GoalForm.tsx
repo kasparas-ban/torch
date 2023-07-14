@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { Subtasks } from "../AddGoalModal/Subtasks"
+import { Subtasks } from "./Subtasks"
 import useModal from "../useModal"
 import { Dream, Goal } from "../../../types"
 import TextInput from "../../Inputs/TextInput"

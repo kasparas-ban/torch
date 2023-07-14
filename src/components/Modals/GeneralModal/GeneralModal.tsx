@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from "react"
+import React from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import useModal from "../useModal"
+import ModalBackground from "./ModalBackground"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import "../inputStyles.css"
 
@@ -17,18 +18,6 @@ const modalVariants = {
 function GeneralModal() {
   const { isOpen, modalContent, modalTitle, modalKey, closeModal, goBack } =
     useModal()
-
-  const backgroundRef = useRef<HTMLDivElement | null>(null)
-
-  const handleClickOutside = (e: MouseEvent) =>
-    backgroundRef.current?.contains(e.target as Node) && closeModal()
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
 
   return (
     <>
@@ -55,26 +44,10 @@ function GeneralModal() {
               </motion.div>
               <div className="mx-auto">{modalContent}</div>
             </motion.div>
+            <ModalBackground closeModal={closeModal} />
           </React.Fragment>
         )}
       </AnimatePresence>
-      {isOpen && (
-        <motion.div
-          ref={backgroundRef}
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: 0.9,
-            transition: { duration: 0.2 },
-          }}
-          exit={{
-            opacity: 0,
-            transition: { duration: 0.2 },
-          }}
-          className="absolute inset-0 z-10 bg-gray-200"
-        />
-      )}
     </>
   )
 }
