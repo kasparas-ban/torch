@@ -25,9 +25,9 @@ const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.35 } },
   addInitial: { opacity: 0, scale: 0.8 },
   remove: {
-    opacity: 0,
-    scale: 0.8,
-    transition: { duration: 0.2 },
+    opacity: [1, 0, 0],
+    scale: [1, 0.8, 0.8],
+    transition: { duration: 0.5 },
   },
 }
 
@@ -65,7 +65,7 @@ function TaskForm() {
       <form className="mt-6">
         <div className="flex flex-col gap-1">
           <AnimatePresence initial={false} mode="popLayout">
-            <motion.div layout className="relative">
+            <motion.div layout key="task_title" className="relative">
               <TextInput
                 id="task_title"
                 value={task.title}
@@ -77,7 +77,7 @@ function TaskForm() {
               />
             </motion.div>
 
-            <motion.div layout key={`task_duration`} className="relative">
+            <motion.div layout key="task_duration" className="relative">
               <DurationInput
                 id={`task_duration`}
                 duration={task.duration}

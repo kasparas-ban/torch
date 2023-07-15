@@ -12,9 +12,9 @@ const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
   addInitial: { opacity: 0, scale: 0.8 },
   remove: {
-    opacity: 0,
-    scale: 0.8,
-    transition: { duration: 0.2 },
+    opacity: [1, 0, 0],
+    scale: [1, 0.8, 0.8],
+    transition: { duration: 0.5 },
   },
 }
 
@@ -184,157 +184,184 @@ export function Subtasks({
 
   return (
     <>
-      <motion.div
-        layout
-        key="subtasks_title"
-        className="mb-1 px-4 text-sm text-gray-600"
-      >
-        Subtasks
-      </motion.div>
+      <AnimatePresence initial={false} mode="popLayout">
+        {goal.subtasks?.length && (
+          <motion.div
+            layout
+            key="subtasks_title"
+            variants={formVariants}
+            initial="addInitial"
+            animate="default"
+            exit="remove"
+            className="mb-1 px-4 text-sm text-gray-600"
+          >
+            Subtasks
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div key="subtasks_list" className="flex flex-col gap-4">
         <AnimatePresence initial={false} mode="popLayout">
           {goal.subtasks?.map(subtask => (
-            <motion.div
-              layout
-              key={`subtask_${subtask.id}`}
-              className="relative rounded-2xl bg-gray-300 p-2 drop-shadow-xl"
-              variants={formVariants}
-              initial="addInitial"
-              animate="default"
-              exit="remove"
-            >
-              <motion.button
-                layout
-                className="absolute top-[-10px] right-[-5px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500"
-                onClick={e => removeTask(e, subtask.id)}
-                whileTap={{ scale: 0.95 }}
-              >
-                <CloseIcon className="m-auto h-full w-6 text-gray-200" />
-              </motion.button>
-              <div className="flex flex-col gap-1">
-                <AnimatePresence initial={false} mode="popLayout">
-                  <motion.div
-                    layout
-                    key={`subtask_title_${subtask.id}`}
-                    className="relative"
-                  >
-                    <TextInput
-                      id={`subtask_title_${subtask.id}`}
-                      value={subtask.title}
-                      setValue={(input: string) =>
-                        setGoal(prev => ({
-                          ...prev,
-                          subtasks: prev.subtasks?.map(task =>
-                            task.id === subtask.id
-                              ? { ...task, title: input }
-                              : task
-                          ),
-                        }))
-                      }
-                      inputName="task_title"
-                      label="Task title"
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    layout
-                    key={`subtask_duration_${subtask.id}`}
-                    className="relative"
-                  >
-                    <DurationInput
-                      id={`subtask_duration_${subtask.id}`}
-                      duration={subtask.duration}
-                      setDuration={(hours: string, minutes: string) =>
-                        setGoal(prev => ({
-                          ...prev,
-                          subtasks: prev.subtasks?.map(task =>
-                            task.id === subtask.id
-                              ? {
-                                  ...task,
-                                  duration: {
-                                    hours: Number(hours),
-                                    minutes: Number(minutes),
-                                  },
-                                }
-                              : task
-                          ),
-                        }))
-                      }
-                    />
-                  </motion.div>
-
-                  {subtask.inputOrder.map(input => {
-                    if (input === "priority") {
-                      return (
-                        <motion.div
-                          layout
-                          key={`subtask_priority_${subtask.id}}`}
-                          className="relative"
-                          variants={formVariants}
-                          initial="addInitial"
-                          animate="default"
-                          exit="remove"
-                        >
-                          <PriorityInput
-                            id={`subtask_priority_${subtask.id}`}
-                            value={subtask.priority}
-                            setValue={(input: PriorityType) =>
-                              setGoal(prev => ({
-                                ...prev,
-                                subtasks: prev.subtasks?.map(task =>
-                                  task.id === subtask.id
-                                    ? { ...task, priority: input }
-                                    : task
-                                ),
-                              }))
-                            }
-                          />
-                        </motion.div>
-                      )
-                    }
-                    if (input === "targetDate") {
-                      return (
-                        <motion.div
-                          layout
-                          key={`subtask_target_date_${subtask.id}}`}
-                          className="relative"
-                          variants={formVariants}
-                          initial="addInitial"
-                          animate="default"
-                          exit="remove"
-                        >
-                          <DateInput
-                            id={`subtask_target_date_${subtask.id}`}
-                            value={subtask.targetDate}
-                            setValue={(input: string) =>
-                              setGoal(prev => ({
-                                ...prev,
-                                subtasks: prev.subtasks?.map(task =>
-                                  task.id === subtask.id
-                                    ? { ...task, targetDate: new Date(input) }
-                                    : task
-                                ),
-                              }))
-                            }
-                          />
-                        </motion.div>
-                      )
-                    }
-                  })}
-
-                  <motion.div layout className="mb-1">
-                    <AddTaskSections
-                      id={subtask.id}
-                      task={subtask}
-                      setGoal={setGoal}
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </motion.div>
+            <div className="relative" key={subtask.id}>
+              <SubtaskItem
+                subtask={subtask}
+                removeTask={removeTask}
+                setGoal={setGoal}
+              />
+            </div>
           ))}
         </AnimatePresence>
       </div>
     </>
+  )
+}
+
+function SubtaskItem({
+  subtask,
+  removeTask,
+  setGoal,
+}: {
+  subtask: ITask
+  removeTask: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: number
+  ) => void
+  setGoal: React.Dispatch<React.SetStateAction<IGoal>>
+}) {
+  return (
+    <motion.div
+      layout
+      id={`subtask_${subtask.id}`}
+      key={`subtask_${subtask.id}`}
+      className="relative rounded-2xl bg-gray-300 p-2 drop-shadow-xl"
+      variants={formVariants}
+      initial="addInitial"
+      animate="default"
+      exit="remove"
+    >
+      <motion.button
+        layout
+        className="absolute top-[-10px] right-[-5px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500"
+        onClick={e => removeTask(e, subtask.id)}
+        whileTap={{ scale: 0.95 }}
+      >
+        <CloseIcon className="m-auto h-full w-6 text-gray-200" />
+      </motion.button>
+      <div className="flex flex-col gap-1">
+        <AnimatePresence initial={false} mode="popLayout">
+          <motion.div
+            layout
+            key={`subtask_title_${subtask.id}`}
+            className="relative"
+          >
+            <TextInput
+              id={`subtask_title_${subtask.id}`}
+              value={subtask.title}
+              setValue={(input: string) =>
+                setGoal(prev => ({
+                  ...prev,
+                  subtasks: prev.subtasks?.map(task =>
+                    task.id === subtask.id ? { ...task, title: input } : task
+                  ),
+                }))
+              }
+              inputName="task_title"
+              label="Task title"
+            />
+          </motion.div>
+
+          <motion.div
+            layout
+            key={`subtask_duration_${subtask.id}`}
+            className="relative"
+          >
+            <DurationInput
+              id={`subtask_duration_${subtask.id}`}
+              duration={subtask.duration}
+              setDuration={(hours: string, minutes: string) =>
+                setGoal(prev => ({
+                  ...prev,
+                  subtasks: prev.subtasks?.map(task =>
+                    task.id === subtask.id
+                      ? {
+                          ...task,
+                          duration: {
+                            hours: Number(hours),
+                            minutes: Number(minutes),
+                          },
+                        }
+                      : task
+                  ),
+                }))
+              }
+            />
+          </motion.div>
+
+          {subtask.inputOrder.map(input => {
+            if (input === "priority") {
+              return (
+                <motion.div
+                  layout
+                  key={`subtask_priority_${subtask.id}}`}
+                  className="relative"
+                  variants={formVariants}
+                  initial="addInitial"
+                  animate="default"
+                  exit="remove"
+                >
+                  <PriorityInput
+                    id={`subtask_priority_${subtask.id}`}
+                    value={subtask.priority}
+                    setValue={(input: PriorityType) =>
+                      setGoal(prev => ({
+                        ...prev,
+                        subtasks: prev.subtasks?.map(task =>
+                          task.id === subtask.id
+                            ? { ...task, priority: input }
+                            : task
+                        ),
+                      }))
+                    }
+                  />
+                </motion.div>
+              )
+            }
+            if (input === "targetDate") {
+              return (
+                <motion.div
+                  layout
+                  key={`subtask_target_date_${subtask.id}}`}
+                  className="relative"
+                  variants={formVariants}
+                  initial="addInitial"
+                  animate="default"
+                  exit="remove"
+                >
+                  <DateInput
+                    id={`subtask_target_date_${subtask.id}`}
+                    value={subtask.targetDate}
+                    setValue={(input: string) =>
+                      setGoal(prev => ({
+                        ...prev,
+                        subtasks: prev.subtasks?.map(task =>
+                          task.id === subtask.id
+                            ? { ...task, targetDate: new Date(input) }
+                            : task
+                        ),
+                      }))
+                    }
+                  />
+                </motion.div>
+              )
+            }
+          })}
+
+          <motion.div layout className="mb-1">
+            <AddTaskSections id={subtask.id} task={subtask} setGoal={setGoal} />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </motion.div>
   )
 }

@@ -35,9 +35,9 @@ const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.35 } },
   addInitial: { opacity: 0, scale: 0.8 },
   remove: {
-    opacity: 0,
-    scale: 0.8,
-    transition: { duration: 0.2 },
+    opacity: [1, 0, 0],
+    scale: [1, 0.8, 0.8],
+    transition: { duration: 0.5 },
   },
 }
 
@@ -222,7 +222,7 @@ function GoalForm() {
 
         <AddGoalSections goal={goal} setGoal={setGoal} />
 
-        {!!goal.subtasks?.length && <Subtasks goal={goal} setGoal={setGoal} />}
+        <Subtasks goal={goal} setGoal={setGoal} />
 
         <div className="relative mt-6 mb-5 flex justify-center">
           <motion.button
