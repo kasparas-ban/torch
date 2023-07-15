@@ -12,10 +12,10 @@ const modalVariants = {
     scale: 1,
     transition: { duration: 0.2, ease: "easeOut" },
   },
-  initial: { opacity: 0, scale: 0.8 },
+  initial: { opacity: 0, scale: 0.9 },
   close: {
     opacity: 0,
-    scale: 0.8,
+    scale: 0.9,
     transition: { duration: 0.1 },
   },
 }

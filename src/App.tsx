@@ -17,8 +17,9 @@ function App() {
   // TODO: need to disable body scroll when modal is open
   return (
     <motion.div
+      initial={false}
       animate={{
-        scale: isModalOpen || isConfirmOpen ? 0.9 : 1,
+        transform: isModalOpen || isConfirmOpen ? "scale(0.9)" : "scale(1)",
         transition: { duration: 0.2, ease: "easeOut" },
       }}
     >
