@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
+import clsx from "clsx"
+import { AnimatePresence, motion } from "framer-motion"
 import { ReactComponent as TasksIcon } from "../assets/navigation_icons/goals.svg"
 import { ReactComponent as CalendarIcon } from "../assets/navigation_icons/calendar.svg"
 import { ReactComponent as TimerIcon } from "../assets/navigation_icons/timer.svg"
@@ -9,7 +11,6 @@ import { ReactComponent as MenuIcon } from "../assets/navigation_icons/menu.svg"
 import { ReactComponent as TorchLogo } from "../assets/torch_logo.svg"
 import { ReactComponent as UserIcon } from "../assets/user.svg"
 import { ReactComponent as CloseIcon } from "../assets/close.svg"
-import { AnimatePresence, motion } from "framer-motion"
 
 function NavigationBar() {
   const [showModalMenu, setShowModalMenu] = useState(false)
@@ -166,9 +167,15 @@ function NavigationLink({
   highlight,
 }: NavigationLinkProps) {
   return (
-    <Link to={path} className="flex flex-col items-center justify-center">
+    <Link
+      to={path}
+      className={clsx(
+        "flex flex-col items-center justify-center",
+        highlight ? "rounded-full" : "rounded-lg"
+      )}
+    >
       {highlight ? (
-        <div className="bg-multi-color bg-multi-color-delay peer mx-2 rounded-full brightness-150 py-2 px-2 hover:cursor-pointer hover:brightness-100">
+        <div className="bg-multi-color bg-multi-color-delay peer mx-2 rounded-full py-2 px-2 brightness-150 hover:cursor-pointer hover:brightness-100">
           <Icon className="mx-auto h-8 w-8 text-slate-800" />
         </div>
       ) : (

@@ -18,3 +18,11 @@ export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
 
 export const capitalizeString = (word: string) =>
   word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+
+export const secondsToMinutes = (totalSeconds: number) => {
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds - minutes * 60
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`
+}
