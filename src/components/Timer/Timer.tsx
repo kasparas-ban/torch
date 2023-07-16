@@ -60,7 +60,7 @@ function timerReducer(state: IState, action: IAction): IState {
     case "tick":
       return {
         ...state,
-        time: state.time--,
+        time: state.time - 1,
       }
     default:
       return state
@@ -105,6 +105,8 @@ function Timer({ initialTime }: ITimer) {
   const [settingsModalOpen, setSettingsModalOpen] = useState(false)
   const minutes = Math.floor(state.time / 60)
   const seconds = state.time - minutes * 60
+
+  console.log("state", state)
 
   return (
     <AnimatePresence>

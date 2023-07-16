@@ -18,10 +18,11 @@ An app that helps you track the time you spend pursuing your goals.
 - [x] Goal form modal
 - [x] Dream form modal
 - [ ] Implement `prefers-reduced-motion` media query
-- [ ] Refactor the modal component (if possible)
+- [x] Refactor the modal component (if possible)
 - [ ] Redo duration input to match what's in the Android timer
 - [ ] Make so that a user may work towards a goal when it has subtasks
 - [ ] Connect "start timer" button in goals list to the timer page
 - [ ] Add React Query
 - [ ] Investigate which state management library to use for forms and list page
-- [ ] Rewrite all of the state management in Goals list page with Jotai or Zustand
+- [x] Rewrite all of the state management in Goals list page with Jotai or Zustand
+- [ ] Disable edit mode when there are no items in the list
