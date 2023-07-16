@@ -3,9 +3,9 @@ import { IGoal, ITask } from "./GoalForm"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { ReactComponent as CloseIcon } from "../../../assets/close.svg"
-import TextInput from "../../Inputs/TextInput"
-import DurationInput from "../../Inputs/DurationInput"
 import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
+import DurationInput from "../../Inputs/DurationInput"
+import TextInput from "../../Inputs/TextInput"
 import DateInput from "../../Inputs/DateInput"
 
 const formVariants = {

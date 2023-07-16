@@ -1,25 +1,11 @@
-import React, { useState, useEffect, useReducer } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import React from "react"
 import dayjs from "dayjs"
-import { TimerShape } from "./TimerShape"
+import { AnimatePresence, motion } from "framer-motion"
 import TimerFocusForm from "./TimerFocusForm"
+import { TimerShape } from "./TimerShape"
 import useModal from "../Modals/useModal"
-import { TimerAction, TimerState } from "../../types"
+import useTimerStore from "./useTimer"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
-
-interface ITimer {
-  initialTime: number
-}
-
-interface IState {
-  time: number
-  timerState: TimerState
-}
-
-interface IAction {
-  type: TimerAction
-  newTime?: number
-}
 
 const buttonVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
@@ -31,72 +17,13 @@ const buttonVariants = {
   },
 }
 
-function timerReducer(state: IState, action: IAction): IState {
-  switch (action.type) {
-    case "start":
-      return {
-        ...state,
-        timerState: "running",
-      }
-    case "pause":
-      return {
-        ...state,
-        timerState: "paused",
-      }
-    case "reset":
-      return {
-        ...state,
-        time: action.newTime || 0,
-        timerState: "idle",
-      }
-    case "tick":
-      return {
-        ...state,
-        time: state.time - 1,
-      }
-    default:
-      return state
-  }
-}
+function Timer() {
+  const timerState = useTimerStore.use.timerState()
+  const startTimer = useTimerStore.use.startTimer()
+  const pauseTimer = useTimerStore.use.pauseTimer()
+  const resetTimer = useTimerStore.use.resetTimer()
 
-function useTimer(initialTime: number) {
-  const initialState: IState = {
-    time: initialTime,
-    timerState: "idle",
-  }
-  const [state, dispatch] = useReducer(timerReducer, initialState)
-  const [intervalNum, setIntervalNum] = useState<number | undefined>(undefined)
-
-  useEffect(() => {
-    if (state.timerState === "running") {
-      clearInterval(intervalNum)
-
-      let timeValue = state.time
-
-      const interval = setInterval(() => {
-        if (timeValue <= 0) {
-          clearInterval(interval)
-          dispatch({ type: "reset", newTime: initialTime })
-        } else {
-          dispatch({ type: "tick" })
-        }
-        timeValue--
-      }, 1000)
-
-      setIntervalNum(interval)
-    } else {
-      clearInterval(intervalNum)
-    }
-  }, [state.timerState])
-
-  return { state, dispatch }
-}
-
-function Timer({ initialTime }: ITimer) {
-  const { state, dispatch } = useTimer(initialTime)
   const { openTimerSettingsModal } = useModal()
-  const minutes = Math.floor(state.time / 60)
-  const seconds = state.time - minutes * 60
 
   return (
     <AnimatePresence>
@@ -107,19 +34,10 @@ function Timer({ initialTime }: ITimer) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "tween" }}
       >
-        <TimerFocusForm timerState={state.timerState} />
-        <div
-          className={`m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border ${
-            state.timerState === "idle" ? "border-rose-600" : ""
-          }`}
-        >
-          <TimerShape initialTime={initialTime} currentTime={state.time} />
-          <div className="text-center text-8xl font-thin tabular-nums max-[300px]:text-7xl">
-            {`${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}
-          </div>
-        </div>
+        <TimerFocusForm timerState={timerState} />
+        <TimerClock />
         <AnimatePresence mode="popLayout">
-          {state.timerState !== "running" && (
+          {timerState !== "running" && (
             <motion.div
               layout
               key="timer_settings"
@@ -141,11 +59,11 @@ function Timer({ initialTime }: ITimer) {
               </motion.button>
             </motion.div>
           )}
-          {state.timerState === "idle" ? (
+          {timerState === "idle" ? (
             <motion.button
               layout
               type="submit"
-              onClick={() => dispatch({ type: "start" })}
+              onClick={startTimer}
               className="bg-multi-color m-auto mt-4 flex h-8 w-24 rounded-full px-5 py-2.5 text-center focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
               whileHover={{ scale: 1.06 }}
               variants={buttonVariants}
@@ -157,11 +75,11 @@ function Timer({ initialTime }: ITimer) {
                 Start
               </div>
             </motion.button>
-          ) : state.timerState === "running" ? (
+          ) : timerState === "running" ? (
             <motion.button
               layout
               type="submit"
-              onClick={() => dispatch({ type: "pause" })}
+              onClick={pauseTimer}
               className="m-auto mt-4 flex h-8 w-24 rounded-full border border-gray-400"
               whileHover={{ scale: 1.06 }}
               variants={buttonVariants}
@@ -178,7 +96,7 @@ function Timer({ initialTime }: ITimer) {
               <motion.button
                 layout
                 type="submit"
-                onClick={() => dispatch({ type: "start" })}
+                onClick={startTimer}
                 className="bg-multi-color relative mt-4 flex h-8 w-24 rounded-full px-5 py-2.5 text-center focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
                 whileHover={{ scale: 1.06 }}
                 variants={buttonVariants}
@@ -193,9 +111,7 @@ function Timer({ initialTime }: ITimer) {
               <motion.button
                 layout
                 type="submit"
-                onClick={() =>
-                  dispatch({ type: "reset", newTime: initialTime })
-                }
+                onClick={resetTimer}
                 className="mt-4 flex h-8 w-24 rounded-full border border-gray-400"
                 whileHover={{ scale: 1.06 }}
                 variants={buttonVariants}
@@ -211,10 +127,32 @@ function Timer({ initialTime }: ITimer) {
           )}
         </AnimatePresence>
         <AnimatePresence>
-          {state.timerState !== "running" && <TimerHistory />}
+          {timerState !== "running" && <TimerHistory />}
         </AnimatePresence>
       </motion.div>
     </AnimatePresence>
+  )
+}
+
+function TimerClock() {
+  const time = useTimerStore.use.time()
+  const initialTime = useTimerStore.use.initialTime()
+  const timerState = useTimerStore.use.timerState()
+
+  const minutes = Math.floor(time / 60)
+  const seconds = time - minutes * 60
+
+  return (
+    <div
+      className={`m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border ${
+        timerState === "idle" ? "border-rose-600" : ""
+      }`}
+    >
+      <TimerShape initialTime={initialTime} currentTime={time} />
+      <div className="text-center text-8xl font-thin tabular-nums max-[300px]:text-7xl">
+        {`${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}
+      </div>
+    </div>
   )
 }
 

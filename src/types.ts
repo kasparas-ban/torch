@@ -38,6 +38,4 @@ export type ItemType = "TASK" | "GOAL" | "DREAM"
 
 export type OptionType = { value: number; label: string }
 
-export type TimerAction = "start" | "pause" | "reset" | "tick"
-
 export type TimerState = "idle" | "paused" | "running"

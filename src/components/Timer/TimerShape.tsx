@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import "./timer.css"
 
 export const TimerShape = ({
@@ -18,27 +18,29 @@ export const TimerShape = ({
 
   return (
     <div className="timer-shape absolute max-w-xs">
-      <motion.svg
-        style={{ width: "inherit", height: "inherit" }}
-        viewBox={`0 0 ${size} ${size}`}
-        width={size}
-        height={size}
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <motion.path
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: fractionComplete }}
-          transition={{
-            duration: 1,
-            ease: "linear",
-          }}
-          d={path}
-          fill="none"
-          stroke={stroke}
-          strokeLinecap={strokeLinecap ?? "round"}
-          strokeWidth={strokeWidth}
-        />
-      </motion.svg>
+      <AnimatePresence initial={false}>
+        <motion.svg
+          style={{ width: "inherit", height: "inherit" }}
+          viewBox={`0 0 ${size} ${size}`}
+          width={size}
+          height={size}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <motion.path
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: fractionComplete }}
+            transition={{
+              duration: 1,
+              ease: "linear",
+            }}
+            d={path}
+            fill="none"
+            stroke={stroke}
+            strokeLinecap={strokeLinecap ?? "round"}
+            strokeWidth={strokeWidth}
+          />
+        </motion.svg>
+      </AnimatePresence>
     </div>
   )
 }
