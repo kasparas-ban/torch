@@ -2,22 +2,14 @@ import React, { useState, useEffect, useReducer } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import dayjs from "dayjs"
 import { TimerShape } from "./TimerShape"
-import {
-  SelectTypeFirstField,
-  SelectTypeSecondField,
-} from "../Inputs/SelectField"
+import TimerFocusForm from "./TimerFocusForm"
+import useModal from "../Modals/useModal"
+import { TimerAction, TimerState } from "../../types"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
-import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
-import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
-import { OptionType } from "../../types"
-import TimerSettingsModal from "./TimerSettingsModal"
 
 interface ITimer {
   initialTime: number
 }
-
-type TimerAction = "start" | "pause" | "reset" | "tick"
-type TimerState = "idle" | "paused" | "running"
 
 interface IState {
   time: number
@@ -102,11 +94,9 @@ function useTimer(initialTime: number) {
 
 function Timer({ initialTime }: ITimer) {
   const { state, dispatch } = useTimer(initialTime)
-  const [settingsModalOpen, setSettingsModalOpen] = useState(false)
+  const { openTimerSettingsModal } = useModal()
   const minutes = Math.floor(state.time / 60)
   const seconds = state.time - minutes * 60
-
-  console.log("state", state)
 
   return (
     <AnimatePresence>
@@ -117,7 +107,7 @@ function Timer({ initialTime }: ITimer) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "tween" }}
       >
-        <TimerSettings timerState={state.timerState} />
+        <TimerFocusForm timerState={state.timerState} />
         <div
           className={`m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border ${
             state.timerState === "idle" ? "border-rose-600" : ""
@@ -144,7 +134,7 @@ function Timer({ initialTime }: ITimer) {
               <motion.button
                 className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
                 whileHover={{ scale: 1.06 }}
-                onClick={() => setSettingsModalOpen(true)}
+                onClick={openTimerSettingsModal}
               >
                 <SettingsIcon className="mr-1 h-4 w-4" />
                 Settings
@@ -221,107 +211,10 @@ function Timer({ initialTime }: ITimer) {
           )}
         </AnimatePresence>
         <AnimatePresence>
-          {settingsModalOpen && (
-            <TimerSettingsModal
-              key="timer_settings_modal"
-              closeModal={() => setSettingsModalOpen(false)}
-            />
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
           {state.timerState !== "running" && <TimerHistory />}
         </AnimatePresence>
       </motion.div>
     </AnimatePresence>
-  )
-}
-
-type FocusType = "ALL" | "TASKS" | "GOALS" | "DREAMS"
-
-const focusTypeOptions = [
-  { label: "All", value: "ALL" as FocusType },
-  { label: "Tasks", value: "TASKS" as FocusType },
-  { label: "Goals", value: "GOALS" as FocusType },
-  { label: "Dreams", value: "DREAMS" as FocusType },
-]
-
-function TimerSettings({ timerState }: { timerState: TimerState }) {
-  const [focusOn, setFocusOn] = useState<OptionType | null>()
-  const [focusType, setFocusType] = useState<FocusType | null>(
-    focusTypeOptions[0].value
-  )
-
-  const getFocusOptions = (inputValue: string) =>
-    new Promise<OptionType[]>(resolve => {
-      setTimeout(() => {
-        resolve([{ label: 'Finish reading "The Shape of Space"', value: 123 }])
-      }, 1000)
-    })
-
-  return (
-    <div className="mx-auto mt-8 max-w-sm max-[400px]:mx-4 max-[320px]:mx-0">
-      <motion.div
-        animate={{
-          opacity: timerState !== "running" ? 1 : 0,
-          height: timerState !== "running" ? "auto" : 0,
-        }}
-      >
-        <div className="mb-1 ml-2">Focus on</div>
-        <div className="flex [&>div:first-child]:w-full">
-          <SelectTypeFirstField
-            value={focusOn}
-            onChange={option => setFocusOn(option)}
-            options={[]}
-            loadOptions={getFocusOptions}
-            defaultOptions
-            isClearable
-            cacheOptions
-          />
-          <SelectTypeSecondField
-            value={focusTypeOptions.find(option => option.value === focusType)}
-            onChange={option => option && setFocusType(option.value)}
-            options={focusTypeOptions.filter(
-              option => option.value !== focusType
-            )}
-          />
-        </div>
-      </motion.div>
-      <AnimatePresence mode="popLayout">
-        {focusOn && (
-          <motion.div
-            layout
-            className="mt-4 flex flex-col justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.25, delay: 0.1 },
-            }}
-            exit={{ opacity: 0, y: 0, transition: { duration: 0.04 } }}
-            transition={{ type: "tween" }}
-          >
-            <div className="text-center text-xl font-semibold">
-              {focusOn.label}
-            </div>
-            <div className="flex justify-center">
-              <div className="text-6xl font-bold">45%</div>
-              <div className="mt-1.5 ml-1.5 flex flex-col gap-1">
-                <div className="flex gap-2">
-                  <TimerBoldIcon />
-                  <span className="font-semibold">6 h</span>
-                  spent
-                </div>
-                <div className="flex gap-2">
-                  <TimerIcon />
-                  <span className="font-semibold">4.5 h</span>
-                  left
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
   )
 }
 

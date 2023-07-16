@@ -5,6 +5,7 @@ import GeneralForm from "./ModalForms/GeneralForm"
 import TaskForm from "./ModalForms/TaskForm"
 import GoalForm from "./ModalForms/GoalForm"
 import DreamForm from "./ModalForms/DreamForm"
+import TimerSettings from "../Timer/TimerSettings"
 
 type ModalState = {
   title: string
@@ -14,6 +15,7 @@ type ModalState = {
   modalContent?: React.ReactNode
   addTaskOnOpen: boolean
   openGeneralOnClose?: boolean
+
   openTaskModal: (item?: Task, openGeneralOnClose?: boolean) => void
   openGoalModal: (
     item?: Goal,
@@ -22,6 +24,8 @@ type ModalState = {
   ) => void
   openDreamModal: (item?: Dream, openGeneralOnClose?: boolean) => void
   openGeneralModal: () => void
+  openTimerSettingsModal: () => void
+
   closeModal: () => void
   goBack: () => void
 }
@@ -71,6 +75,13 @@ const useModalStore = create<ModalState>(set => ({
       modalKey: "general_modal",
       modalContent: <GeneralForm />,
     })),
+  openTimerSettingsModal: () =>
+    set(() => ({
+      isOpen: true,
+      title: "Timer Settings",
+      modalKey: "timer_settings_modal",
+      modalContent: <TimerSettings />,
+    })),
 
   goBack: () =>
     set(state =>
@@ -110,6 +121,7 @@ const useModal = () => ({
   openGoalModal: useModalStore(state => state.openGoalModal),
   openDreamModal: useModalStore(state => state.openDreamModal),
   openGeneralModal: useModalStore(state => state.openGeneralModal),
+  openTimerSettingsModal: useModalStore(state => state.openTimerSettingsModal),
 
   closeModal: useModalStore(state => state.closeModal),
   goBack: useModalStore(state => state.goBack),
