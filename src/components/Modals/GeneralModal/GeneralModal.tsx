@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
 import useModal from "../useModal"
 import ModalBackground from "../ModalBackground"
 import { ReactComponent as BackIcon } from "../../../assets/back.svg"
@@ -25,7 +25,7 @@ function GeneralModal() {
     useModal()
 
   return ReactDOM.createPortal(
-    <>
+    <LayoutGroup>
       <AnimatePresence>
         {isOpen && (
           <React.Fragment key="general_modal">
@@ -54,7 +54,7 @@ function GeneralModal() {
           </React.Fragment>
         )}
       </AnimatePresence>
-    </>,
+    </LayoutGroup>,
     document.getElementById("root") as HTMLElement
   )
 }
