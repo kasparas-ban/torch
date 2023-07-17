@@ -13,6 +13,8 @@ type TimerStoreState = {
   pauseTimer: () => void
   resetTimer: () => void
   tickTimer: () => void
+
+  showTimerToast: () => void
 }
 
 const DEFAULT_TIME = 30 // 25 * 60
@@ -61,6 +63,8 @@ const useTimerStoreBase = create<TimerStoreState>(set => ({
     set(state => ({
       time: state.time - 1,
     })),
+
+  showTimerToast: () => set(() => ({})),
 }))
 
 const useTimerStore = createSelectors(useTimerStoreBase)

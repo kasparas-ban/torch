@@ -26,3 +26,4 @@ An app that helps you track the time you spend pursuing your goals.
 - [ ] Investigate which state management library to use for forms and list page
 - [x] Rewrite all of the state management in Goals list page with Jotai or Zustand
 - [ ] Disable edit mode when there are no items in the list
+- [ ] Add timer toast

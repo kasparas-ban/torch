@@ -8,6 +8,7 @@ import ItemsPage from "./pages/ItemsPage/ItemsPage"
 import CalendarPage from "./pages/CalendarPage"
 import WorldPage from "./pages/WorldPage"
 import StatisticsPage from "./pages/StatisticsPage"
+import TimerToast from "./components/TimerToast/TimerToast"
 import "./App.css"
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
     >
       <BrowserRouter>
         <NavigationBar />
+        <TimerToast />
         <Routes>
           <Route index element={<TimerPage />} />
           <Route path="items" element={<ItemsPage />} />
