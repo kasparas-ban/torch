@@ -38,7 +38,7 @@ const TimerToast = () => {
           className="relative z-[-1] mt-4 flex justify-center max-[768px]:px-6 md:space-x-36"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
+          exit={{ opacity: [1, 0.2, 0], y: [0, -10, -20] }}
         >
           <motion.div
             layout
@@ -53,7 +53,7 @@ const TimerToast = () => {
             <motion.div
               layout
               className={clsx(
-                "pl-2 pr-1 pb-[3px] text-2xl font-semibold",
+                "min-w-[75px] pl-2 pr-1 pb-[3px] text-2xl font-semibold",
                 timerState !== "running" ? "text-gray-600" : "text-white"
               )}
             >
@@ -93,6 +93,10 @@ const TimerToast = () => {
                     onClick={pauseTimer}
                     className="flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-700"
                     whileHover={{ scale: 1.06 }}
+                    variants={buttonVariants}
+                    initial="initial"
+                    animate="default"
+                    exit="close"
                   >
                     <PauseIcon className="h-5 w-5 stroke-2" />
                   </motion.button>
@@ -105,6 +109,10 @@ const TimerToast = () => {
                     onClick={resetTimer}
                     className="group flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-700"
                     whileHover={{ scale: 1.06 }}
+                    variants={buttonVariants}
+                    initial="initial"
+                    animate="default"
+                    exit="close"
                   >
                     <ResetIcon className="h-5 w-5 stroke-2 text-gray-500 group-hover:text-gray-700" />
                   </motion.button>
