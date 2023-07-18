@@ -1,14 +1,14 @@
-import React from "react"
+import React, { forwardRef } from "react"
 import dayjs from "dayjs"
 import { AnimatePresence, motion } from "framer-motion"
-import TimerFocusForm from "./TimerFocusForm"
+import { useTimerForm, TimerFocusForm, TimerFocusInfo } from "./TimerFocusForm"
 import { TimerShape } from "./TimerShape"
 import useModal from "../Modals/useModal"
 import useTimerStore from "./useTimer"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
 
 const buttonVariants = {
-  default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
+  default: { opacity: 1, scale: 1, transition: { duration: 0.6 } },
   initial: { opacity: 0, scale: 0.95 },
   close: {
     opacity: 0,
@@ -25,62 +25,124 @@ function Timer() {
 
   const { openTimerSettingsModal } = useModal()
 
+  const { focusOn, setFocusOn, getFocusOptions, focusType, setFocusType } =
+    useTimerForm()
+
   return (
-    <AnimatePresence>
-      <motion.div
-        key="timer_component"
-        className="max-[320px]:mx-2"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "tween" }}
-      >
-        <TimerFocusForm timerState={timerState} />
-        <TimerClock />
-        <AnimatePresence mode="popLayout">
-          {timerState !== "running" && (
-            <motion.div
-              layout
-              key="timer_settings"
-              className="mt-2 flex justify-center"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{
-                opacity: 1,
-                height: "auto",
-              }}
-              exit={{ opacity: 0, height: 0, transition: { duration: 0.01 } }}
+    <motion.div
+      className="max-[320px]:mx-2"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "tween" }}
+    >
+      <AnimatePresence mode="popLayout">
+        <TimerFocusForm
+          key="timer_focus_form"
+          timerState={timerState}
+          focusOn={focusOn}
+          setFocusOn={setFocusOn}
+          getFocusOptions={getFocusOptions}
+          focusType={focusType}
+          setFocusType={setFocusType}
+        />
+
+        {focusOn && (
+          <motion.div
+            layout
+            key="timer_focus_info"
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              transition: { duration: 0.6 },
+            }}
+            exit={{ opacity: 0, y: -20, transition: { duration: 0.1 } }}
+          >
+            <TimerFocusInfo focusOn={focusOn} />
+          </motion.div>
+        )}
+
+        <TimerClock key="timer_clock" />
+
+        {timerState !== "running" && (
+          <motion.div
+            layout
+            key="timer_settings"
+            className="mt-2 flex justify-center"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{
+              opacity: 1,
+              height: "auto",
+            }}
+            exit={{ opacity: 0, height: 0, transition: { duration: 0.01 } }}
+          >
+            <motion.button
+              className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+              whileHover={{ scale: 1.06 }}
+              onClick={openTimerSettingsModal}
             >
-              <motion.button
-                className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
-                whileHover={{ scale: 1.06 }}
-                onClick={openTimerSettingsModal}
-              >
-                <SettingsIcon className="mr-1 h-4 w-4" />
-                Settings
-              </motion.button>
-            </motion.div>
-          )}
-          {timerState === "idle" ? (
+              <SettingsIcon className="mr-1 h-4 w-4" />
+              Settings
+            </motion.button>
+          </motion.div>
+        )}
+        {timerState === "idle" ? (
+          <motion.button
+            layout
+            type="submit"
+            key="timer_start"
+            onClick={startTimer}
+            className="bg-multi-color m-auto mt-4 flex h-8 w-24 rounded-full px-5 py-2.5 text-center focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
+            whileHover={{ scale: 1.06 }}
+            variants={buttonVariants}
+            initial="initial"
+            animate="default"
+            exit="close"
+          >
+            <div className="m-auto flex h-full items-center font-medium tracking-wider text-white">
+              Start
+            </div>
+          </motion.button>
+        ) : timerState === "running" ? (
+          <motion.button
+            layout
+            type="submit"
+            key="timer_pause"
+            onClick={pauseTimer}
+            className="m-auto mt-4 flex h-8 w-24 rounded-full border border-gray-400"
+            whileHover={{ scale: 1.06 }}
+            variants={buttonVariants}
+            initial="initial"
+            animate="default"
+            exit="close"
+          >
+            <div className="m-auto font-semibold tracking-wide text-gray-600">
+              Pause
+            </div>
+          </motion.button>
+        ) : (
+          <div className="flex justify-center space-x-3">
             <motion.button
               layout
               type="submit"
+              key="timer_continue"
               onClick={startTimer}
-              className="bg-multi-color m-auto mt-4 flex h-8 w-24 rounded-full px-5 py-2.5 text-center focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
+              className="bg-multi-color relative mt-4 flex h-8 w-24 rounded-full px-5 py-2.5 text-center focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
               whileHover={{ scale: 1.06 }}
               variants={buttonVariants}
               initial="initial"
               animate="default"
               exit="close"
             >
-              <div className="m-auto flex h-full items-center font-medium tracking-wider text-white">
-                Start
+              <div className="absolute top-1 right-[13px] font-medium tracking-wide text-white">
+                Continue
               </div>
             </motion.button>
-          ) : timerState === "running" ? (
             <motion.button
               layout
               type="submit"
-              onClick={pauseTimer}
-              className="m-auto mt-4 flex h-8 w-24 rounded-full border border-gray-400"
+              key="timer_reset"
+              onClick={resetTimer}
+              className="mt-4 flex h-8 w-24 rounded-full border border-gray-400"
               whileHover={{ scale: 1.06 }}
               variants={buttonVariants}
               initial="initial"
@@ -88,53 +150,22 @@ function Timer() {
               exit="close"
             >
               <div className="m-auto font-semibold tracking-wide text-gray-600">
-                Pause
+                Stop
               </div>
             </motion.button>
-          ) : (
-            <div className="flex justify-center space-x-3">
-              <motion.button
-                layout
-                type="submit"
-                onClick={startTimer}
-                className="bg-multi-color relative mt-4 flex h-8 w-24 rounded-full px-5 py-2.5 text-center focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800"
-                whileHover={{ scale: 1.06 }}
-                variants={buttonVariants}
-                initial="initial"
-                animate="default"
-                exit="close"
-              >
-                <div className="absolute top-1 right-[13px] font-medium tracking-wide text-white">
-                  Continue
-                </div>
-              </motion.button>
-              <motion.button
-                layout
-                type="submit"
-                onClick={resetTimer}
-                className="mt-4 flex h-8 w-24 rounded-full border border-gray-400"
-                whileHover={{ scale: 1.06 }}
-                variants={buttonVariants}
-                initial="initial"
-                animate="default"
-                exit="close"
-              >
-                <div className="m-auto font-semibold tracking-wide text-gray-600">
-                  Stop
-                </div>
-              </motion.button>
-            </div>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {timerState !== "running" && <TimerHistory />}
-        </AnimatePresence>
-      </motion.div>
-    </AnimatePresence>
+          </div>
+        )}
+        {timerState !== "running" && (
+          <motion.div layout key="timer_history">
+            <TimerHistory />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   )
 }
 
-function TimerClock() {
+const TimerClock = forwardRef(() => {
   const time = useTimerStore.use.time()
   const initialTime = useTimerStore.use.initialTime()
   const timerState = useTimerStore.use.timerState()
@@ -143,7 +174,8 @@ function TimerClock() {
   const seconds = time - minutes * 60
 
   return (
-    <div
+    <motion.div
+      layout
       className={`m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border ${
         timerState === "idle" ? "border-rose-600" : ""
       }`}
@@ -152,9 +184,9 @@ function TimerClock() {
       <div className="text-center text-8xl font-thin tabular-nums max-[300px]:text-7xl">
         {`${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}
       </div>
-    </div>
+    </motion.div>
   )
-}
+})
 
 function TimerHistory() {
   const data = [
@@ -202,6 +234,7 @@ function TimerHistory() {
 
   return (
     <motion.div
+      layout
       className="mt-8 mb-4 flex"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

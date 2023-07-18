@@ -17,7 +17,7 @@ type TimerStoreState = {
   showTimerToast: () => void
 }
 
-const DEFAULT_TIME = 30 // 25 * 60
+const DEFAULT_TIME = 60 // 25 * 60
 
 const useTimerStoreBase = create<TimerStoreState>(set => ({
   time: DEFAULT_TIME,
