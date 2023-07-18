@@ -171,7 +171,7 @@ function NavigationLink({
       to={path}
       className={clsx(
         "flex flex-col items-center justify-center",
-        highlight ? "rounded-full" : "rounded-lg"
+        highlight ? "mx-4 w-12 rounded-full" : "rounded-lg"
       )}
     >
       {highlight ? (

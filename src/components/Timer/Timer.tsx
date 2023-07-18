@@ -1,10 +1,11 @@
 import React, { forwardRef } from "react"
 import dayjs from "dayjs"
 import { AnimatePresence, motion } from "framer-motion"
-import { useTimerForm, TimerFocusForm, TimerFocusInfo } from "./TimerFocusForm"
+import { TimerFocusForm, TimerFocusInfo } from "./TimerFocusForm"
+import useTimerForm from "./useTimerForm"
+import useTimerStore from "./useTimer"
 import { TimerShape } from "./TimerShape"
 import useModal from "../Modals/useModal"
-import useTimerStore from "./useTimer"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
 
 const buttonVariants = {
@@ -24,9 +25,7 @@ function Timer() {
   const resetTimer = useTimerStore.use.resetTimer()
 
   const { openTimerSettingsModal } = useModal()
-
-  const { focusOn, setFocusOn, getFocusOptions, focusType, setFocusType } =
-    useTimerForm()
+  const { focusOn } = useTimerForm()
 
   return (
     <motion.div
@@ -36,15 +35,7 @@ function Timer() {
       transition={{ type: "tween" }}
     >
       <AnimatePresence mode="popLayout">
-        <TimerFocusForm
-          key="timer_focus_form"
-          timerState={timerState}
-          focusOn={focusOn}
-          setFocusOn={setFocusOn}
-          getFocusOptions={getFocusOptions}
-          focusType={focusType}
-          setFocusType={setFocusType}
-        />
+        <TimerFocusForm key="timer_focus_form" />
 
         {focusOn && (
           <motion.div
@@ -57,7 +48,7 @@ function Timer() {
             }}
             exit={{ opacity: 0, y: -20, transition: { duration: 0.1 } }}
           >
-            <TimerFocusInfo focusOn={focusOn} />
+            <TimerFocusInfo />
           </motion.div>
         )}
 
