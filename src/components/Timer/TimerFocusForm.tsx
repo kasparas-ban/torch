@@ -8,6 +8,7 @@ import {
 } from "../Inputs/SelectField"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
+import { OptionType } from "../../types"
 
 const focusTypeOptions = [
   { label: "All", value: "ALL" as FocusType },
@@ -64,27 +65,41 @@ export const TimerFocusForm = forwardRef(() => {
   )
 })
 
-export const TimerFocusInfo = forwardRef(() => {
-  const { focusOn } = useTimerForm()
-
-  return (
-    <motion.div layout className="mt-4 flex flex-col justify-center">
-      <div className="text-center text-xl font-semibold">{focusOn?.label}</div>
-      <div className="flex justify-center">
-        <div className="text-6xl font-bold">45%</div>
-        <div className="mt-1.5 ml-1.5 flex flex-col gap-1">
-          <div className="flex gap-2">
-            <TimerBoldIcon />
-            <span className="font-semibold">6 h</span>
-            spent
+export const TimerFocusInfo = forwardRef(
+  ({ focusOn }: { focusOn: OptionType }) => {
+    return (
+      <motion.div
+        layout
+        className="relative mt-4 flex flex-col justify-center"
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+          transition: { duration: 0.6 },
+        }}
+        exit={{ opacity: 0, y: 20, transition: { duration: 0.1 } }}
+      >
+        <motion.div
+          layout
+          className="mx-auto max-w-2xl px-6 text-center text-xl font-semibold [text-wrap:balance]"
+        >
+          {focusOn?.label}
+        </motion.div>
+        <motion.div layout className="flex justify-center">
+          <div className="text-6xl font-bold">45%</div>
+          <div className="mt-1.5 ml-1.5 flex flex-col gap-1">
+            <div className="flex gap-2">
+              <TimerBoldIcon />
+              <span className="font-semibold">6 h</span>
+              spent
+            </div>
+            <div className="flex gap-2">
+              <TimerIcon />
+              <span className="font-semibold">4.5 h</span>
+              left
+            </div>
           </div>
-          <div className="flex gap-2">
-            <TimerIcon />
-            <span className="font-semibold">4.5 h</span>
-            left
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  )
-})
+        </motion.div>
+      </motion.div>
+    )
+  }
+)

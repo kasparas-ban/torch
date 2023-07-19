@@ -6,6 +6,7 @@ import { secondsToMinutes } from "../../helpers"
 import { ReactComponent as PlayIcon } from "../../assets/timer_icons/play.svg"
 import { ReactComponent as PauseIcon } from "../../assets/timer_icons/pause.svg"
 import { ReactComponent as ResetIcon } from "../../assets/timer_icons/reset.svg"
+import useTimerForm from "../Timer/useTimerForm"
 
 const buttonVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.8 } },
@@ -23,6 +24,8 @@ const TimerToast = () => {
   const pauseTimer = useTimerStore.use.pauseTimer()
   const resetTimer = useTimerStore.use.resetTimer()
   const timerState = useTimerStore.use.timerState()
+
+  const { focusOn } = useTimerForm()
 
   const showPlayBtn = timerState === "idle" || timerState === "paused"
   const showPauseBtn = timerState === "running"
@@ -43,17 +46,29 @@ const TimerToast = () => {
           <motion.div
             layout
             className={clsx(
-              "flex w-fit items-center gap-4 rounded-3xl bg-gradient-to-b from-red-400 to-rose-500 px-4 py-1 drop-shadow",
+              "flex w-fit items-center gap-4 rounded-3xl bg-gradient-to-b from-red-400 to-rose-500 px-4 py-1 drop-shadow max-sm:max-w-full",
               timerState !== "running" && "from-red-400/50 to-rose-500/50"
             )}
             initial={{ background: "" }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
+            {focusOn && (
+              <motion.div
+                layout
+                className={clsx(
+                  "max-w-sm truncate pl-2 pr-1 text-lg",
+                  timerState !== "running" ? "text-gray-600" : "text-white"
+                )}
+              >
+                {focusOn.label}
+              </motion.div>
+            )}
+
             <motion.div
               layout
               className={clsx(
-                "min-w-[75px] pl-2 pr-1 pb-[3px] text-2xl font-semibold",
+                "min-w-[90px] pl-2 pr-1 pb-[3px] text-3xl font-semibold",
                 timerState !== "running" ? "text-gray-600" : "text-white"
               )}
             >
@@ -82,7 +97,7 @@ const TimerToast = () => {
                     animate="default"
                     exit="close"
                   >
-                    <PlayIcon className="h-5 w-5 stroke-2 pl-px text-gray-500 group-hover:text-gray-700" />
+                    <PlayIcon className="h-5 w-5 stroke-2 pl-px text-gray-600 group-hover:text-gray-700" />
                   </motion.button>
                 )}
 
@@ -114,7 +129,7 @@ const TimerToast = () => {
                     animate="default"
                     exit="close"
                   >
-                    <ResetIcon className="h-5 w-5 stroke-2 text-gray-500 group-hover:text-gray-700" />
+                    <ResetIcon className="h-5 w-5 stroke-2 text-gray-600 group-hover:text-gray-700" />
                   </motion.button>
                 )}
               </AnimatePresence>

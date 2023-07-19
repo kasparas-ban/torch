@@ -19,7 +19,14 @@ const useTimerFormStoreBase = create<TimerFormStoreState>(set => ({
   getFocusOptions: async () => {
     return new Promise<OptionType[]>(resolve => {
       setTimeout(() => {
-        resolve([{ label: 'Finish reading "The Shape of Space"', value: 123 }])
+        resolve([
+          { label: 'Finish reading "The Shape of Space"', value: 123 },
+          {
+            label:
+              'Finish reading "Linear Equations in Linear Algebra" by Mendes and do all the exercises',
+            value: 124,
+          },
+        ])
       }, 1000)
     })
   },

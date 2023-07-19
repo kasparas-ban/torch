@@ -38,18 +38,9 @@ function Timer() {
         <TimerFocusForm key="timer_focus_form" />
 
         {focusOn && (
-          <motion.div
-            layout
-            key="timer_focus_info"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              transition: { duration: 0.6 },
-            }}
-            exit={{ opacity: 0, y: -20, transition: { duration: 0.1 } }}
-          >
-            <TimerFocusInfo />
-          </motion.div>
+          <div>
+            <TimerFocusInfo key="timer_focus_info" focusOn={focusOn} />
+          </div>
         )}
 
         <TimerClock key="timer_clock" />
