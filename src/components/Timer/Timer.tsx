@@ -102,7 +102,10 @@ function Timer() {
             </div>
           </motion.button>
         ) : (
-          <div className="flex justify-center space-x-3">
+          <div
+            key="timer_continue_panel"
+            className="flex justify-center space-x-3"
+          >
             <motion.button
               layout
               type="submit"
@@ -147,7 +150,7 @@ function Timer() {
   )
 }
 
-const TimerClock = forwardRef(() => {
+const TimerClock = forwardRef<HTMLDivElement>((_, ref) => {
   const time = useTimerStore.use.time()
   const initialTime = useTimerStore.use.initialTime()
   const timerState = useTimerStore.use.timerState()
@@ -158,6 +161,7 @@ const TimerClock = forwardRef(() => {
   return (
     <motion.div
       layout
+      ref={ref}
       className={`m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border ${
         timerState === "idle" ? "border-rose-600" : ""
       }`}

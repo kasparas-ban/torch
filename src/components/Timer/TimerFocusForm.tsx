@@ -17,7 +17,7 @@ const focusTypeOptions = [
   { label: "Dreams", value: "DREAMS" as FocusType },
 ]
 
-export const TimerFocusForm = forwardRef(() => {
+export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
   const timerState = useTimerStore.use.timerState()
   const { focusOn, setFocusOn, focusType, setFocusType, getFocusOptions } =
     useTimerForm()
@@ -27,6 +27,7 @@ export const TimerFocusForm = forwardRef(() => {
       {timerState !== "running" && (
         <motion.div
           layout
+          ref={ref}
           className="mx-auto mt-8 max-w-sm max-[400px]:mx-4 max-[320px]:mx-0"
           initial={{ opacity: 0, y: 0 }}
           animate={{
@@ -65,41 +66,43 @@ export const TimerFocusForm = forwardRef(() => {
   )
 })
 
-export const TimerFocusInfo = forwardRef(
-  ({ focusOn }: { focusOn: OptionType }) => {
-    return (
+export const TimerFocusInfo = forwardRef<
+  HTMLDivElement,
+  { focusOn: OptionType }
+>(({ focusOn }, ref) => {
+  return (
+    <motion.div
+      layout
+      ref={ref}
+      className="relative mt-4 flex flex-col justify-center"
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        transition: { duration: 0.6 },
+      }}
+      exit={{ opacity: 0, y: 20, transition: { duration: 0.1 } }}
+    >
       <motion.div
         layout
-        className="relative mt-4 flex flex-col justify-center"
-        initial={{ opacity: 0 }}
-        animate={{
-          opacity: 1,
-          transition: { duration: 0.6 },
-        }}
-        exit={{ opacity: 0, y: 20, transition: { duration: 0.1 } }}
+        className="mx-auto max-w-2xl px-6 text-center text-xl font-semibold [text-wrap:balance]"
       >
-        <motion.div
-          layout
-          className="mx-auto max-w-2xl px-6 text-center text-xl font-semibold [text-wrap:balance]"
-        >
-          {focusOn?.label}
-        </motion.div>
-        <motion.div layout className="flex justify-center">
-          <div className="text-6xl font-bold">45%</div>
-          <div className="mt-1.5 ml-1.5 flex flex-col gap-1">
-            <div className="flex gap-2">
-              <TimerBoldIcon />
-              <span className="font-semibold">6 h</span>
-              spent
-            </div>
-            <div className="flex gap-2">
-              <TimerIcon />
-              <span className="font-semibold">4.5 h</span>
-              left
-            </div>
-          </div>
-        </motion.div>
+        {focusOn?.label}
       </motion.div>
-    )
-  }
-)
+      <motion.div layout className="flex justify-center">
+        <div className="text-6xl font-bold">45%</div>
+        <div className="mt-1.5 ml-1.5 flex flex-col gap-1">
+          <div className="flex gap-2">
+            <TimerBoldIcon />
+            <span className="font-semibold">6 h</span>
+            spent
+          </div>
+          <div className="flex gap-2">
+            <TimerIcon />
+            <span className="font-semibold">4.5 h</span>
+            left
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+})

@@ -32,7 +32,9 @@ const TimerToast = () => {
   const showResetBtn = timerState === "paused"
 
   const location = useLocation()
-  const isShowing = location.pathname !== "/"
+  const isShowing =
+    location.pathname !== "/" &&
+    (timerState === "running" || timerState === "paused")
 
   return (
     <AnimatePresence mode="popLayout">
@@ -55,7 +57,7 @@ const TimerToast = () => {
           >
             {focusOn && (
               <motion.div
-                layout
+                layout="position"
                 className={clsx(
                   "max-w-sm truncate pl-2 pr-1 text-lg",
                   timerState !== "running" ? "text-gray-600" : "text-white"
