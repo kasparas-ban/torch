@@ -29,3 +29,4 @@ An app that helps you track the time you spend pursuing your goals.
 - [x] Add timer toast
 - [ ] Fix item input style in timer page
 - [ ] Add timer to tab title
+- [ ] Implement item filter

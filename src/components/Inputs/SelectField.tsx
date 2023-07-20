@@ -72,7 +72,11 @@ export const SelectTypeFirstField = <
               "h-10 rounded-l-2xl rounded-r-none bg-gray-200 px-2 text-gray-900 border-0 border-r border-solid border-gray-300",
               isFocused && "!shadow-none !border-none bg-gray-100"
             ),
+          menu: () => classNames("rounded-lg overflow-hidden"),
+          menuList: () => classNames("p-0"),
           indicatorSeparator: () => classNames("hidden"),
+          clearIndicator: () => classNames("cursor-pointer"),
+          option: () => classNames("cursor-pointer"),
         }}
         styles={styles}
       />
@@ -97,7 +101,11 @@ export const SelectTypeSecondField = <
               "w-28 h-10 rounded-l-none rounded-r-2xl bg-gray-200 text-gray-900 border-none",
               isFocused && "!shadow-none !border-none bg-gray-100"
             ),
+          menu: () => classNames("rounded-lg overflow-hidden"),
+          menuList: () => classNames("p-0"),
           indicatorSeparator: () => classNames("hidden"),
+          clearIndicator: () => classNames("cursor-pointer"),
+          option: () => classNames("cursor-pointer"),
         }}
         styles={styles}
       />
