@@ -12,7 +12,8 @@ import { ReactComponent as AddItemIcon } from "../../assets/add_item.svg"
 import { ReactComponent as StatsIcon } from "../../assets/stats.svg"
 import { ReactComponent as DeleteIcon } from "../../assets/delete.svg"
 import ItemProgress from "./ProgressBar"
-import useEditItem from "./useEditItem"
+import useEditItem from "./useEditMode"
+import useEditMode from "./useEditMode"
 
 const sublistVariant = {
   initial: { opacity: 0, height: 0, marginTop: 0 },
@@ -50,13 +51,12 @@ const subitemVariant = {
 export default function ItemsList<T extends GeneralItem>({
   items,
   itemType,
-  editMode,
 }: {
   items: T[] | undefined
   itemType: ItemType
-  editMode: boolean
 }) {
   const { openTaskModal, openGoalModal, openDreamModal } = useModal()
+  const { editMode } = useEditMode()
   const [scope, animate] = useAnimate()
 
   useEffect(() => {
@@ -98,7 +98,12 @@ export default function ItemsList<T extends GeneralItem>({
       {items?.length ? (
         <motion.ul className="space-y-3" ref={scope}>
           {items.map(item => (
-            <Item<T> item={item} key={item.id} editMode={editMode} />
+            <Item<T>
+              key={`${itemType}_${item.id}`}
+              item={item}
+              itemType={itemType}
+              editMode={editMode}
+            />
           ))}
         </motion.ul>
       ) : (
@@ -123,9 +128,11 @@ export default function ItemsList<T extends GeneralItem>({
 
 function Item<T extends GeneralItem>({
   item,
+  itemType,
   editMode,
 }: {
   item: T
+  itemType: ItemType
   editMode: boolean
 }) {
   const { editItem, setEditItem } = useEditItem()
@@ -170,7 +177,7 @@ function Item<T extends GeneralItem>({
         )}
         <motion.div
           layout
-          className={`relative flex w-full cursor-pointer overflow-hidden rounded-full py-3 px-6 ${
+          className={`relative flex w-full cursor-pointer overflow-hidden rounded-2xl py-3 px-6 md:rounded-3xl ${
             editMode && !showEditPanel ? "bg-gray-300" : "bg-red-300"
           }`}
           whileHover={{
@@ -178,7 +185,7 @@ function Item<T extends GeneralItem>({
           }}
         >
           <ItemProgress
-            progress={item.progress}
+            progress={item.progress || 0}
             inEditMode={editMode && !showEditPanel}
           />
           <motion.div className="z-10 select-none">{item.title}</motion.div>
@@ -212,7 +219,7 @@ function Item<T extends GeneralItem>({
       <AnimatePresence initial={false}>
         {containsSublist && showSublist && (
           <ItemSublist<(typeof itemSublist)[number]>
-            key={`${item.id}_sublist`}
+            key={`${itemType}_${item.id}_sublist`}
             subitems={itemSublist || []}
             editMode={editMode}
             editItem={editItem as (typeof itemSublist)[number] | undefined}
@@ -319,6 +326,12 @@ function ItemSublist<T extends Task | Goal>({
     e.stopPropagation()
     setEditItem(showEditPanel(subitem) ? undefined : subitem)
   }
+  const getSubitemKey = (subitem: Task | Goal) =>
+    `${
+      (subitem as Task).goal
+        ? (subitem as Task).goal?.id
+        : (subitem as Goal).dream?.id
+    }_${subitem.id}`
 
   return (
     <motion.div
@@ -330,7 +343,7 @@ function ItemSublist<T extends Task | Goal>({
     >
       <motion.ul layout className="space-y-3">
         {subitems.map(subitem => (
-          <Fragment key={subitem.id}>
+          <Fragment key={getSubitemKey(subitem)}>
             <motion.li
               layout
               className={`flex space-x-3 ${editMode ? "" : "ml-6"}`}
@@ -362,7 +375,7 @@ function ItemSublist<T extends Task | Goal>({
                 whileHover={{ scale: 1.02 }}
               >
                 <ItemProgress
-                  progress={subitem.progress}
+                  progress={subitem.progress || 0}
                   inEditMode={editMode && !showEditPanel(subitem)}
                 />
                 <div className="z-10 select-none">{subitem.title}</div>

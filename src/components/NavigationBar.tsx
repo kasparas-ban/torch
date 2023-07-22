@@ -81,7 +81,7 @@ function NavigationBar() {
         )}
       </div>
       <div
-        className={`fixed top-20 left-0 z-30 h-full w-full bg-white ${
+        className={`fixed top-16 left-0 z-30 h-full w-full bg-white ${
           showModalMenu ? "visible" : "hidden"
         }`}
       >
@@ -216,7 +216,7 @@ function AccountDropdown({
     <div
       id="dropdownInformation"
       ref={dropdownRef}
-      className="z-10 w-44 divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700"
+      className="z-10 w-44 divide-y divide-gray-100 overflow-hidden rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700"
     >
       <div className="rounded-t-lg px-4 py-3 text-sm text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white">
         <div>Bonnie Green</div>
@@ -226,13 +226,13 @@ function AccountDropdown({
         </div>
       </div>
       <ul
-        className="py-2 text-sm text-gray-700 dark:text-gray-200"
+        className="text-sm text-gray-700 dark:text-gray-200"
         aria-labelledby="accountDropdownButton"
       >
         <li>
           <a
             href="#"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+            className="block px-4 py-4 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             Sign out
           </a>

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import useEditItem from "./useEditItem"
 import { capitalizeString } from "../../helpers"
 import { ItemType, ItemTypeLabel } from "../../types"
 import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
@@ -8,6 +7,7 @@ import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
 import useModal from "../../components/Modals/useModal"
+import useEditMode from "./useEditMode"
 
 const itemTypeMotion = {
   initial: {
@@ -49,33 +49,21 @@ const itemTypeMenuMotion = {
 export function ItemsHeader({
   itemType,
   setItemType,
-  editMode,
-  setEditMode,
 }: {
   itemType: ItemType
   setItemType: (type: ItemType) => void
-  editMode: boolean
-  setEditMode: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-  const { setEditItem } = useEditItem()
   const { openGeneralModal } = useModal()
+  const { editMode, enableEditMode, disableEditMode } = useEditMode()
 
-  const toggleEditMode = () => {
-    if (editMode) setEditItem(undefined)
-    setEditMode(prev => !prev)
-  }
-
-  const closeEditMode = () => {
-    setEditMode(false)
-    setEditItem(undefined)
-  }
+  const toggleEditMode = () => (editMode ? disableEditMode : enableEditMode)
 
   return (
     <div className="mb-8 flex">
       <ItemsTypeDropdown
         itemType={itemType}
         setItemType={setItemType}
-        closeEditMode={closeEditMode}
+        closeEditMode={disableEditMode}
       />
       <div className="mt-7 ml-auto flex space-x-4">
         <motion.div
@@ -92,14 +80,18 @@ export function ItemsHeader({
             <EditIcon />
           </motion.div>
         </motion.div>
-        <motion.div layout whileHover={{ scale: 1.2 }} onClick={closeEditMode}>
+        <motion.div
+          layout
+          whileHover={{ scale: 1.2 }}
+          onClick={disableEditMode}
+        >
           <FilterIcon className="cursor-pointer" />
         </motion.div>
         <motion.div layout whileHover={{ scale: 1.2 }}>
           <PlusIcon
             className="cursor-pointer"
             onClick={() => {
-              closeEditMode()
+              disableEditMode()
               openGeneralModal()
             }}
           />

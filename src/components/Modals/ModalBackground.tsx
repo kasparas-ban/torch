@@ -22,7 +22,7 @@ function ModalBackground({ closeModal }: { closeModal: () => void }) {
         backdropFilter: "blur(0px)",
       }}
       animate={{
-        backgroundColor: "rgba(80, 80, 80, 0.1)",
+        backgroundColor: "rgba(40, 40, 40, 0.2)",
         backdropFilter: "blur(4px)",
         transition: { duration: 0.2 },
       }}
@@ -31,7 +31,7 @@ function ModalBackground({ closeModal }: { closeModal: () => void }) {
         backdropFilter: "blur(0px)",
         transition: { duration: 0.2 },
       }}
-      className="absolute inset-0 z-10 bg-gray-200"
+      className="absolute inset-0 z-10"
     />
   )
 }
