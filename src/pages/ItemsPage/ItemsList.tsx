@@ -52,7 +52,7 @@ export default function ItemsList<T extends GeneralItem>({
   itemType,
   editMode,
 }: {
-  items: T[]
+  items: T[] | undefined
   itemType: ItemType
   editMode: boolean
 }) {
@@ -95,14 +95,14 @@ export default function ItemsList<T extends GeneralItem>({
           </motion.div>
         )}
       </AnimatePresence>
-      {items.length ? (
+      {items?.length ? (
         <motion.ul className="space-y-3" ref={scope}>
           {items.map(item => (
             <Item<T> item={item} key={item.id} editMode={editMode} />
           ))}
         </motion.ul>
       ) : (
-        <div className="mt-6 text-center">
+        <motion.div layout className="mt-6 text-center">
           <div>No {itemType.toLowerCase()}s have been added.</div>
           <button className="mt-8 font-bold" onClick={handleAddItem}>
             <motion.div className="flex" whileHover={{ scale: 1.05 }}>
@@ -115,7 +115,7 @@ export default function ItemsList<T extends GeneralItem>({
                 : "dream"}
             </motion.div>
           </button>
-        </div>
+        </motion.div>
       )}
     </>
   )

@@ -27,7 +27,8 @@ An app that helps you track the time you spend pursuing your goals.
 - [x] Rewrite all of the state management in Goals list page with Jotai or Zustand
 - [ ] Disable edit mode when there are no items in the list
 - [x] Add timer toast
-- [ ] Fix item input style in timer page
+- [x] Fix item input style in timer page
 - [x] Add timer to tab title
 - [ ] Implement item filter
 - [ ] Add fadeout gradient for scroll
+- [ ] Try adding Million.js for smoother animations

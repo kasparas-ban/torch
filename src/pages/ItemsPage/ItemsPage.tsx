@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { GeneralItem, ItemType } from "../../types"
-import { dreamsData, goalsData, tasksData } from "../../data/data"
-import { ItemsHeader } from "./ItemsHeader"
+import { useItems } from "../../api"
 import ItemsList from "./ItemsList"
+import { ItemsHeader } from "./ItemsHeader"
+import { GeneralItem, ItemType } from "../../types"
 import GeneralModal from "../../components/Modals/GeneralModal/GeneralModal"
 import ConfirmModal from "../../components/Modals/ConfirmModal/ConfirmModal"
 
@@ -10,12 +10,8 @@ function ItemsPage() {
   const [editMode, setEditMode] = useState(false)
 
   const [itemType, setItemType] = useState<ItemType>("GOAL")
-  const items =
-    itemType === "TASK"
-      ? tasksData
-      : itemType === "GOAL"
-      ? goalsData
-      : dreamsData
+
+  const { data: items } = useItems(itemType)
 
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">
