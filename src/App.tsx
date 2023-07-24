@@ -12,7 +12,6 @@ import CalendarPage from "./pages/CalendarPage"
 import WorldPage from "./pages/WorldPage"
 import StatisticsPage from "./pages/StatisticsPage"
 import TimerToast from "./components/TimerToast/TimerToast"
-import "./App.css"
 
 const queryClient = new QueryClient()
 

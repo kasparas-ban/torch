@@ -8,14 +8,13 @@ import ConfirmModal from "../../components/Modals/ConfirmModal/ConfirmModal"
 
 function ItemsPage() {
   const [itemType, setItemType] = useState<ItemType>("GOAL")
-
-  const { data: items } = useItems(itemType)
+  const { data } = useItems(itemType)
 
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">
       <div className="w-[650px]">
         <ItemsHeader itemType={itemType} setItemType={setItemType} />
-        <ItemsList<GeneralItem> items={items} itemType={itemType} />
+        <ItemsList<GeneralItem> groupedItems={data} itemType={itemType} />
         <GeneralModal />
         <ConfirmModal />
       </div>

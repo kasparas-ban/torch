@@ -1,8 +1,8 @@
-import { Fragment, useEffect, useState } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import { AnimatePresence, motion, stagger, useAnimate } from "framer-motion"
 import useConfirmModal from "../../components/Modals/ConfirmModal/useConfirmModal"
 import useModal from "../../components/Modals/useModal"
-import { GeneralItem, Goal, ItemType, Task } from "../../types"
+import { GeneralItem, Goal, GroupedItems, ItemType, Task } from "../../types"
 import { ReactComponent as TimerStartIcon } from "../../assets/timer_start.svg"
 import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
 import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
@@ -49,18 +49,28 @@ const subitemVariant = {
 }
 
 export default function ItemsList<T extends GeneralItem>({
-  items,
+  groupedItems,
   itemType,
 }: {
-  items: T[] | undefined
+  groupedItems?: GroupedItems<T>
   itemType: ItemType
 }) {
   const { openTaskModal, openGoalModal, openDreamModal } = useModal()
   const { editMode } = useEditMode()
-  const [scope, animate] = useAnimate()
+  const [total_scope, animate] = useAnimate()
 
   useEffect(() => {
-    if (!scope.current) return
+    if (!total_scope.current) return
+    animate(
+      "ul",
+      { y: [-40, 0], opacity: [0, 1] },
+      {
+        duration: 0.3,
+        type: "spring",
+        bounce: 0.4,
+        delay: stagger(0.025),
+      }
+    )
     animate(
       "li",
       { y: [-40, 0], opacity: [0, 1] },
@@ -95,16 +105,34 @@ export default function ItemsList<T extends GeneralItem>({
           </motion.div>
         )}
       </AnimatePresence>
-      {items?.length ? (
-        <motion.ul className="space-y-3" ref={scope}>
-          {items.map(item => (
-            <Item<T>
-              key={`${itemType}_${item.id}`}
-              item={item}
-              itemType={itemType}
-              editMode={editMode}
-            />
-          ))}
+      {groupedItems && Object.keys(groupedItems) ? (
+        <motion.ul className="space-y-3" ref={total_scope}>
+          {Object.keys(groupedItems).map(group => {
+            const parentLabel = groupedItems[group].parentLabel
+            const items = groupedItems[group].items
+
+            return (
+              <motion.li key={`group_${group}`}>
+                {parentLabel && (
+                  <motion.div layout className="mb-2 text-gray-500">
+                    {parentLabel}
+                  </motion.div>
+                )}
+                {items?.length && (
+                  <motion.ul className="space-y-3">
+                    {items.map(item => (
+                      <Item<T>
+                        key={`${group}_${itemType}_${item.id}`}
+                        item={item}
+                        itemType={itemType}
+                        editMode={editMode}
+                      />
+                    ))}
+                  </motion.ul>
+                )}
+              </motion.li>
+            )
+          })}
         </motion.ul>
       ) : (
         <motion.div layout className="mt-6 text-center">
@@ -346,7 +374,7 @@ function ItemSublist<T extends Task | Goal>({
           <Fragment key={getSubitemKey(subitem)}>
             <motion.li
               layout
-              className={`flex space-x-3 ${editMode ? "" : "ml-6"}`}
+              className={`flex space-x-3 ${editMode ? "" : "md:ml-2"}`}
               variants={subitemVariant}
             >
               {editMode && (
@@ -367,7 +395,7 @@ function ItemSublist<T extends Task | Goal>({
               )}
               <div className="my-auto aspect-square w-4 rounded-full bg-gray-400"></div>
               <motion.div
-                className={`relative flex w-full cursor-pointer overflow-hidden rounded-full py-3 px-6 ${
+                className={`relative flex w-full cursor-pointer overflow-hidden rounded-2xl py-3 px-6 md:rounded-3xl ${
                   editMode && !showEditPanel(subitem)
                     ? "bg-gray-300"
                     : "bg-red-300"

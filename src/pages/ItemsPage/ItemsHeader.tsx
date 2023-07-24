@@ -56,7 +56,7 @@ export function ItemsHeader({
   const { openGeneralModal } = useModal()
   const { editMode, enableEditMode, disableEditMode } = useEditMode()
 
-  const toggleEditMode = () => (editMode ? disableEditMode : enableEditMode)
+  const toggleEditMode = editMode ? disableEditMode : enableEditMode
 
   return (
     <div className="mb-8 flex">

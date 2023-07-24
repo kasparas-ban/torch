@@ -1,5 +1,12 @@
 export type GeneralItem = Task | Goal | Dream
 
+export type GroupedItems<T> = {
+  [parentId: number | string | "empty" | "other"]: {
+    parentLabel?: string
+    items: T[]
+  }
+}
+
 export type Task = {
   id: number
   title: string

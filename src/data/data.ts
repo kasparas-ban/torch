@@ -6,14 +6,14 @@ const dreams = [
     title: "Learn Spanish",
     progress: 0.15,
     type: "DREAM",
-    goals: [3, 4, 5, 6],
+    goalIds: [3, 4, 5, 6],
   },
   {
     id: 2,
     title: "Get fit",
     progress: 0.54,
     type: "DREAM",
-    goals: [7],
+    goalIds: [7],
     targetDate: new Date("2024-01-01"),
   },
   {
@@ -21,7 +21,7 @@ const dreams = [
     title: "Get good at math",
     progress: 0.08,
     type: "DREAM",
-    goals: [8, 9],
+    goalIds: [8, 9],
   },
 ]
 
@@ -33,7 +33,7 @@ const goals = [
     targetDate: new Date("2023-09-01"),
     priority: "HIGH",
     type: "GOAL",
-    tasks: [1, 2, 3, 4, 5, 6, 7, 8],
+    taskIds: [1, 2, 3, 4, 5, 6, 7, 8],
   },
   {
     id: 2,
@@ -41,42 +41,47 @@ const goals = [
     progress: 0,
     priority: "LOW",
     type: "GOAL",
-    tasks: [],
+    taskIds: [31, 32, 33],
   },
   {
     id: 3,
     title: "Learn Spanish vocabulary",
     progress: 0.1,
     type: "GOAL",
-    tasks: [9, 10, 11, 12],
+    taskIds: [9, 10, 11, 12],
+    dreamId: 1,
   },
   {
     id: 4,
     title: "Learn Spanish grammar",
     progress: 0.05,
     type: "GOAL",
-    tasks: [13, 14],
+    taskIds: [13, 14],
+    dreamId: 1,
   },
   {
     id: 5,
     title: "Spanish language comprehension",
     progress: 0.3,
     type: "GOAL",
-    tasks: [15, 16, 17],
+    taskIds: [15, 16, 17],
+    dreamId: 1,
   },
   {
     id: 6,
     title: "Spanish writing",
     progress: 0.2,
     type: "GOAL",
-    tasks: [18, 19],
+    taskIds: [18, 19],
+    dreamId: 1,
   },
   {
     id: 7,
     title: "Build muscle",
     progress: 0.6,
     type: "GOAL",
-    tasks: [],
+    taskIds: [20, 21, 22],
+    dreamId: 2,
   },
   {
     id: 8,
@@ -84,30 +89,32 @@ const goals = [
     targetDate: new Date("2023-11-01"),
     progress: 0.44,
     type: "GOAL",
-    tasks: [],
+    taskIds: [23, 24, 25, 26, 27],
+    dreamId: 3,
   },
   {
     id: 9,
     title: "Learn Calculus",
     progress: 0.8,
     type: "GOAL",
-    tasks: [27, 28, 29],
+    taskIds: [27, 28, 29],
+    dreamId: 3,
   },
   {
     id: 10,
     title: 'Read "Demons" by Dostoevsky',
     progress: 0.14,
     type: "GOAL",
-    tasks: [],
+    taskIds: [],
   },
   {
     id: 11,
     title: 'Read "The Shape of Space"',
     progress: 0,
     type: "GOAL",
-    tasks: [],
+    taskIds: [],
   },
-] as Goal[]
+]
 
 const tasks = [
   {
@@ -118,7 +125,7 @@ const tasks = [
     targetDate: new Date("2023-09-01"),
     priority: "MEDIUM",
     type: "TASK",
-    goal: 1,
+    goalId: 1,
   },
   {
     id: 2,
@@ -128,7 +135,7 @@ const tasks = [
     targetDate: new Date("2023-09-01"),
     priority: "HIGH",
     type: "TASK",
-    goal: 1,
+    goalId: 1,
   },
   {
     id: 3,
@@ -138,7 +145,7 @@ const tasks = [
     targetDate: new Date("2023-09-01"),
     priority: "HIGH",
     type: "TASK",
-    goal: 1,
+    goalId: 1,
   },
   {
     id: 4,
@@ -146,7 +153,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 40, minutes: 0 },
     type: "TASK",
-    goal: 1,
+    goalId: 1,
   },
   {
     id: 5,
@@ -154,7 +161,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 60, minutes: 0 },
     type: "TASK",
-    goal: 1,
+    goalId: 1,
   },
   {
     id: 6,
@@ -162,7 +169,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 50, minutes: 0 },
     type: "TASK",
-    goal: 1,
+    goalId: 1,
   },
   {
     id: 7,
@@ -170,7 +177,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 20, minutes: 0 },
     type: "TASK",
-    goal: 1,
+    goalId: 1,
   },
   {
     id: 8,
@@ -178,7 +185,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 15, minutes: 0 },
     type: "TASK",
-    goal: 1,
+    goalId: 1,
   },
   {
     id: 9,
@@ -186,7 +193,7 @@ const tasks = [
     progress: 0.8,
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
-    goal: 3,
+    goalId: 3,
   },
   {
     id: 10,
@@ -194,7 +201,7 @@ const tasks = [
     progress: 0.9,
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
-    goal: 3,
+    goalId: 3,
   },
   {
     id: 11,
@@ -202,7 +209,7 @@ const tasks = [
     progress: 0.3,
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
-    goal: 3,
+    goalId: 3,
   },
   {
     id: 12,
@@ -210,7 +217,7 @@ const tasks = [
     progress: 0.3,
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
-    goal: 3,
+    goalId: 3,
   },
   {
     id: 13,
@@ -218,7 +225,7 @@ const tasks = [
     progress: 0.1,
     duration: { hours: 18, minutes: 0 },
     type: "TASK",
-    goal: 4,
+    goalId: 4,
   },
   {
     id: 14,
@@ -226,7 +233,7 @@ const tasks = [
     progress: 0.1,
     duration: { hours: 22, minutes: 0 },
     type: "TASK",
-    goal: 4,
+    goalId: 4,
   },
   {
     id: 15,
@@ -234,7 +241,7 @@ const tasks = [
     progress: 0.4,
     duration: { hours: 40, minutes: 0 },
     type: "TASK",
-    goal: 5,
+    goalId: 5,
   },
   {
     id: 16,
@@ -242,7 +249,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 38, minutes: 0 },
     type: "TASK",
-    goal: 5,
+    goalId: 5,
   },
   {
     id: 17,
@@ -250,7 +257,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 42, minutes: 0 },
     type: "TASK",
-    goal: 5,
+    goalId: 5,
   },
   {
     id: 18,
@@ -258,7 +265,7 @@ const tasks = [
     progress: 0.5,
     duration: { hours: 12, minutes: 0 },
     type: "TASK",
-    goal: 6,
+    goalId: 6,
   },
   {
     id: 19,
@@ -266,27 +273,27 @@ const tasks = [
     progress: 0.5,
     duration: { hours: 44, minutes: 0 },
     type: "TASK",
-    goal: 6,
+    goalId: 6,
   },
   {
     id: 20,
     title: "Do weight lifting",
     type: "TASK",
-    goal: 7,
+    goalId: 7,
     recurring: true,
   },
   {
     id: 21,
     title: "Go running",
     type: "TASK",
-    goal: 7,
+    goalId: 7,
     recurring: true,
   },
   {
     id: 22,
     title: "Do morning yoga",
     type: "TASK",
-    goal: 7,
+    goalId: 7,
     recurring: true,
   },
   {
@@ -295,7 +302,7 @@ const tasks = [
     progress: 0.2,
     duration: { hours: 60, minutes: 0 },
     type: "TASK",
-    goal: 8,
+    goalId: 8,
   },
   {
     id: 24,
@@ -303,7 +310,7 @@ const tasks = [
     progress: 0.16,
     duration: { hours: 40, minutes: 0 },
     type: "TASK",
-    goal: 8,
+    goalId: 8,
   },
   {
     id: 25,
@@ -311,7 +318,7 @@ const tasks = [
     progress: 1,
     duration: { hours: 3, minutes: 0 },
     type: "TASK",
-    goal: 8,
+    goalId: 8,
   },
   {
     id: 26,
@@ -319,7 +326,7 @@ const tasks = [
     progress: 0.01,
     duration: { hours: 55, minutes: 0 },
     type: "TASK",
-    goal: 8,
+    goalId: 8,
   },
   {
     id: 27,
@@ -327,7 +334,7 @@ const tasks = [
     progress: 0.04,
     duration: { hours: 60, minutes: 0 },
     type: "TASK",
-    goal: 8,
+    goalId: 8,
   },
   {
     id: 28,
@@ -335,7 +342,7 @@ const tasks = [
     progress: 1,
     duration: { hours: 38, minutes: 0 },
     type: "TASK",
-    goal: 9,
+    goalId: 9,
   },
   {
     id: 29,
@@ -343,7 +350,7 @@ const tasks = [
     progress: 1,
     duration: { hours: 26, minutes: 0 },
     type: "TASK",
-    goal: 9,
+    goalId: 9,
   },
   {
     id: 30,
@@ -351,7 +358,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 8, minutes: 0 },
     type: "TASK",
-    goal: 9,
+    goalId: 9,
   },
   {
     id: 31,
@@ -359,7 +366,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 8, minutes: 0 },
     type: "TASK",
-    goal: 2,
+    goalId: 2,
   },
   {
     id: 32,
@@ -367,7 +374,7 @@ const tasks = [
     progress: 0,
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
-    goal: 2,
+    goalId: 2,
   },
   {
     id: 33,
@@ -375,46 +382,52 @@ const tasks = [
     progress: 0,
     duration: { hours: 50, minutes: 0 },
     type: "TASK",
-    goal: 2,
+    goalId: 2,
   },
 ]
 
 export const goalsData = goals.map(goal => {
   const filteredTasks = tasks
-    .filter(task => task.goal === goal.id)
+    .filter(task => task.goalId === goal.id)
     .map(task => {
-      const { goal, ...rest } = task
+      const { goalId, ...rest } = task
       return rest
     })
 
+  const dream = dreams.find(dream => goal.dreamId && dream.id === goal.dreamId)
+
+  const { taskIds, dreamId, ...rest } = goal
+
   return {
-    ...goal,
+    ...rest,
+    ...(dream ? { dream } : {}),
     tasks: filteredTasks,
   }
 }) as Goal[]
 
 export const tasksData = tasks.map(task => {
-  const goal = goals.find(goal => goal.id === task.goal)
-  let taskGoal = undefined
+  const goal = goals.find(goal => goal.id === task.goalId)
 
-  if (goal) taskGoal = goal
+  const { goalId, ...rest } = task
 
   return {
-    ...task,
-    goal: taskGoal,
+    ...rest,
+    ...(goal ? { goal } : {}),
   }
 }) as Task[]
 
 export const dreamsData = dreams.map(dream => {
   const filteredGoals = goals
-    .filter(goal => dream.goals.includes(goal.id))
+    .filter(goal => dream.goalIds.includes(goal.id))
     .map(goal => {
-      const { tasks, ...rest } = goal
+      const { taskIds, ...rest } = goal
       return rest
     })
 
+  const { goalIds, ...rest } = dream
+
   return {
-    ...dream,
+    ...rest,
     goals: filteredGoals,
   }
 }) as Dream[]
