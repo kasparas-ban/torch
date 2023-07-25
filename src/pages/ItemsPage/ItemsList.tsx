@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react"
+import React, { Fragment, useEffect, useLayoutEffect, useState } from "react"
 import { AnimatePresence, motion, stagger, useAnimate } from "framer-motion"
 import useConfirmModal from "../../components/Modals/ConfirmModal/useConfirmModal"
 import useModal from "../../components/Modals/useModal"
@@ -81,7 +81,7 @@ export default function ItemsList<T extends GeneralItem>({
         delay: stagger(0.025),
       }
     )
-  }, [itemType])
+  }, [itemType, groupedItems])
 
   const handleAddItem = () =>
     itemType === "TASK"
@@ -106,7 +106,11 @@ export default function ItemsList<T extends GeneralItem>({
         )}
       </AnimatePresence>
       {groupedItems && Object.keys(groupedItems) ? (
-        <motion.ul className="space-y-3" ref={total_scope}>
+        <motion.ul
+          ref={total_scope}
+          key={`list_${itemType}`}
+          className="space-y-3"
+        >
           {Object.keys(groupedItems).map(group => {
             const parentLabel = groupedItems[group].parentLabel
             const items = groupedItems[group].items
