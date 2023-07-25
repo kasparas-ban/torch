@@ -24,7 +24,7 @@ function App() {
     <motion.div
       initial={false}
       animate={{
-        transform: isModalOpen || isConfirmOpen ? "scale(0.9)" : "scale(1)",
+        transform: isModalOpen || isConfirmOpen ? "scale(0.97)" : "scale(1)",
         transition: { duration: 0.2, ease: "easeOut" },
       }}
     >
