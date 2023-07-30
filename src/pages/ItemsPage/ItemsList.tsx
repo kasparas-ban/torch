@@ -380,7 +380,7 @@ function ItemSublist<T extends Task | Goal>({
           <Fragment key={getSubitemKey(subitem)}>
             <motion.li
               layout
-              className={`relative flex space-x-3 ${editMode ? "" : "md:ml-2"}`}
+              className={`flex space-x-3 ${editMode ? "" : "md:ml-2"}`}
               variants={subitemVariant}
             >
               {editMode && (
@@ -399,10 +399,11 @@ function ItemSublist<T extends Task | Goal>({
                   <EditIcon className="m-auto h-full text-gray-500 group-hover:text-gray-700 group-[.selected]:text-gray-700" />
                 </motion.div>
               )}
-              <div className="z-10 my-auto aspect-square w-4 rounded-full bg-gray-300"></div>
-              {idx !== subitems.length - 1 && (
-                <div className="absolute top-7 left-[-7px] h-14 w-1 bg-gray-300"></div>
-              )}
+              <div className="relative my-auto aspect-square w-4 rounded-full bg-gray-300">
+                {idx !== subitems.length - 1 && (
+                  <div className="absolute top-3 left-[5px] h-14 w-1 bg-gray-300"></div>
+                )}
+              </div>
               <motion.div
                 className={`relative flex w-full cursor-pointer overflow-hidden rounded-2xl py-3 px-6 md:rounded-3xl ${
                   editMode && !showEditPanel(subitem)
