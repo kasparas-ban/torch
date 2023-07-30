@@ -178,7 +178,8 @@ function Item<T extends GeneralItem>({
       : undefined
   const containsSublist = !!itemSublist?.length
 
-  const showEditPanel = editMode && editItem?.id === item.id
+  const showEditPanel =
+    editMode && editItem?.type === item.type && editItem?.id === item.id
 
   const toggleEditClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation()
@@ -349,7 +350,8 @@ function ItemSublist<T extends Task | Goal>({
   editItem?: T
   setEditItem: React.Dispatch<React.SetStateAction<T | undefined>>
 }) {
-  const showEditPanel = (subitem: T) => editMode && subitem.id === editItem?.id
+  const showEditPanel = (subitem: T) =>
+    editMode && subitem.type === editItem?.type && subitem.id === editItem?.id
 
   const toggleEditClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
