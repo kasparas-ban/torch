@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useLayoutEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { capitalizeString } from "../../helpers"
 import { ItemType, ItemTypeLabel } from "../../types"
@@ -127,19 +127,20 @@ function ItemsTypeDropdown({
     setItemType(selectedType)
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!dropdownMenuRef.current) return
 
     const onClick = (event: Event) => {
       const clickInside =
         dropdownMenuRef.current?.contains(event.target as Node) ||
         dropdownSelectRef.current?.contains(event.target as Node)
+
       if (isDropdownOpen && !clickInside) setIsDropdownOpen(false)
     }
 
     document.addEventListener("click", onClick)
     return () => document.removeEventListener("click", onClick)
-  }, [dropdownMenuRef.current])
+  }, [dropdownMenuRef.current, isDropdownOpen])
 
   return (
     <>

@@ -15,7 +15,7 @@ export type Task = {
   duration: { hours: number | null; minutes: number | null }
   priority?: "LOW" | "MEDIUM" | "HIGH"
   targetDate?: Date | null
-  recurring?: boolean
+  recurring?: RecurringType
   goal?: Goal | null
 }
 
@@ -46,3 +46,10 @@ export type ItemType = "TASK" | "GOAL" | "DREAM"
 export type OptionType = { value: number; label: string }
 
 export type TimerState = "idle" | "paused" | "running"
+
+export type RecurringType = {
+  times: number
+  period: ReccuringPeriod
+}
+
+export type ReccuringPeriod = "DAY" | "WEEK" | "MONTH"

@@ -34,7 +34,7 @@ export function AddTaskSections({
         task.id === id
           ? {
               ...task,
-              recurring: true,
+              recurring: { times: 1, period: "DAY" },
             }
           : task
       ),

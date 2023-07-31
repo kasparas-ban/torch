@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import useModal from "../useModal"
-import { Goal, Task } from "../../../types"
+import { Goal, RecurringType, Task } from "../../../types"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
+import RecurringInput from "../../Inputs/RecurringInput"
 import DurationInput from "../../Inputs/DurationInput"
 import SelectInput from "../../Inputs/SelectInput"
 import DateInput from "../../Inputs/DateInput"
@@ -16,7 +17,7 @@ interface ITask {
   duration: { hours: number | null; minutes: number | null }
   priority?: "LOW" | "MEDIUM" | "HIGH"
   targetDate?: Date | null
-  recurring?: boolean
+  recurring?: RecurringType
   goal?: Goal | null
   inputOrder: string[]
 }
@@ -150,6 +151,28 @@ function TaskForm() {
                     </motion.div>
                   )
                 )
+              if (input === "recurring")
+                return (
+                  task.recurring && (
+                    <motion.div
+                      layout
+                      key="task_recurring"
+                      className="relative"
+                      variants={formVariants}
+                      initial="addInitial"
+                      animate="default"
+                      exit="remove"
+                    >
+                      <RecurringInput
+                        id="task_recurring"
+                        value={task.recurring}
+                        setValue={(input: RecurringType) =>
+                          setTask(prev => ({ ...prev, recurring: input }))
+                        }
+                      />
+                    </motion.div>
+                  )
+                )
               return (
                 input === "targetDate" &&
                 task.targetDate !== undefined && (
@@ -244,20 +267,22 @@ function AddTaskSections({
   const addRecurring = () =>
     setTask(prev => ({
       ...prev,
-      recurring: true,
+      recurring: { times: 1, period: "DAY" },
+      inputOrder: [...prev.inputOrder, "recurring"],
     }))
   const removeRecurring = () =>
     setTask(prev => ({
       ...prev,
       recurring: undefined,
+      inputOrder: prev.inputOrder.filter(input => input !== "recurring"),
     }))
 
   return (
     <motion.div layout className="my-4 flex flex-wrap justify-center gap-2">
       <button
-        className={`flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600 ${
-          task.recurring ? "bg-blue-300" : ""
-        }`}
+        className={`flex rounded-xl ${
+          task.recurring ? "bg-[#d0d0d0]" : "bg-gray-200"
+        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
           task.recurring ? removeRecurring() : addRecurring()

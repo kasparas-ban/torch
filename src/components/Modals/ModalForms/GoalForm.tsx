@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Subtasks } from "./Subtasks"
 import useModal from "../useModal"
-import { Dream, Goal } from "../../../types"
+import { Dream, Goal, RecurringType } from "../../../types"
 import TextInput from "../../Inputs/TextInput"
 import DateInput from "../../Inputs/DateInput"
 import SelectInput from "../../Inputs/SelectInput"
@@ -27,7 +27,7 @@ export interface ITask {
   priority?: "LOW" | "MEDIUM" | "HIGH"
   duration?: { hours: number | null; minutes: number | null }
   targetDate?: Date | null
-  recurring?: boolean
+  recurring?: RecurringType
   inputOrder: string[]
 }
 
