@@ -7,6 +7,8 @@ import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
 import DurationInput from "../../Inputs/DurationInput"
 import TextInput from "../../Inputs/TextInput"
 import DateInput from "../../Inputs/DateInput"
+import { RecurringType } from "../../../types"
+import RecurringInput from "../../Inputs/RecurringInput"
 
 const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
@@ -35,6 +37,7 @@ export function AddTaskSections({
           ? {
               ...task,
               recurring: { times: 1, period: "DAY" },
+              inputOrder: [...task.inputOrder, "recurring"],
             }
           : task
       ),
@@ -47,6 +50,9 @@ export function AddTaskSections({
           ? {
               ...task,
               recurring: undefined,
+              inputOrder: task.inputOrder.filter(
+                input => input !== "recurring"
+              ),
             }
           : task
       ),
@@ -111,9 +117,7 @@ export function AddTaskSections({
   return (
     <div className="mt-3 flex flex-wrap justify-center gap-2">
       <button
-        className={`flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600 ${
-          task.recurring ? "bg-blue-300" : ""
-        }`}
+        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-400 hover:text-gray-600"
         onClick={e => {
           e.preventDefault()
           task.recurring ? removeRecurring() : addRecurring()
@@ -347,6 +351,34 @@ function SubtaskItem({
                         subtasks: prev.subtasks?.map(task =>
                           task.id === subtask.id
                             ? { ...task, targetDate: new Date(input) }
+                            : task
+                        ),
+                      }))
+                    }
+                  />
+                </motion.div>
+              )
+            }
+            if (input === "recurring") {
+              return (
+                <motion.div
+                  layout
+                  key={`subtask_recurring_${subtask.id}}`}
+                  className="relative"
+                  variants={formVariants}
+                  initial="addInitial"
+                  animate="default"
+                  exit="remove"
+                >
+                  <RecurringInput
+                    id={`subtask_recurring_${subtask.id}`}
+                    value={subtask.recurring}
+                    setValue={(input: RecurringType) =>
+                      setGoal(prev => ({
+                        ...prev,
+                        subtasks: prev.subtasks?.map(task =>
+                          task.id === subtask.id
+                            ? { ...task, recurring: input }
                             : task
                         ),
                       }))
