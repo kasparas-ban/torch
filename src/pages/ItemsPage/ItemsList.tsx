@@ -399,9 +399,15 @@ function ItemSublist<T extends Task | Goal>({
                   <EditIcon className="m-auto h-full text-gray-500 group-hover:text-gray-700 group-[.selected]:text-gray-700" />
                 </motion.div>
               )}
-              <div className="relative my-auto aspect-square w-4 rounded-full bg-gray-300">
+              <div className="relative flex">
+                <div className="my-auto aspect-square w-4 rounded-full bg-gray-300"></div>
+                {/* Upper line */}
+                {idx !== 0 && (
+                  <div className="h0 absolute left-[6px] h-1/2 w-1 bg-gray-300"></div>
+                )}
+                {/* Lower line */}
                 {idx !== subitems.length - 1 && (
-                  <div className="absolute top-3 left-[5px] h-14 w-1 bg-gray-300"></div>
+                  <div className="h0 absolute left-[6px] h-3/4 w-1 translate-y-3/4 bg-gray-300"></div>
                 )}
               </div>
               <motion.div
