@@ -11,7 +11,7 @@ function TimerSettings() {
   return (
     <div className="mx-auto">
       <div className="flex flex-col gap-3 px-0 pb-2 sm:px-4">
-        <div className="inline-flex w-full items-center justify-center">
+        <div className="mt-4 inline-flex w-full items-center justify-center">
           <hr className="my-2 h-0.5 w-full rounded border-0 bg-gray-200 dark:bg-gray-700"></hr>
           <div className="absolute left-1/2 -translate-x-1/2 bg-white px-4 dark:bg-gray-900">
             <div className="font-semibold">Duration (min)</div>

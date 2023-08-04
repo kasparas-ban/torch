@@ -16,6 +16,19 @@ function NavigationBar() {
   const [showModalMenu, setShowModalMenu] = useState(false)
   const [showAccountDropdown, setShowAccountDropdown] = useState(false)
 
+  useEffect(() => {
+    const htmlElement = document.querySelector(":root")
+    if (showModalMenu) {
+      htmlElement?.setAttribute(
+        "style",
+        "overflow: hidden; scrollbar-gutter: auto;"
+      )
+    } else {
+      ;(htmlElement as HTMLElement)?.style.removeProperty("overflow")
+      ;(htmlElement as HTMLElement)?.style.removeProperty("scrollbar-gutter")
+    }
+  }, [showModalMenu])
+
   return (
     <nav className="mt-4 flex justify-between max-[768px]:px-6 md:justify-center md:space-x-36">
       <div className="relative -top-1 h-12 hover:cursor-pointer">
@@ -183,7 +196,7 @@ function NavigationLink({
           <Icon className="mx-auto h-6 w-6 text-slate-800" />
         </div>
       )}
-      <div className="relative hidden translate-y-5 min-[400px]:peer-hover:block">
+      <div className="relative z-10 hidden translate-y-5 min-[400px]:peer-hover:block">
         <div className="absolute -translate-x-1/2 -translate-y-1/2 rounded-lg bg-red-200 p-1">
           {linkName}
         </div>

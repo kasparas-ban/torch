@@ -9,6 +9,7 @@ import {
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
 import { OptionType } from "../../types"
+import { getItemsByType } from "../../API/api"
 
 const focusTypeOptions = [
   { label: "All", value: "ALL" as FocusType },
@@ -19,8 +20,7 @@ const focusTypeOptions = [
 
 export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
   const timerState = useTimerStore.use.timerState()
-  const { focusOn, setFocusOn, focusType, setFocusType, getFocusOptions } =
-    useTimerForm()
+  const { focusOn, setFocusOn, focusType, setFocusType } = useTimerForm()
 
   return (
     <AnimatePresence mode="popLayout">
@@ -41,13 +41,12 @@ export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
             <div className="mb-1 ml-2">Focus on</div>
             <div className="flex [&>div:first-child]:w-full">
               <SelectTypeFirstField
+                key={`${focusType}_focus_item`}
                 value={focusOn}
                 onChange={option => setFocusOn(option)}
-                options={[]}
-                loadOptions={getFocusOptions}
+                loadOptions={input => getItemsByType(input, focusType)}
                 defaultOptions
                 isClearable
-                cacheOptions
               />
               <SelectTypeSecondField
                 value={focusTypeOptions.find(

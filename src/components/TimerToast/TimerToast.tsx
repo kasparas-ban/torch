@@ -40,7 +40,7 @@ const TimerToast = () => {
     <AnimatePresence mode="popLayout">
       {isShowing && (
         <motion.div
-          className="relative z-[-1] mt-4 flex justify-center max-[768px]:px-6 md:space-x-36"
+          className="relative mt-4 flex justify-center max-[768px]:px-6 md:space-x-36"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: [1, 0.2, 0], y: [0, -10, -20] }}

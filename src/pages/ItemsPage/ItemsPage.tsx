@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useItems } from "../../api"
+import { useItemsList } from "../../API/api"
 import ItemsList from "./ItemsList"
 import { ItemsHeader } from "./ItemsHeader"
 import { GeneralItem, ItemType } from "../../types"
@@ -8,7 +8,7 @@ import ConfirmModal from "../../components/Modals/ConfirmModal/ConfirmModal"
 
 function ItemsPage() {
   const [itemType, setItemType] = useState<ItemType>("GOAL")
-  const { data } = useItems(itemType)
+  const { data } = useItemsList(itemType)
 
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">

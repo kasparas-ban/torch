@@ -4,10 +4,11 @@
 
 html {
   -webkit-tap-highlight-color: transparent;
+  scrollbar-gutter: stable;
 }
 
 .bg-multi-color {
-  background: linear-gradient(60deg,#f79533,#f37055,#ef4e7b, #ff234f);
+  background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #ff234f);
   animation: animatedgradient 4s ease infinite alternate;
   background-size: 300% 300%;
 }
