@@ -5,6 +5,7 @@
 html {
   -webkit-tap-highlight-color: transparent;
   scrollbar-gutter: stable;
+  overflow-x: hidden;
 }
 
 .bg-multi-color {

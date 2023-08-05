@@ -45,6 +45,12 @@ export type ItemType = "TASK" | "GOAL" | "DREAM"
 
 export type OptionType = { value: number; label: string; progress?: number }
 
+export type GroupedOptionType = {
+  value: number
+  label: string
+  options: Array<OptionType & { parent?: number }>
+}
+
 export type TimerState = "idle" | "paused" | "running"
 
 export type RecurringType = {

@@ -8,7 +8,7 @@ import {
 } from "../Inputs/SelectField"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
-import { OptionType } from "../../types"
+import { GroupedOptionType, OptionType } from "../../types"
 import { getItemsByType } from "../../API/api"
 import { toPercent } from "../../helpers"
 
@@ -22,26 +22,6 @@ const focusTypeOptions = [
 export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
   const timerState = useTimerStore.use.timerState()
   const { focusOn, setFocusOn, focusType, setFocusType } = useTimerForm()
-
-  const optionLabel = (
-    option: OptionType,
-    { context }: { context: "menu" | "value" }
-  ) => {
-    return (
-      <div className="flex w-full gap-2">
-        {context === "menu" ? (
-          <>
-            <div className="shrink-0 basis-10 text-center font-bold text-rose-500">
-              {toPercent(option.progress)}
-            </div>
-            <div>{option.label}</div>
-          </>
-        ) : (
-          <div>{option.label}</div>
-        )}
-      </div>
-    )
-  }
 
   return (
     <AnimatePresence mode="popLayout">
@@ -65,11 +45,17 @@ export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
                 key={`${focusType}_focus_item`}
                 value={focusOn}
                 onChange={option => setFocusOn(option)}
-                loadOptions={input => getItemsByType(input, focusType)}
+                loadOptions={input =>
+                  getItemsByType(
+                    input,
+                    focusType,
+                    focusType === "TASKS" || focusType === "GOALS"
+                  )
+                }
                 formatOptionLabel={optionLabel}
+                formatGroupLabel={groupLabel}
                 defaultOptions
                 isClearable
-                menuIsOpen
               />
               <SelectTypeSecondField
                 value={focusTypeOptions.find(
@@ -128,3 +114,25 @@ export const TimerFocusInfo = forwardRef<
     </motion.div>
   )
 })
+
+const optionLabel = (
+  option: OptionType,
+  { context }: { context: "menu" | "value" }
+) => {
+  return (
+    <div className="flex w-full items-center gap-2">
+      {context === "menu" ? (
+        <>
+          <div className="shrink-0 basis-10 text-center font-bold text-rose-500">
+            {toPercent(option.progress)}
+          </div>
+          <div>{option.label}</div>
+        </>
+      ) : (
+        <div>{option.label}</div>
+      )}
+    </div>
+  )
+}
+
+const groupLabel = (data: GroupedOptionType) => <div>{data.label}</div>

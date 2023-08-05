@@ -35,3 +35,4 @@ An app that helps you track the time you spend pursuing your goals.
 - [ ] Try adding Million.js for smoother animations
 - [ ] Limit animations in modal transitions to modal content instead of the whole modal
 - [ ] Adjust all sizes to make sure they look good on mobile
+- [ ] Add a loading skeleton for lists

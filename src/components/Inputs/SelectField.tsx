@@ -80,6 +80,7 @@ export const SelectTypeFirstField = <
           indicatorSeparator: () => classNames("hidden"),
           clearIndicator: () => classNames("cursor-pointer"),
           option: () => classNames("cursor-pointer"),
+          singleValue: () => classNames("[&>div>div]:truncate"),
         }}
         styles={styles}
       />
