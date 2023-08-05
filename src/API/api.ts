@@ -42,6 +42,10 @@ export const getItemsByType = async (input: string, focusType: FocusType) => {
 
   const filteredItems = items
     .filter(item => item.title.toLowerCase().includes(input.toLowerCase()))
-    .map(item => ({ label: item.title, value: item.id }))
+    .map(item => ({
+      label: item.title,
+      value: item.id,
+      progress: item.progress,
+    }))
   return filteredItems
 }

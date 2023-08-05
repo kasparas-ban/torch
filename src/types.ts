@@ -43,7 +43,7 @@ export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
 
 export type ItemType = "TASK" | "GOAL" | "DREAM"
 
-export type OptionType = { value: number; label: string }
+export type OptionType = { value: number; label: string; progress?: number }
 
 export type TimerState = "idle" | "paused" | "running"
 

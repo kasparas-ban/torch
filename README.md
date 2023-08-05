@@ -31,6 +31,7 @@ An app that helps you track the time you spend pursuing your goals.
 - [x] Add timer to tab title
 - [ ] Implement item filter
 - [ ] Add fadeout gradient for lists
+- [ ] Rewrite forms with React Form Hook
 - [ ] Try adding Million.js for smoother animations
 - [ ] Limit animations in modal transitions to modal content instead of the whole modal
 - [ ] Adjust all sizes to make sure they look good on mobile

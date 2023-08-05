@@ -26,3 +26,15 @@ export const secondsToMinutes = (totalSeconds: number) => {
     .toString()
     .padStart(2, "0")}`
 }
+
+export const toPercent = (input?: number) => {
+  if (input === undefined) return ""
+
+  const percent = input * 100
+  const rounded = Math.round(input * 100)
+
+  if (percent !== 0 && rounded === 0) return "<0%"
+  if (percent !== 100 && rounded === 100) return "99%"
+
+  return `${rounded.toString()}%`
+}

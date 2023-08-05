@@ -27,6 +27,7 @@ function App() {
         transform: isModalOpen || isConfirmOpen ? "scale(0.97)" : "scale(1)",
         transition: { duration: 0.2, ease: "easeOut" },
       }}
+      className="origin-top pb-24"
     >
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>

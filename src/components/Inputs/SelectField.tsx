@@ -72,7 +72,10 @@ export const SelectTypeFirstField = <
               "h-10 rounded-l-2xl rounded-r-none bg-gray-200 px-2 text-gray-900 border-0 border-r border-solid border-gray-300",
               isFocused && "!shadow-none !border-none bg-gray-100"
             ),
-          menu: () => classNames("rounded-lg overflow-hidden"),
+          menu: () =>
+            classNames(
+              "rounded-lg overflow-hidden max-[320px]:w-[calc(100vw-2rem)] max-[400px]:w-[calc(100vw-3rem)]"
+            ),
           menuList: () => classNames("p-0"),
           indicatorSeparator: () => classNames("hidden"),
           clearIndicator: () => classNames("cursor-pointer"),
