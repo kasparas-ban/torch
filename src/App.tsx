@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import {
+  Outlet,
+  RouterProvider,
+  createBrowserRouter,
+  RouteObject,
+  ScrollRestoration,
+} from "react-router-dom"
 import { motion } from "framer-motion"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
@@ -15,11 +21,10 @@ import TimerToast from "./components/TimerToast/TimerToast"
 
 const queryClient = new QueryClient()
 
-function App() {
+const Wrapper = () => {
   const { isOpen: isModalOpen } = useModal()
   const { isOpen: isConfirmOpen } = useConfirmModal()
 
-  // TODO: need to disable body scroll when modal is open
   return (
     <motion.div
       initial={false}
@@ -29,26 +34,61 @@ function App() {
       }}
       className="origin-top pb-24"
     >
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <HelmetProvider>
-            <TitleWrapper>
-              <NavigationBar />
-              <TimerToast />
-              <Routes>
-                <Route index element={<TimerPage />} />
-                <Route path="items" element={<ItemsPage />} />
-                <Route path="calendar" element={<CalendarPage />} />
-                <Route path="world" element={<WorldPage />} />
-                <Route path="stats" element={<StatisticsPage />} />
-                <Route path="*" element={<>Page not found</>} />
-              </Routes>
-            </TitleWrapper>
-          </HelmetProvider>
-        </QueryClientProvider>
-      </BrowserRouter>
+      <ScrollRestoration />
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <TitleWrapper>
+            <NavigationBar />
+            <TimerToast />
+            <Outlet />
+          </TitleWrapper>
+        </HelmetProvider>
+      </QueryClientProvider>
     </motion.div>
   )
+}
+
+const routes: RouteObject[] = [
+  {
+    path: "/",
+    element: <Wrapper />,
+    children: [
+      {
+        index: true,
+        element: <TimerPage />,
+      },
+      {
+        path: "items",
+        element: <ItemsPage />,
+      },
+      {
+        path: "calendar",
+        element: <CalendarPage />,
+      },
+      {
+        path: "world",
+        element: <WorldPage />,
+      },
+      {
+        path: "stats",
+        element: <StatisticsPage />,
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: <>Page not found</>,
+  },
+  {
+    path: "/404",
+    element: <></>,
+  },
+]
+
+const router = createBrowserRouter(routes)
+
+function App() {
+  return <RouterProvider router={router} />
 }
 
 export default App

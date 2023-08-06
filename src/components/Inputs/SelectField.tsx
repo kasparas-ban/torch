@@ -79,7 +79,11 @@ export const SelectTypeFirstField = <
           menuList: () => classNames("p-0"),
           indicatorSeparator: () => classNames("hidden"),
           clearIndicator: () => classNames("cursor-pointer"),
-          option: () => classNames("cursor-pointer"),
+          option: state =>
+            classNames(
+              "cursor-pointer",
+              state.isSelected && "bg-blue-200 text-black"
+            ),
           singleValue: () => classNames("[&>div>div]:truncate"),
         }}
         styles={styles}

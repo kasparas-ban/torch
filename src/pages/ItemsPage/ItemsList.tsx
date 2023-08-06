@@ -1,7 +1,13 @@
 import React, { Fragment, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { AnimatePresence, motion, stagger, useAnimate } from "framer-motion"
 import useConfirmModal from "../../components/Modals/ConfirmModal/useConfirmModal"
+import useTimerForm from "../../components/Timer/useTimerForm"
 import useModal from "../../components/Modals/useModal"
+import ItemProgress from "./ProgressBar"
+import useEditItem from "./useEditMode"
+import useEditMode from "./useEditMode"
+import { ROUTES } from "../../routes"
 import { GeneralItem, Goal, GroupedItems, ItemType, Task } from "../../types"
 import { ReactComponent as TimerStartIcon } from "../../assets/timer_start.svg"
 import { ReactComponent as PlusSmallIcon } from "../../assets/plus_small.svg"
@@ -11,9 +17,6 @@ import { ReactComponent as TickIcon } from "../../assets/tick.svg"
 import { ReactComponent as AddItemIcon } from "../../assets/add_item.svg"
 import { ReactComponent as StatsIcon } from "../../assets/stats.svg"
 import { ReactComponent as DeleteIcon } from "../../assets/delete.svg"
-import ItemProgress from "./ProgressBar"
-import useEditItem from "./useEditMode"
-import useEditMode from "./useEditMode"
 
 const sublistVariant = {
   initial: { opacity: 0, height: 0, marginTop: 0 },
@@ -170,6 +173,9 @@ function Item<T extends GeneralItem>({
   const { editItem, setEditItem } = useEditItem()
   const [showSublist, setShowSublist] = useState(true)
 
+  const navigate = useNavigate()
+  const { setFocusOn, setFocusType } = useTimerForm()
+
   const itemSublist =
     item.type === "GOAL"
       ? item.tasks
@@ -184,6 +190,20 @@ function Item<T extends GeneralItem>({
   const toggleEditClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation()
     setEditItem(showEditPanel ? undefined : item)
+  }
+
+  const handleTimerClick = () => {
+    navigate(ROUTES.index.path)
+    setFocusOn({ value: item.id, label: item.title, progress: item.progress })
+    setFocusType(
+      itemType === "TASK"
+        ? "TASKS"
+        : itemType === "GOAL"
+        ? "GOALS"
+        : itemType === "DREAM"
+        ? "DREAMS"
+        : "ALL"
+    )
   }
 
   return (
@@ -239,6 +259,7 @@ function Item<T extends GeneralItem>({
           <motion.div
             className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400"
             whileHover={{ scale: 1.1 }}
+            onClick={handleTimerClick}
           >
             <TimerStartIcon className="m-auto h-full" />
           </motion.div>
@@ -254,6 +275,7 @@ function Item<T extends GeneralItem>({
           <ItemSublist<(typeof itemSublist)[number]>
             key={`${itemType}_${item.id}_sublist`}
             subitems={itemSublist || []}
+            subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
             editMode={editMode}
             editItem={editItem as (typeof itemSublist)[number] | undefined}
             setEditItem={
@@ -341,15 +363,20 @@ function ItemEditPanel<T extends GeneralItem>({ item }: { item: T }) {
 
 function ItemSublist<T extends Task | Goal>({
   subitems,
+  subitemType,
   editMode,
   editItem,
   setEditItem,
 }: {
   subitems: T[]
+  subitemType: "TASK" | "GOAL"
   editMode: boolean
   editItem?: T
   setEditItem: React.Dispatch<React.SetStateAction<T | undefined>>
 }) {
+  const navigate = useNavigate()
+  const { setFocusOn, setFocusType } = useTimerForm()
+
   const showEditPanel = (subitem: T) =>
     editMode && subitem.type === editItem?.type && subitem.id === editItem?.id
 
@@ -366,6 +393,18 @@ function ItemSublist<T extends Task | Goal>({
         ? (subitem as Task).goal?.id
         : (subitem as Goal).dream?.id
     }_${subitem.id}`
+
+  const handleTimerClick = (item: Task | Goal) => {
+    navigate(ROUTES.index.path)
+    setFocusOn({ value: item.id, label: item.title, progress: item.progress })
+    setFocusType(
+      subitemType === "TASK"
+        ? "TASKS"
+        : subitemType === "GOAL"
+        ? "GOALS"
+        : "ALL"
+    )
+  }
 
   return (
     <motion.div
@@ -430,6 +469,7 @@ function ItemSublist<T extends Task | Goal>({
                   whileHover={{ scale: 1.1 }}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
+                  onClick={() => handleTimerClick(subitem)}
                 >
                   <TimerStartIcon className="m-auto h-full" />
                 </motion.div>
