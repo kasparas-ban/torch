@@ -1,7 +1,7 @@
-import CommingSoon from "../components/CommingSoon"
+import ComingSoon from "../components/ComingSoon"
 
 function WorldPage() {
-  return <CommingSoon />
+  return <ComingSoon />
 }
 
 export default WorldPage

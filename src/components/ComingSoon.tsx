@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 
-function CommingSoon() {
+function ComingSoon() {
   return (
     <motion.div
       className="mt-16 flex flex-col justify-center max-[768px]:px-6"
@@ -37,4 +37,4 @@ function CommingSoon() {
   )
 }
 
-export default CommingSoon
+export default ComingSoon

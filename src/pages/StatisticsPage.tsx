@@ -1,7 +1,7 @@
-import CommingSoon from "../components/CommingSoon"
+import ComingSoon from "../components/ComingSoon"
 
 function StatisticsPage() {
-  return <CommingSoon />
+  return <ComingSoon />
 }
 
 export default StatisticsPage
