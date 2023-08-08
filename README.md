@@ -36,4 +36,5 @@ An app that helps you track the time you spend pursuing your goals.
 - [ ] Limit animations in modal transitions to modal content instead of the whole modal
 - [ ] Adjust all sizes to make sure they look good on mobile
 - [ ] Add a loading skeleton for lists
-- [ ] Make navbar sticky
+- [x] Make navbar sticky
+- [x] Remake navbar to stick to the bottom of the screen on mobile

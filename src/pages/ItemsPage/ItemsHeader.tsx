@@ -118,7 +118,7 @@ function ItemsTypeDropdown({
   const selectedLabel =
     itemType === "TASK" ? "Tasks" : itemType === "GOAL" ? "Goals" : "Dreams"
   const typeOptions = ["Tasks", "Goals", "Dreams"].filter(
-    type => type !== selectedLabel
+    type => type !== selectedLabel,
   ) as ItemTypeLabel[]
 
   const handleTypeChange = (type: ItemTypeLabel) => {
@@ -157,8 +157,8 @@ function ItemsTypeDropdown({
           animate="animate"
           exit="exit"
         >
-          <div className="text-6xl font-bold">{`${capitalizeString(
-            itemType
+          <div className="text-5xl flex items-center font-bold">{`${capitalizeString(
+            itemType,
           )}s`}</div>
           <div className="mx-2 mt-7">
             <motion.div

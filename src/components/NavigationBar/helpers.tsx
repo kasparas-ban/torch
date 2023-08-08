@@ -14,17 +14,30 @@ export function useScrollPosition() {
   return { yScroll }
 }
 
-export function NavigationBarWrapper({ children }: { children: ReactNode }) {
+export function NavigationBarWrapper({
+  children,
+  mobile,
+}: {
+  children: ReactNode
+  mobile?: boolean
+}) {
   const { yScroll } = useScrollPosition()
+
+  const backgroundColorMobile = "rgb(156 163 175 / 0.3)"
+  const backgroundColorDesktop = yScroll
+    ? "rgb(156 163 175 / 0.3)"
+    : "rgb(0 0 0 / 0)"
 
   return (
     <motion.nav
       layout
       className={clsx("flex justify-between rounded-2xl backdrop-blur-sm")}
       animate={{
-        backgroundColor: yScroll ? "rgb(156 163 175 / 0.3)" : "rgb(0 0 0 / 0)",
-        paddingLeft: yScroll ? 24 : 0,
-        paddingRight: yScroll ? 24 : 0,
+        backgroundColor: mobile
+          ? backgroundColorMobile
+          : backgroundColorDesktop,
+        paddingLeft: !mobile && yScroll ? 24 : 0,
+        paddingRight: !mobile && yScroll ? 24 : 0,
       }}
       transition={{ duration: 0.4 }}
     >

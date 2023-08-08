@@ -1,34 +1,76 @@
 import { useEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import { Link } from "react-router-dom"
 import clsx from "clsx"
+import { useMediaQuery } from "react-responsive"
 import { AnimatePresence, motion } from "framer-motion"
-import { ReactComponent as TasksIcon } from "../../assets/navigation_icons/goals.svg"
+import { NavigationBarWrapper, useScrollPosition } from "./helpers"
 import { ReactComponent as CalendarIcon } from "../../assets/navigation_icons/calendar.svg"
+import { ReactComponent as TasksIcon } from "../../assets/navigation_icons/goals.svg"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import { ReactComponent as WorldIcon } from "../../assets/navigation_icons/world.svg"
 import { ReactComponent as StatsIcon } from "../../assets/navigation_icons/stats.svg"
-import { ReactComponent as MenuIcon } from "../../assets/navigation_icons/menu.svg"
 import { ReactComponent as TorchLogo } from "../../assets/torch_logo.svg"
 import { ReactComponent as UserIcon } from "../../assets/user.svg"
-import { ReactComponent as CloseIcon } from "../../assets/close.svg"
-import { NavigationBarWrapper, useScrollPosition } from "./helpers"
 
 function NavigationBar() {
-  const [showModalMenu, setShowModalMenu] = useState(false)
-  const [showAccountDropdown, setShowAccountDropdown] = useState(false)
+  const isDesktop = useMediaQuery({
+    query: "(min-width: 600px)",
+  })
 
-  useEffect(() => {
-    const htmlElement = document.querySelector(":root")
-    if (showModalMenu) {
-      htmlElement?.setAttribute(
-        "style",
-        "overflow: hidden; scrollbar-gutter: auto;",
-      )
-    } else {
-      ;(htmlElement as HTMLElement)?.style.removeProperty("overflow")
-      ;(htmlElement as HTMLElement)?.style.removeProperty("scrollbar-gutter")
-    }
-  }, [showModalMenu])
+  return (
+    <>
+      {isDesktop ? (
+        <NavbarContentDesktop />
+      ) : (
+        <>{createPortal(<NavbarMobile />, document.body)}</>
+      )}
+    </>
+  )
+}
+
+function NavbarMobile() {
+  return (
+    <div
+      className={clsx(
+        "fixed bottom-0 w-full z-20 py-2 bg-transparent flex justify-center max-[768px]:px-3 shadow-lg",
+        "before:from-50% before:absolute before:top-[-20px] before:z-[-1] before:h-[calc(100%+20px)] before:w-full before:bg-gradient-to-t before:from-white/80 before:content-['']",
+      )}
+    >
+      <div className="w-full max-w-[650px]">
+        <NavigationBarWrapper mobile>
+          <NavbarContentMobile />
+        </NavigationBarWrapper>
+      </div>
+    </div>
+  )
+}
+
+function NavbarContentMobile() {
+  return (
+    <ul className="flex h-12 space-x-1 overflow-visible rounded-[16px] w-full justify-between px-3">
+      <NavigationLink path="items" Icon={TasksIcon} linkName={"Tasks"} mobile />
+      <NavigationLink path="stats" Icon={StatsIcon} linkName={"Stats"} mobile />
+      <NavigationLink
+        path=""
+        Icon={TimerIcon}
+        linkName="Timer"
+        highlight
+        mobile
+      />
+      <NavigationLink path="world" Icon={WorldIcon} linkName={"World"} mobile />
+      <NavigationLink
+        path="account"
+        Icon={UserIcon}
+        linkName={"Account"}
+        mobile
+      />
+    </ul>
+  )
+}
+
+function NavbarContentDesktop() {
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false)
 
   return (
     <div
@@ -91,89 +133,6 @@ function NavigationBar() {
               )}
             </AnimatePresence>
           </div>
-          <div className="group hidden items-center hover:cursor-pointer max-[450px]:flex">
-            {showModalMenu ? (
-              <CloseIcon
-                onClick={() => setShowModalMenu(prev => !prev)}
-                className="h-8 w-6"
-              />
-            ) : (
-              <MenuIcon
-                onClick={() => setShowModalMenu(prev => !prev)}
-                className="h-8 w-6"
-              />
-            )}
-          </div>
-          <div
-            className={clsx(
-              "fixed top-16 left-0 z-30 h-screen w-full bg-white",
-              showModalMenu ? "visible" : "hidden",
-            )}
-          >
-            <ul className="divide-y divide-slate-200 px-4">
-              <li className="py-1">
-                <Link to="items" onClick={() => setShowModalMenu(false)}>
-                  <motion.div
-                    className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <TasksIcon className="h-6 w-6 text-slate-800" />
-                    <div className="ml-5 flex items-center">Goals</div>
-                  </motion.div>
-                </Link>
-              </li>
-              <li className="py-1">
-                <Link to="calendar" onClick={() => setShowModalMenu(false)}>
-                  <motion.div
-                    className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <CalendarIcon className="h-6 w-6 text-slate-800" />
-                    <div className="ml-5 flex items-center">Calendar</div>
-                  </motion.div>
-                </Link>
-              </li>
-              <li className="py-1">
-                <Link to="world" onClick={() => setShowModalMenu(false)}>
-                  <motion.div
-                    className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <WorldIcon className="h-6 w-6 text-slate-800" />
-                    <div className="ml-5 flex items-center">World</div>
-                  </motion.div>
-                </Link>
-              </li>
-              <li className="py-1">
-                <Link to="stats" onClick={() => setShowModalMenu(false)}>
-                  <motion.div
-                    className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <StatsIcon className="h-6 w-6 text-slate-800" />
-                    <div className="ml-5 flex items-center">Statistics</div>
-                  </motion.div>
-                </Link>
-              </li>
-              <li className="py-1">
-                <Link to="account" onClick={() => setShowModalMenu(false)}>
-                  <motion.div
-                    className="flex select-none rounded-md p-2 hover:cursor-pointer hover:bg-red-200"
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <UserIcon className="h-6 w-6 text-slate-800" />
-                    <div className="ml-5 flex items-center">Account</div>
-                  </motion.div>
-                </Link>
-              </li>
-            </ul>
-            <motion.div
-              className="fixed w-full text-center"
-              whileTap={{ scale: 0.96 }}
-            >
-              <div className="mx-auto w-fit px-8 py-2 text-lg">Sign Out</div>
-            </motion.div>
-          </div>
         </NavigationBarWrapper>
       </div>
     </div>
@@ -185,6 +144,7 @@ interface NavigationLinkProps {
   path: string
   linkName: string
   highlight?: boolean
+  mobile?: boolean
 }
 
 function NavigationLink({
@@ -192,6 +152,7 @@ function NavigationLink({
   path,
   linkName,
   highlight,
+  mobile,
 }: NavigationLinkProps) {
   return (
     <Link
@@ -202,17 +163,24 @@ function NavigationLink({
       )}
     >
       {highlight ? (
-        <TimerLink Icon={Icon} />
+        <TimerLink Icon={Icon} mobile={mobile} />
       ) : (
-        <div className="peer rounded-lg py-2 px-3 hover:cursor-pointer hover:bg-slate-300 max-[450px]:hidden">
+        <div
+          className={clsx(
+            "peer rounded-lg py-2 px-3 hover:cursor-pointer",
+            !mobile && "max-[450px]:hidden hover:bg-slate-300",
+          )}
+        >
           <Icon className="mx-auto h-6 w-6 text-slate-800" />
         </div>
       )}
-      <div className="relative z-10 hidden translate-y-5 min-[450px]:peer-hover:block">
-        <div className="absolute -translate-x-1/2 -translate-y-1/2 rounded-lg bg-red-200 p-1 shadow-lg">
-          {linkName}
+      {!mobile && (
+        <div className="relative z-10 hidden translate-y-5 peer-hover:block">
+          <div className="absolute -translate-x-1/2 -translate-y-1/2 rounded-lg bg-red-200 p-1 shadow-lg">
+            {linkName}
+          </div>
         </div>
-      </div>
+      )}
     </Link>
   )
 }
@@ -232,15 +200,17 @@ const TorchLink = () => {
 
 const TimerLink = ({
   Icon,
+  mobile,
 }: {
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  mobile?: boolean
 }) => {
   const { yScroll } = useScrollPosition()
 
   return (
     <motion.div
       className="bg-multi-color bg-multi-color-delay peer mx-2 rounded-full py-2 px-2 brightness-150 hover:cursor-pointer hover:brightness-100"
-      animate={{ scale: yScroll ? 0.8 : 1 }}
+      animate={{ scale: !mobile && yScroll ? 0.8 : 1 }}
     >
       <Icon className="mx-auto h-8 w-8 text-slate-800" />
     </motion.div>

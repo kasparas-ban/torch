@@ -19,16 +19,16 @@ function ModalBackground({ closeModal }: { closeModal: () => void }) {
       ref={backgroundRef}
       initial={{
         backgroundColor: "rgba(0, 0, 0, 0)",
-        backdropFilter: "blur(0px)",
+        // backdropFilter: "blur(0px)",
       }}
       animate={{
         backgroundColor: "rgba(40, 40, 40, 0.2)",
-        backdropFilter: "blur(4px)",
+        // backdropFilter: "blur(4px)",
         transition: { duration: 0.2 },
       }}
       exit={{
         backgroundColor: "rgba(0, 0, 0, 0)",
-        backdropFilter: "blur(0px)",
+        // backdropFilter: "blur(0px)",
         transition: { duration: 0.2 },
       }}
       className="absolute inset-0 z-10"
