@@ -105,9 +105,10 @@ function NavigationBar() {
             )}
           </div>
           <div
-            className={`fixed top-16 left-0 z-30 h-full w-full bg-white ${
-              showModalMenu ? "visible" : "hidden"
-            }`}
+            className={clsx(
+              "fixed top-16 left-0 z-30 h-screen w-full bg-white",
+              showModalMenu ? "visible" : "hidden",
+            )}
           >
             <ul className="divide-y divide-slate-200 px-4">
               <li className="py-1">
@@ -167,7 +168,7 @@ function NavigationBar() {
               </li>
             </ul>
             <motion.div
-              className="fixed bottom-8 w-full text-center"
+              className="fixed w-full text-center"
               whileTap={{ scale: 0.96 }}
             >
               <div className="mx-auto w-fit px-8 py-2 text-lg">Sign Out</div>
