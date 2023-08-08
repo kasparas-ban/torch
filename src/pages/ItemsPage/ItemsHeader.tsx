@@ -110,6 +110,23 @@ function ItemsTypeDropdown({
   setItemType: (type: ItemType) => void
   closeEditMode: () => void
 }) {
+  return (
+    <select>
+      <option value="dog">Dog</option>
+      <option value="cat">Cat</option>
+    </select>
+  )
+}
+
+function ItemsTypeDropdown1({
+  itemType,
+  setItemType,
+  closeEditMode,
+}: {
+  itemType: ItemType
+  setItemType: (type: ItemType) => void
+  closeEditMode: () => void
+}) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownSelectRef = useRef<HTMLDivElement | null>(null)
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null)
