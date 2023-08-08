@@ -167,11 +167,12 @@ function NavigationLink({
       ) : (
         <div
           className={clsx(
-            "peer rounded-lg py-2 px-3 hover:cursor-pointer",
+            "peer rounded-lg py-2 px-3 hover:cursor-pointer flex flex-col",
             !mobile && "max-[450px]:hidden hover:bg-slate-300",
           )}
         >
           <Icon className="mx-auto h-6 w-6 text-slate-800" />
+          {mobile && <span className="text-[11px]">{linkName}</span>}
         </div>
       )}
       {!mobile && (
@@ -210,7 +211,7 @@ const TimerLink = ({
   return (
     <motion.div
       className="bg-multi-color bg-multi-color-delay peer mx-2 rounded-full py-2 px-2 brightness-150 hover:cursor-pointer hover:brightness-100"
-      animate={{ scale: !mobile && yScroll ? 0.8 : 1 }}
+      animate={{ scale: mobile || yScroll ? 0.8 : 1 }}
     >
       <Icon className="mx-auto h-8 w-8 text-slate-800" />
     </motion.div>

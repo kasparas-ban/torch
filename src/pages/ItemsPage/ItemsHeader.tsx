@@ -80,7 +80,7 @@ export function ItemsHeader({
             <EditIcon />
           </motion.div>
         </motion.div>
-        <motion.div
+        {/* <motion.div
           layout
           whileHover={{ scale: 1.2 }}
           onClick={disableEditMode}
@@ -95,7 +95,7 @@ export function ItemsHeader({
               openGeneralModal()
             }}
           />
-        </motion.div>
+        </motion.div> */}
       </div>
     </div>
   )
@@ -157,7 +157,7 @@ function ItemsTypeDropdown({
           animate="animate"
           exit="exit"
         >
-          <div className="text-5xl flex items-center font-bold">{`${capitalizeString(
+          <div className="text-6xl flex items-center font-bold">{`${capitalizeString(
             itemType,
           )}s`}</div>
           <div className="mx-2 mt-7">
