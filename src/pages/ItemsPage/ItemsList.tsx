@@ -72,7 +72,7 @@ export default function ItemsList<T extends GeneralItem>({
         type: "spring",
         bounce: 0.4,
         delay: stagger(0.025),
-      }
+      },
     )
     animate(
       "li",
@@ -82,7 +82,7 @@ export default function ItemsList<T extends GeneralItem>({
         type: "spring",
         bounce: 0.4,
         delay: stagger(0.025),
-      }
+      },
     )
   }, [itemType, groupedItems])
 
@@ -202,7 +202,7 @@ function Item<T extends GeneralItem>({
         ? "GOALS"
         : itemType === "DREAM"
         ? "DREAMS"
-        : "ALL"
+        : "ALL",
     )
   }
 
@@ -382,7 +382,7 @@ function ItemSublist<T extends Task | Goal>({
 
   const toggleEditClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    subitem: T
+    subitem: T,
   ) => {
     e.stopPropagation()
     setEditItem(showEditPanel(subitem) ? undefined : subitem)
@@ -402,7 +402,7 @@ function ItemSublist<T extends Task | Goal>({
         ? "TASKS"
         : subitemType === "GOAL"
         ? "GOALS"
-        : "ALL"
+        : "ALL",
     )
   }
 

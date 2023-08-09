@@ -1,13 +1,13 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import useEditMode from "./useEditMode"
 import { capitalizeString } from "../../helpers"
 import { ItemType, ItemTypeLabel } from "../../types"
+import useModal from "../../components/Modals/useModal"
 import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
 import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
-import useModal from "../../components/Modals/useModal"
-import useEditMode from "./useEditMode"
 
 const itemTypeMotion = {
   initial: {
@@ -86,7 +86,7 @@ export function ItemsHeader({
           onClick={disableEditMode}
         >
           <FilterIcon className="cursor-pointer" />
-        </motion.div>
+        </motion.div> */}
         <motion.div layout whileHover={{ scale: 1.2 }}>
           <PlusIcon
             className="cursor-pointer"
@@ -95,30 +95,13 @@ export function ItemsHeader({
               openGeneralModal()
             }}
           />
-        </motion.div> */}
+        </motion.div>
       </div>
     </div>
   )
 }
 
 function ItemsTypeDropdown({
-  itemType,
-  setItemType,
-  closeEditMode,
-}: {
-  itemType: ItemType
-  setItemType: (type: ItemType) => void
-  closeEditMode: () => void
-}) {
-  return (
-    <select>
-      <option value="dog">Dog</option>
-      <option value="cat">Cat</option>
-    </select>
-  )
-}
-
-function ItemsTypeDropdown1({
   itemType,
   setItemType,
   closeEditMode,
