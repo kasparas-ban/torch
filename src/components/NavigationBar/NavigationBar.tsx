@@ -5,6 +5,7 @@ import clsx from "clsx"
 import { useMediaQuery } from "react-responsive"
 import { AnimatePresence, motion } from "framer-motion"
 import { NavigationBarWrapper, useScrollPosition } from "./helpers"
+import useTimerStore from "../Timer/useTimer"
 import { ReactComponent as CalendarIcon } from "../../assets/navigation_icons/calendar.svg"
 import { ReactComponent as TasksIcon } from "../../assets/navigation_icons/goals.svg"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
@@ -154,6 +155,9 @@ function NavigationLink({
   highlight,
   mobile,
 }: NavigationLinkProps) {
+  const timerState = useTimerStore.use.timerState()
+  const showLabel = timerState === "idle"
+
   return (
     <Link
       to={path}
@@ -175,9 +179,9 @@ function NavigationLink({
           {mobile && <span className="text-[11px]">{linkName}</span>}
         </div>
       )}
-      {!mobile && (
-        <div className="relative z-10 hidden translate-y-5 peer-hover:block">
-          <div className="absolute -translate-x-1/2 -translate-y-1/2 rounded-lg bg-red-200 p-1 shadow-lg">
+      {!mobile && showLabel && (
+        <div className="relative z-30 hidden translate-y-5 peer-hover:block">
+          <div className="absolute z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-red-200 p-1 shadow-lg">
             {linkName}
           </div>
         </div>

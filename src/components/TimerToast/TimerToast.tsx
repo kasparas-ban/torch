@@ -40,7 +40,7 @@ const TimerToast = () => {
     <AnimatePresence mode="popLayout">
       {isShowing && (
         <motion.div
-          className="relative mt-4 flex justify-center max-[768px]:px-6 md:space-x-36"
+          className="sticky z-20 top-[70px] mt-4 flex justify-center max-[768px]:px-6 md:space-x-36 max-[600px]:top-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: [1, 0.2, 0], y: [0, -10, -20] }}
@@ -49,7 +49,7 @@ const TimerToast = () => {
             layout
             className={clsx(
               "flex w-fit items-center gap-4 rounded-3xl bg-gradient-to-b from-red-400 to-rose-500 px-4 py-1 drop-shadow max-sm:max-w-full",
-              timerState !== "running" && "from-red-400/50 to-rose-500/50"
+              timerState !== "running" && "from-red-200 to-rose-300",
             )}
             initial={{ background: "" }}
             animate={{ opacity: 1, y: 0 }}
@@ -60,7 +60,7 @@ const TimerToast = () => {
                 layout="position"
                 className={clsx(
                   "max-w-sm truncate pl-2 pr-1 text-lg",
-                  timerState !== "running" ? "text-gray-600" : "text-white"
+                  timerState !== "running" ? "text-gray-600" : "text-white",
                 )}
               >
                 {focusOn.label}
@@ -71,7 +71,7 @@ const TimerToast = () => {
               layout
               className={clsx(
                 "min-w-[90px] pl-2 pr-1 pb-[3px] text-3xl font-semibold",
-                timerState !== "running" ? "text-gray-600" : "text-white"
+                timerState !== "running" ? "text-gray-600" : "text-white",
               )}
             >
               {secondsToMinutes(time)}
@@ -80,7 +80,7 @@ const TimerToast = () => {
               layout
               className={clsx(
                 "h-4/5 w-[1px]",
-                timerState !== "running" ? "bg-gray-500/30" : "bg-gray-100"
+                timerState !== "running" ? "bg-gray-500/30" : "bg-gray-100",
               )}
             />
             <div className="flex gap-2">
@@ -91,7 +91,7 @@ const TimerToast = () => {
                     key="play_btn"
                     onClick={startTimer}
                     className={clsx(
-                      "group flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-600"
+                      "group flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-600",
                     )}
                     whileHover={{ scale: 1.06 }}
                     variants={buttonVariants}
