@@ -33,8 +33,8 @@ function NavbarMobile() {
   return (
     <div
       className={clsx(
-        "fixed bottom-0 w-full z-20 py-2 bg-transparent flex justify-center max-[768px]:px-3 shadow-lg",
-        "before:from-50% before:absolute before:top-[-20px] before:z-[-1] before:h-[calc(100%+20px)] before:w-full before:bg-gradient-to-t before:from-white/80 before:content-['']",
+        "fixed bottom-0 w-full z-20 pt-2 pb-4 bg-transparent flex justify-center max-[768px]:px-3 shadow-lg",
+        "before:from-60% before:absolute before:top-[-30px] before:z-[-1] before:h-[calc(100%+30px)] before:w-full before:bg-gradient-to-t before:from-white/80 before:content-['']",
       )}
     >
       <div className="w-full max-w-[650px]">
@@ -48,7 +48,7 @@ function NavbarMobile() {
 
 function NavbarContentMobile() {
   return (
-    <ul className="flex h-12 space-x-1 overflow-visible rounded-[16px] w-full justify-between px-3">
+    <ul className="flex h-13 space-x-1 overflow-visible rounded-[16px] w-full justify-between px-3">
       <NavigationLink path="items" Icon={TasksIcon} linkName={"Tasks"} mobile />
       <NavigationLink path="stats" Icon={StatsIcon} linkName={"Stats"} mobile />
       <NavigationLink
@@ -167,7 +167,7 @@ function NavigationLink({
       ) : (
         <div
           className={clsx(
-            "peer rounded-lg py-2 px-3 hover:cursor-pointer flex flex-col",
+            "peer rounded-lg pt-2 pb-1 px-3 hover:cursor-pointer flex flex-col",
             !mobile && "max-[450px]:hidden hover:bg-slate-300",
           )}
         >
@@ -208,10 +208,12 @@ const TimerLink = ({
 }) => {
   const { yScroll } = useScrollPosition()
 
+  const scale = mobile ? 0.9 : yScroll ? 0.8 : 1
+
   return (
     <motion.div
       className="bg-multi-color bg-multi-color-delay peer mx-2 rounded-full py-2 px-2 brightness-150 hover:cursor-pointer hover:brightness-100"
-      animate={{ scale: mobile || yScroll ? 0.8 : 1 }}
+      animate={{ scale }}
     >
       <Icon className="mx-auto h-8 w-8 text-slate-800" />
     </motion.div>
