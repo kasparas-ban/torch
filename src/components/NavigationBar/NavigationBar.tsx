@@ -171,7 +171,7 @@ function NavigationLink({
       ) : (
         <div
           className={clsx(
-            "peer rounded-lg pt-2 pb-1 px-3 hover:cursor-pointer flex flex-col",
+            "peer rounded-lg pt-2 max-[600px]:pb-1 py-2 px-3 hover:cursor-pointer flex flex-col",
             !mobile && "max-[450px]:hidden hover:bg-slate-300",
           )}
         >

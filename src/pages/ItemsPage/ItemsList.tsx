@@ -211,7 +211,9 @@ function Item<T extends GeneralItem>({
       <motion.div
         layout
         onClick={() => setShowSublist(prev => !prev)}
-        className="flex space-x-3"
+        className="relative flex space-x-3 mb-2"
+        style={{ zIndex: itemSublist?.length }}
+        whileTap={{ scale: 0.98 }}
       >
         {editMode && (
           <motion.div
@@ -230,12 +232,9 @@ function Item<T extends GeneralItem>({
         )}
         <motion.div
           layout
-          className={`relative flex w-full cursor-pointer overflow-hidden rounded-2xl py-3 px-6 md:rounded-3xl ${
+          className={`relative border border-gray-700 flex w-full cursor-pointer overflow-hidden rounded-2xl py-3 px-6 md:rounded-3xl ${
             editMode && !showEditPanel ? "bg-gray-300" : "bg-red-300"
           }`}
-          whileHover={{
-            scale: 1.02,
-          }}
         >
           <ItemProgress
             progress={item.progress || 0}
@@ -270,22 +269,21 @@ function Item<T extends GeneralItem>({
           <ItemEditPanel<T> key={`goal_${item.id}_edit_panel`} item={item} />
         )}
       </AnimatePresence>
-      <AnimatePresence initial={false}>
-        {containsSublist && showSublist && (
-          <ItemSublist<(typeof itemSublist)[number]>
-            key={`${itemType}_${item.id}_sublist`}
-            subitems={itemSublist || []}
-            subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
-            editMode={editMode}
-            editItem={editItem as (typeof itemSublist)[number] | undefined}
-            setEditItem={
-              setEditItem as React.Dispatch<
-                React.SetStateAction<(typeof itemSublist)[number] | undefined>
-              >
-            }
-          />
-        )}
-      </AnimatePresence>
+      {containsSublist && (
+        <ItemSublist<(typeof itemSublist)[number]>
+          key={`${itemType}_${item.id}_sublist`}
+          subitems={itemSublist || []}
+          subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
+          editMode={editMode}
+          editItem={editItem as (typeof itemSublist)[number] | undefined}
+          setEditItem={
+            setEditItem as React.Dispatch<
+              React.SetStateAction<(typeof itemSublist)[number] | undefined>
+            >
+          }
+          showSublist={showSublist}
+        />
+      )}
     </motion.li>
   )
 }
@@ -367,12 +365,14 @@ function ItemSublist<T extends Task | Goal>({
   editMode,
   editItem,
   setEditItem,
+  showSublist,
 }: {
   subitems: T[]
   subitemType: "TASK" | "GOAL"
   editMode: boolean
   editItem?: T
   setEditItem: React.Dispatch<React.SetStateAction<T | undefined>>
+  showSublist: boolean
 }) {
   const navigate = useNavigate()
   const { setFocusOn, setFocusType } = useTimerForm()
@@ -407,20 +407,23 @@ function ItemSublist<T extends Task | Goal>({
   }
 
   return (
-    <motion.div
-      layout
-      variants={sublistVariant}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
-      <motion.ul layout className="space-y-3">
+    <motion.div layout>
+      <motion.ul
+        layout
+        className="space-y-3"
+        animate={{ height: showSublist ? "auto" : 10 }}
+      >
         {subitems.map((subitem, idx) => (
           <Fragment key={getSubitemKey(subitem)}>
             <motion.li
               layout
-              className={`flex space-x-3 ${editMode ? "" : "md:ml-2"}`}
-              variants={subitemVariant}
+              className="relative flex space-x-3"
+              animate={{
+                scale: showSublist ? 1 : 0.98 - 0.03 * idx,
+                y: showSublist ? 0 : -(50 + 50 * idx + 6 * idx),
+                zIndex: showSublist ? 0 : subitems.length - 1 - idx,
+                opacity: showSublist ? 1 : idx > 1 ? 0 : 1,
+              }}
             >
               {editMode && (
                 <motion.div
@@ -438,7 +441,14 @@ function ItemSublist<T extends Task | Goal>({
                   <EditIcon className="m-auto h-full text-gray-500 group-hover:text-gray-700 group-[.selected]:text-gray-700" />
                 </motion.div>
               )}
-              <div className="relative flex">
+              <motion.div
+                className="relative flex"
+                animate={{
+                  width: showSublist ? "auto" : 0,
+                  opacity: showSublist ? 1 : 0,
+                }}
+                transition={{ duration: 0.1 }}
+              >
                 <div className="my-auto aspect-square w-4 rounded-full bg-gray-300"></div>
                 {/* Upper line */}
                 {idx !== 0 && (
@@ -448,22 +458,28 @@ function ItemSublist<T extends Task | Goal>({
                 {idx !== subitems.length - 1 && (
                   <div className="h0 absolute left-[6px] h-3/4 w-1 translate-y-3/4 bg-gray-300"></div>
                 )}
-              </div>
+              </motion.div>
               <motion.div
-                className={`relative flex w-full cursor-pointer overflow-hidden rounded-2xl py-3 px-6 md:rounded-3xl ${
+                className={`relative flex w-full cursor-pointer overflow-hidden rounded-2xl border border-gray-700 py-3 px-6 md:rounded-3xl ${
                   editMode && !showEditPanel(subitem)
                     ? "bg-gray-300"
                     : "bg-red-300"
                 }`}
-                whileHover={{ scale: 1.02 }}
               >
-                <ItemProgress
-                  progress={subitem.progress || 0}
-                  inEditMode={editMode && !showEditPanel(subitem)}
-                />
-                <div className="z-10 select-none">{subitem.title}</div>
+                {showSublist && (
+                  <ItemProgress
+                    progress={subitem.progress || 0}
+                    inEditMode={editMode && !showEditPanel(subitem)}
+                  />
+                )}
+                <motion.div
+                  className="z-10 select-none"
+                  animate={{ opacity: showSublist ? 1 : 0 }}
+                >
+                  {subitem.title}
+                </motion.div>
               </motion.div>
-              {!editMode && (
+              {/* {!editMode && (
                 <motion.div
                   className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400"
                   whileHover={{ scale: 1.1 }}
@@ -473,7 +489,7 @@ function ItemSublist<T extends Task | Goal>({
                 >
                   <TimerStartIcon className="m-auto h-full" />
                 </motion.div>
-              )}
+              )} */}
             </motion.li>
             <AnimatePresence initial={false}>
               {showEditPanel(subitem) && (
