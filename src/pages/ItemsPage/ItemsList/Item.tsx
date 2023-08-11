@@ -58,10 +58,10 @@ export default function Item<T extends GeneralItem>({
     <motion.li layout>
       <motion.div
         layout
-        onClick={() => setShowSublist(prev => !prev)}
-        className={clsx("relative flex space-x-3", containsSublist && "mb-3")}
+        onClick={() => !editItem && setShowSublist(prev => !prev)}
+        className={clsx("relative flex", containsSublist && "mb-3")}
         style={{ zIndex: itemSublist?.length }}
-        whileTap={{ scale: 0.98 }}
+        whileTap={{ scale: showEditPanel ? 1 : 0.98 }}
       >
         <motion.div
           layout
@@ -80,7 +80,14 @@ export default function Item<T extends GeneralItem>({
           />
           <motion.div className="z-10 select-none">{item.title}</motion.div>
           <div
-            className="hover:bg-red-200 rounded-full z-0 ml-auto h-10 w-10 flex items-center justify-center group"
+            className={clsx(
+              "rounded-full z-0 ml-auto h-10 w-10 flex items-center justify-center group",
+              !editItem
+                ? "hover:bg-red-200"
+                : showEditPanel
+                ? "hover:bg-red-200"
+                : "hover:bg-gray-100",
+            )}
             onClick={toggleEditClick}
           >
             <motion.div
@@ -91,15 +98,20 @@ export default function Item<T extends GeneralItem>({
             </motion.div>
           </div>
         </motion.div>
-        {/* {!containsSublist && (
-          <motion.div
-            className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400"
-            whileHover={{ scale: 1.1 }}
-            onClick={handleTimerClick}
-          >
-            <TimerStartIcon className="m-auto h-full" />
-          </motion.div>
-        )} */}
+        <AnimatePresence>
+          {showEditPanel && (
+            <motion.div
+              className="my-auto aspect-square w-12 ml-3 cursor-pointer rounded-full bg-red-400"
+              whileHover={{ scale: 1.1 }}
+              onClick={handleTimerClick}
+              initial={{ width: 0, opacity: 0, marginLeft: 0 }}
+              animate={{ width: 48, opacity: 1, marginLeft: 12 }}
+              exit={{ width: 0, opacity: 0, marginLeft: 0 }}
+            >
+              <TimerStartIcon className="m-auto h-full" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
       {showSublist ? (
         <>
@@ -118,6 +130,7 @@ export default function Item<T extends GeneralItem>({
               subitems={itemSublist || []}
               subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}
+              isParentEditActive={showEditPanel}
             />
           )}
         </>
@@ -129,6 +142,7 @@ export default function Item<T extends GeneralItem>({
               subitems={itemSublist || []}
               subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}
+              isParentEditActive={showEditPanel}
             />
           )}
           <AnimatePresence initial={false}>

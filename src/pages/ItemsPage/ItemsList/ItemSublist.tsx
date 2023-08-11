@@ -9,15 +9,18 @@ import ItemEditPanel from "./ItemEditPanel"
 import { Goal, Task } from "../../../types"
 import useTimerForm from "../../../components/Timer/useTimerForm"
 import { ReactComponent as DotsIcon } from "../../../assets/dots.svg"
+import { ReactComponent as TimerStartIcon } from "../../../assets/timer_start.svg"
 
 export default function ItemSublist<T extends Task | Goal>({
   subitems,
   subitemType,
   showSublist,
+  isParentEditActive,
 }: {
   subitems: T[]
   subitemType: "TASK" | "GOAL"
   showSublist: boolean
+  isParentEditActive: boolean
 }) {
   const navigate = useNavigate()
   const { editItem, setEditItem } = useEditMode()
@@ -68,6 +71,7 @@ export default function ItemSublist<T extends Task | Goal>({
               className="relative flex space-x-3"
               animate={{
                 scale: showSublist ? 1 : 0.98 - 0.03 * idx,
+                width: !showSublist && isParentEditActive ? "90%" : "100%",
                 y: showSublist ? 0 : -(54 + 50 * idx + 6 * idx),
                 zIndex: showSublist ? 0 : subitems.length - 1 - idx,
                 opacity: showSublist ? 1 : idx > 1 ? 0 : 1,
@@ -102,7 +106,14 @@ export default function ItemSublist<T extends Task | Goal>({
                   {subitem.title}
                 </motion.div>
                 <div
-                  className="group z-0 hover:bg-red-200 rounded-full ml-auto h-10 w-10 flex items-center justify-center"
+                  className={clsx(
+                    "rounded-full z-0 ml-auto h-10 w-10 flex items-center justify-center group",
+                    !editItem
+                      ? "hover:bg-red-200"
+                      : showEditPanel(subitem)
+                      ? "hover:bg-red-200"
+                      : "hover:bg-gray-100",
+                  )}
                   onClick={e => toggleEditClick(e, subitem)}
                 >
                   <motion.div
@@ -113,17 +124,20 @@ export default function ItemSublist<T extends Task | Goal>({
                   </motion.div>
                 </div>
               </motion.div>
-              {/* {!editMode && (
-                <motion.div
-                  className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400"
-                  whileHover={{ scale: 1.1 }}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  onClick={() => handleTimerClick(subitem)}
-                >
-                  <TimerStartIcon className="m-auto h-full" />
-                </motion.div>
-              )} */}
+              <AnimatePresence>
+                {showEditPanel(subitem) && (
+                  <motion.div
+                    className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400"
+                    whileHover={{ scale: 1.1 }}
+                    onClick={() => handleTimerClick(subitem)}
+                    initial={{ width: 0, opacity: 0, marginLeft: 0 }}
+                    animate={{ width: 48, opacity: 1, marginLeft: 12 }}
+                    exit={{ width: 0, opacity: 0, marginLeft: 0 }}
+                  >
+                    <TimerStartIcon className="m-auto h-full" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.li>
             <AnimatePresence initial={false}>
               {showEditPanel(subitem) && (
