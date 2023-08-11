@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import clsx from "clsx"
 import ItemSublist from "./ItemSublist"
 import ItemProgress from "./ProgressBar"
-import useEditMode from "../useEditMode"
+import useEditItem from "../useEditItem"
 import { ROUTES } from "../../../routes"
 import ItemEditPanel from "./ItemEditPanel"
 import { GeneralItem, ItemType } from "../../../types"
@@ -19,7 +19,7 @@ export default function Item<T extends GeneralItem>({
   item: T
   itemType: ItemType
 }) {
-  const { editItem, setEditItem } = useEditMode()
+  const { editItem, setEditItem } = useEditItem()
   const [showSublist, setShowSublist] = useState(true)
 
   const navigate = useNavigate()
@@ -66,7 +66,7 @@ export default function Item<T extends GeneralItem>({
         <motion.div
           layout
           className={clsx(
-            "relative border border-gray-700 flex w-full cursor-pointer items-center overflow-hidden rounded-2xl h-12 pl-6 pr-1 md:rounded-3xl",
+            "relative border border-gray-700 flex w-full cursor-pointer items-center overflow-hidden rounded-2xl pl-6 pr-1 md:rounded-3xl",
             editItem
               ? showEditPanel
                 ? "bg-red-300"
@@ -78,10 +78,12 @@ export default function Item<T extends GeneralItem>({
             progress={item.progress || 0}
             showEditPanel={showEditPanel}
           />
-          <motion.div className="z-10 select-none">{item.title}</motion.div>
+          <motion.div className="z-10 select-none py-3 truncate">
+            {item.title}
+          </motion.div>
           <div
             className={clsx(
-              "rounded-full z-0 ml-auto h-10 w-10 flex items-center justify-center group",
+              "rounded-full z-0 ml-auto h-10 w-10 flex shrink-0 items-center justify-center group",
               !editItem
                 ? "hover:bg-red-200"
                 : showEditPanel

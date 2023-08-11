@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import { motion } from "framer-motion"
-import useEditMode from "../useEditMode"
+import useEditItem from "../useEditItem"
 
 function ItemProgress({
   progress,
@@ -9,7 +9,7 @@ function ItemProgress({
   progress: number
   showEditPanel: boolean
 }) {
-  const { editItem } = useEditMode()
+  const { editItem } = useEditItem()
 
   return (
     <motion.div

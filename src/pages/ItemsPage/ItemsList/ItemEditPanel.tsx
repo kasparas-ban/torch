@@ -46,44 +46,44 @@ export default function ItemEditPanel<T extends GeneralItem>({
       exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0 }}
     >
       <motion.div
-        className="flex shrink-0 cursor-pointer select-none flex-col"
+        className="flex shrink-0 cursor-pointer select-none flex-col text-sm"
         whileHover={{ scale: 1.1 }}
         onClick={() => openConfirmModal(doneFn, "Mark as done?")}
       >
-        <TickIcon className="mx-auto" />
+        <TickIcon className="mx-auto h-5" />
         Done
       </motion.div>
       {item.type === "GOAL" && (
         <motion.div
-          className="flex shrink-0 cursor-pointer select-none flex-col"
+          className="flex shrink-0 cursor-pointer select-none flex-col text-sm"
           whileHover={{ scale: 1.1 }}
           onClick={() => openEditItemModal(item, true)}
         >
-          <AddItemIcon className="mx-auto" />
+          <AddItemIcon className="mx-auto h-5" />
           Add task
         </motion.div>
       )}
       <motion.div
-        className="flex shrink-0 cursor-pointer select-none flex-col"
+        className="flex shrink-0 cursor-pointer select-none flex-col text-sm"
         whileHover={{ scale: 1.1 }}
       >
-        <StatsIcon className="mx-auto" />
+        <StatsIcon className="mx-auto h-5" />
         Stats
       </motion.div>
       <motion.div
-        className="flex shrink-0 cursor-pointer select-none flex-col"
+        className="flex shrink-0 cursor-pointer select-none flex-col text-sm"
         whileHover={{ scale: 1.1 }}
         onClick={() => openEditItemModal(item)}
       >
-        <EditIcon className="mx-auto" />
+        <EditIcon className="mx-auto h-5" />
         Edit
       </motion.div>
       <motion.div
-        className="flex shrink-0 cursor-pointer select-none flex-col"
+        className="flex shrink-0 cursor-pointer select-none flex-col text-sm"
         whileHover={{ scale: 1.1 }}
         onClick={() => openConfirmModal(removeFn, "Remove item?")}
       >
-        <DeleteIcon className="mx-auto" />
+        <DeleteIcon className="mx-auto h-5" />
         Remove
       </motion.div>
     </motion.div>

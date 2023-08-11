@@ -1,10 +1,11 @@
 import React, { Fragment } from "react"
 import { useNavigate } from "react-router-dom"
+import { useMediaQuery } from "react-responsive"
 import { AnimatePresence, motion } from "framer-motion"
 import clsx from "clsx"
 import { ROUTES } from "../../../routes"
 import ItemProgress from "./ProgressBar"
-import useEditMode from "../useEditMode"
+import useEditItem from "../useEditItem"
 import ItemEditPanel from "./ItemEditPanel"
 import { Goal, Task } from "../../../types"
 import useTimerForm from "../../../components/Timer/useTimerForm"
@@ -22,8 +23,12 @@ export default function ItemSublist<T extends Task | Goal>({
   showSublist: boolean
   isParentEditActive: boolean
 }) {
+  const isDesktop = useMediaQuery({
+    query: "(min-width: 600px)",
+  })
+
   const navigate = useNavigate()
-  const { editItem, setEditItem } = useEditMode()
+  const { editItem, setEditItem } = useEditItem()
   const { setFocusOn, setFocusType } = useTimerForm()
 
   const showEditPanel = (subitem: T) =>
@@ -55,6 +60,8 @@ export default function ItemSublist<T extends Task | Goal>({
     )
   }
 
+  const scaledWidth = isDesktop ? "90%" : "82%"
+
   return (
     <motion.div layout>
       <motion.ul
@@ -68,10 +75,11 @@ export default function ItemSublist<T extends Task | Goal>({
           <Fragment key={getSubitemKey(subitem)}>
             <motion.li
               layout
-              className="relative flex space-x-3"
+              className="relative flex"
               animate={{
                 scale: showSublist ? 1 : 0.98 - 0.03 * idx,
-                width: !showSublist && isParentEditActive ? "90%" : "100%",
+                width:
+                  !showSublist && isParentEditActive ? scaledWidth : "100%",
                 y: showSublist ? 0 : -(54 + 50 * idx + 6 * idx),
                 zIndex: showSublist ? 0 : subitems.length - 1 - idx,
                 opacity: showSublist ? 1 : idx > 1 ? 0 : 1,
@@ -85,7 +93,7 @@ export default function ItemSublist<T extends Task | Goal>({
               />
               <motion.div
                 className={clsx(
-                  "relative items-center flex w-full cursor-pointer overflow-hidden rounded-2xl border border-gray-700 h-12 pl-6 pr-1 md:rounded-3xl",
+                  "relative items-center ml-3 h-12 flex w-full cursor-pointer overflow-hidden rounded-2xl border border-gray-700 pl-6 pr-1 md:rounded-3xl",
                   editItem
                     ? showEditPanel(subitem)
                       ? "bg-red-300"
@@ -100,14 +108,14 @@ export default function ItemSublist<T extends Task | Goal>({
                   />
                 )}
                 <motion.div
-                  className="z-10 select-none"
+                  className="z-10 select-none truncate"
                   animate={{ opacity: showSublist ? 1 : 0 }}
                 >
                   {subitem.title}
                 </motion.div>
                 <div
                   className={clsx(
-                    "rounded-full z-0 ml-auto h-10 w-10 flex items-center justify-center group",
+                    "rounded-full shrink-0 z-0 ml-auto h-10 w-10 flex items-center justify-center group",
                     !editItem
                       ? "hover:bg-red-200"
                       : showEditPanel(subitem)
@@ -127,7 +135,7 @@ export default function ItemSublist<T extends Task | Goal>({
               <AnimatePresence>
                 {showEditPanel(subitem) && (
                   <motion.div
-                    className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400"
+                    className="my-auto aspect-square w-12 ml-3 cursor-pointer rounded-full bg-red-400"
                     whileHover={{ scale: 1.1 }}
                     onClick={() => handleTimerClick(subitem)}
                     initial={{ width: 0, opacity: 0, marginLeft: 0 }}
