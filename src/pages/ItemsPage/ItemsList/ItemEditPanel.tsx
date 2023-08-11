@@ -10,8 +10,12 @@ import { ReactComponent as DeleteIcon } from "../../../assets/delete.svg"
 
 export default function ItemEditPanel<T extends GeneralItem>({
   item,
+  extendTop,
+  extendBottom,
 }: {
   item: T
+  extendTop?: boolean
+  extendBottom?: boolean
 }) {
   const { openTaskModal, openGoalModal, openDreamModal } = useModal()
   const { openModal: openConfirmModal } = useConfirmModal()
@@ -34,9 +38,14 @@ export default function ItemEditPanel<T extends GeneralItem>({
           ? "w-[400px] max-[500px]:w-full"
           : "w-[320px] max-[400px]:w-full max-[400px]:px-6"
       } justify-between`}
-      initial={{ height: 0, opacity: 0, marginTop: 0 }}
-      animate={{ height: "auto", opacity: 1, marginTop: 12 }}
-      exit={{ height: 0, opacity: 0, marginTop: 0 }}
+      initial={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0 }}
+      animate={{
+        height: "auto",
+        opacity: 1,
+        marginTop: extendTop ? 24 : 12,
+        marginBottom: extendBottom ? 12 : 0,
+      }}
+      exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0 }}
     >
       <motion.div
         className="flex shrink-0 cursor-pointer select-none flex-col"

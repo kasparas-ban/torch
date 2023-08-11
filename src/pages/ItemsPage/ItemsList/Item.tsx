@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
+import clsx from "clsx"
 import ItemSublist from "./ItemSublist"
 import ItemProgress from "./ProgressBar"
 import useEditMode from "../useEditMode"
@@ -8,8 +9,8 @@ import { ROUTES } from "../../../routes"
 import ItemEditPanel from "./ItemEditPanel"
 import { GeneralItem, ItemType } from "../../../types"
 import useTimerForm from "../../../components/Timer/useTimerForm"
-import { ReactComponent as TimerStartIcon } from "../../../assets/timer_start.svg"
 import { ReactComponent as DotsIcon } from "../../../assets/dots.svg"
+import { ReactComponent as TimerStartIcon } from "../../../assets/timer_start.svg"
 
 export default function Item<T extends GeneralItem>({
   item,
@@ -18,7 +19,7 @@ export default function Item<T extends GeneralItem>({
   item: T
   itemType: ItemType
 }) {
-  const { editMode, editItem, setEditItem } = useEditMode()
+  const { editItem, setEditItem } = useEditMode()
   const [showSublist, setShowSublist] = useState(true)
 
   const navigate = useNavigate()
@@ -32,8 +33,7 @@ export default function Item<T extends GeneralItem>({
       : undefined
   const containsSublist = !!itemSublist?.length
 
-  const showEditPanel =
-    editMode && editItem?.type === item.type && editItem?.id === item.id
+  const showEditPanel = editItem?.type === item.type && editItem?.id === item.id
 
   const toggleEditClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation()
@@ -59,22 +59,33 @@ export default function Item<T extends GeneralItem>({
       <motion.div
         layout
         onClick={() => setShowSublist(prev => !prev)}
-        className="relative flex space-x-3 mb-2"
+        className={clsx(
+          "relative flex space-x-3 mb-3",
+          // showEditPanel && !showSublist ? "mb-4" : "mb-2",
+        )}
         style={{ zIndex: itemSublist?.length }}
         whileTap={{ scale: 0.98 }}
       >
         <motion.div
           layout
-          className={`relative border border-gray-700 flex w-full cursor-pointer items-center overflow-hidden rounded-2xl h-12 pl-6 pr-1 md:rounded-3xl ${
-            editMode && !showEditPanel ? "bg-gray-300" : "bg-red-300"
-          }`}
+          className={clsx(
+            "relative border border-gray-700 flex w-full cursor-pointer items-center overflow-hidden rounded-2xl h-12 pl-6 pr-1 md:rounded-3xl",
+            editItem
+              ? showEditPanel
+                ? "bg-red-300"
+                : "bg-gray-300"
+              : "bg-red-300",
+          )}
         >
           <ItemProgress
             progress={item.progress || 0}
-            inEditMode={editMode && !showEditPanel}
+            showEditPanel={showEditPanel}
           />
           <motion.div className="z-10 select-none">{item.title}</motion.div>
-          <div className="hover:bg-red-200 rounded-full ml-auto h-10 w-10 flex items-center justify-center group">
+          <div
+            className="hover:bg-red-200 rounded-full z-50 ml-auto h-10 w-10 flex items-center justify-center group"
+            onClick={toggleEditClick}
+          >
             <motion.div
               layout
               className="text-gray-600 group-hover:text-gray-800"
@@ -83,7 +94,7 @@ export default function Item<T extends GeneralItem>({
             </motion.div>
           </div>
         </motion.div>
-        {!containsSublist && !editMode && (
+        {!containsSublist && (
           <motion.div
             className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400"
             whileHover={{ scale: 1.1 }}
@@ -95,7 +106,12 @@ export default function Item<T extends GeneralItem>({
       </motion.div>
       <AnimatePresence initial={false}>
         {showEditPanel && (
-          <ItemEditPanel<T> key={`goal_${item.id}_edit_panel`} item={item} />
+          <ItemEditPanel<T>
+            key={`goal_${item.id}_edit_panel`}
+            item={item}
+            extendTop={!showSublist && showEditPanel}
+            extendBottom={showSublist && showEditPanel}
+          />
         )}
       </AnimatePresence>
       {containsSublist && (
@@ -103,14 +119,8 @@ export default function Item<T extends GeneralItem>({
           key={`${itemType}_${item.id}_sublist`}
           subitems={itemSublist || []}
           subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
-          editMode={editMode}
-          editItem={editItem as (typeof itemSublist)[number] | undefined}
-          setEditItem={
-            setEditItem as React.Dispatch<
-              React.SetStateAction<(typeof itemSublist)[number] | undefined>
-            >
-          }
           showSublist={showSublist}
+          parentShowingEdit={showEditPanel}
         />
       )}
     </motion.li>
