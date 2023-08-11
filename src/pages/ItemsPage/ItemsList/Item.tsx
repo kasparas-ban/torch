@@ -59,10 +59,7 @@ export default function Item<T extends GeneralItem>({
       <motion.div
         layout
         onClick={() => setShowSublist(prev => !prev)}
-        className={clsx(
-          "relative flex space-x-3 mb-3",
-          // showEditPanel && !showSublist ? "mb-4" : "mb-2",
-        )}
+        className={clsx("relative flex space-x-3", containsSublist && "mb-3")}
         style={{ zIndex: itemSublist?.length }}
         whileTap={{ scale: 0.98 }}
       >
@@ -83,7 +80,7 @@ export default function Item<T extends GeneralItem>({
           />
           <motion.div className="z-10 select-none">{item.title}</motion.div>
           <div
-            className="hover:bg-red-200 rounded-full z-50 ml-auto h-10 w-10 flex items-center justify-center group"
+            className="hover:bg-red-200 rounded-full z-0 ml-auto h-10 w-10 flex items-center justify-center group"
             onClick={toggleEditClick}
           >
             <motion.div
@@ -94,7 +91,7 @@ export default function Item<T extends GeneralItem>({
             </motion.div>
           </div>
         </motion.div>
-        {!containsSublist && (
+        {/* {!containsSublist && (
           <motion.div
             className="my-auto aspect-square w-12 cursor-pointer rounded-full bg-red-400"
             whileHover={{ scale: 1.1 }}
@@ -102,26 +99,48 @@ export default function Item<T extends GeneralItem>({
           >
             <TimerStartIcon className="m-auto h-full" />
           </motion.div>
-        )}
+        )} */}
       </motion.div>
-      <AnimatePresence initial={false}>
-        {showEditPanel && (
-          <ItemEditPanel<T>
-            key={`goal_${item.id}_edit_panel`}
-            item={item}
-            extendTop={!showSublist && showEditPanel}
-            extendBottom={showSublist && showEditPanel}
-          />
-        )}
-      </AnimatePresence>
-      {containsSublist && (
-        <ItemSublist<(typeof itemSublist)[number]>
-          key={`${itemType}_${item.id}_sublist`}
-          subitems={itemSublist || []}
-          subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
-          showSublist={showSublist}
-          parentShowingEdit={showEditPanel}
-        />
+      {showSublist ? (
+        <>
+          <AnimatePresence initial={false}>
+            {showEditPanel && (
+              <ItemEditPanel<T>
+                key={`goal_${item.id}_edit_panel`}
+                item={item}
+                sublistVisible={showSublist && showEditPanel}
+              />
+            )}
+          </AnimatePresence>
+          {containsSublist && (
+            <ItemSublist<(typeof itemSublist)[number]>
+              key={`${itemType}_${item.id}_sublist`}
+              subitems={itemSublist || []}
+              subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
+              showSublist={showSublist}
+            />
+          )}
+        </>
+      ) : (
+        <>
+          {containsSublist && (
+            <ItemSublist<(typeof itemSublist)[number]>
+              key={`${itemType}_${item.id}_sublist`}
+              subitems={itemSublist || []}
+              subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
+              showSublist={showSublist}
+            />
+          )}
+          <AnimatePresence initial={false}>
+            {showEditPanel && (
+              <ItemEditPanel<T>
+                key={`goal_${item.id}_edit_panel`}
+                item={item}
+                sublistVisible={showSublist && showEditPanel}
+              />
+            )}
+          </AnimatePresence>
+        </>
       )}
     </motion.li>
   )

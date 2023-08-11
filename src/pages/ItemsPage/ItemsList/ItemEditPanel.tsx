@@ -10,12 +10,10 @@ import { ReactComponent as DeleteIcon } from "../../../assets/delete.svg"
 
 export default function ItemEditPanel<T extends GeneralItem>({
   item,
-  extendTop,
-  extendBottom,
+  sublistVisible,
 }: {
   item: T
-  extendTop?: boolean
-  extendBottom?: boolean
+  sublistVisible?: boolean
 }) {
   const { openTaskModal, openGoalModal, openDreamModal } = useModal()
   const { openModal: openConfirmModal } = useConfirmModal()
@@ -42,8 +40,8 @@ export default function ItemEditPanel<T extends GeneralItem>({
       animate={{
         height: "auto",
         opacity: 1,
-        marginTop: extendTop ? 24 : 12,
-        marginBottom: extendBottom ? 12 : 0,
+        marginTop: 12,
+        marginBottom: sublistVisible ? 12 : 0,
       }}
       exit={{ height: 0, opacity: 0, marginTop: 0, marginBottom: 0 }}
     >

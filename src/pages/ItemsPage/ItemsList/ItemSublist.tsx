@@ -14,12 +14,10 @@ export default function ItemSublist<T extends Task | Goal>({
   subitems,
   subitemType,
   showSublist,
-  parentShowingEdit,
 }: {
   subitems: T[]
   subitemType: "TASK" | "GOAL"
   showSublist: boolean
-  parentShowingEdit: boolean
 }) {
   const navigate = useNavigate()
   const { editItem, setEditItem } = useEditMode()
@@ -61,10 +59,7 @@ export default function ItemSublist<T extends Task | Goal>({
         className="space-y-3"
         animate={{
           height: showSublist ? "auto" : 0,
-          // y: parentShowingEdit && !showSublist ? -60 : 0,
-          // opacity: !showSublist && parentShowingEdit ? 0 : 1,
         }}
-        // transition={{ opacity: { type: "tween", duration: 0.01 } }}
       >
         {subitems.map((subitem, idx) => (
           <Fragment key={getSubitemKey(subitem)}>
@@ -107,7 +102,7 @@ export default function ItemSublist<T extends Task | Goal>({
                   {subitem.title}
                 </motion.div>
                 <div
-                  className="group hover:bg-red-200 rounded-full ml-auto h-10 w-10 flex items-center justify-center"
+                  className="group z-0 hover:bg-red-200 rounded-full ml-auto h-10 w-10 flex items-center justify-center"
                   onClick={e => toggleEditClick(e, subitem)}
                 >
                   <motion.div

@@ -1,11 +1,9 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import useEditMode from "./useEditMode"
 import { capitalizeString } from "../../helpers"
 import { ItemType, ItemTypeLabel } from "../../types"
 import useModal from "../../components/Modals/useModal"
 import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
-import { ReactComponent as EditIcon } from "../../assets/edit_pen.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
 
@@ -54,46 +52,18 @@ export function ItemsHeader({
   setItemType: (type: ItemType) => void
 }) {
   const { openGeneralModal } = useModal()
-  const { editMode, enableEditMode, disableEditMode } = useEditMode()
-
-  const toggleEditMode = editMode ? disableEditMode : enableEditMode
 
   return (
     <div className="mb-8 flex">
-      <ItemsTypeDropdown
-        itemType={itemType}
-        setItemType={setItemType}
-        closeEditMode={disableEditMode}
-      />
+      <ItemsTypeDropdown itemType={itemType} setItemType={setItemType} />
       <div className="mt-7 ml-auto flex space-x-4">
-        <motion.div
-          layout
-          whileHover={{ scale: 1.2 }}
-          onClick={toggleEditMode}
-          className="relative top-[-6px]"
-        >
-          <motion.div
-            className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-full ${
-              editMode ? "bg-red-400" : ""
-            }`}
-          >
-            <EditIcon />
-          </motion.div>
-        </motion.div>
-        {/* <motion.div
-          layout
-          whileHover={{ scale: 1.2 }}
-          onClick={disableEditMode}
-        >
+        <motion.div layout whileHover={{ scale: 1.2 }}>
           <FilterIcon className="cursor-pointer" />
-        </motion.div> */}
+        </motion.div>
         <motion.div layout whileHover={{ scale: 1.2 }}>
           <PlusIcon
             className="cursor-pointer"
-            onClick={() => {
-              disableEditMode()
-              openGeneralModal()
-            }}
+            onClick={() => openGeneralModal()}
           />
         </motion.div>
       </div>
@@ -104,11 +74,9 @@ export function ItemsHeader({
 function ItemsTypeDropdown({
   itemType,
   setItemType,
-  closeEditMode,
 }: {
   itemType: ItemType
   setItemType: (type: ItemType) => void
-  closeEditMode: () => void
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownSelectRef = useRef<HTMLDivElement | null>(null)
@@ -192,7 +160,6 @@ function ItemsTypeDropdown({
                   tabIndex={-1}
                   id="menu-item-0"
                   onClick={() => {
-                    closeEditMode()
                     handleTypeChange(typeOptions[0])
                     setIsDropdownOpen(false)
                   }}
@@ -205,7 +172,6 @@ function ItemsTypeDropdown({
                   tabIndex={-1}
                   id="menu-item-1"
                   onClick={() => {
-                    closeEditMode()
                     handleTypeChange(typeOptions[1])
                     toggleDropdown()
                   }}
