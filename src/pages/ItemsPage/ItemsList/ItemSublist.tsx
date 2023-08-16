@@ -152,6 +152,7 @@ export default function ItemSublist<T extends Task | Goal>({
                 <ItemEditPanel<T>
                   key={`task_${subitem.id}_edit_panel`}
                   item={subitem}
+                  showBulletLine={idx !== subitems.length - 1}
                 />
               )}
             </AnimatePresence>
@@ -165,7 +166,6 @@ export default function ItemSublist<T extends Task | Goal>({
 function BulletPoint<T>({
   idx,
   showSublist,
-  showEditPanel,
   subitems,
 }: {
   idx: number
@@ -173,14 +173,6 @@ function BulletPoint<T>({
   showEditPanel: (subitem: T) => boolean
   subitems: T[]
 }) {
-  const animateUpperLine =
-    idx - 1 >= 0 &&
-    idx < subitems.length - 1 &&
-    showEditPanel(subitems[idx - 1])
-
-  const animateLowerLine =
-    idx === subitems.length - 2 && showEditPanel(subitems[idx])
-
   return (
     <motion.div
       className="relative flex"
@@ -193,25 +185,11 @@ function BulletPoint<T>({
       <div className="my-auto aspect-square w-4 rounded-full bg-gray-300"></div>
       {/* Upper line */}
       {idx !== 0 && (
-        <motion.div
-          className="h0 absolute left-[6px] h-1/2 w-1 bg-gray-300"
-          animate={{
-            height: animateUpperLine ? "270%" : "50%",
-            y: animateUpperLine ? "-75%" : "0%",
-          }}
-          transition={{ type: "tween" }}
-        />
+        <motion.div className="h0 absolute left-[6px] h-1/2 w-1 bg-gray-300" />
       )}
       {/* Lower line */}
       {idx !== subitems.length - 1 && (
-        <motion.div
-          className="h0 absolute left-[6px] h-3/4 w-1 translate-y-3/4 bg-gray-300"
-          animate={{
-            height: animateLowerLine ? "250%" : "75%",
-            y: animateLowerLine ? "0%" : "75%",
-          }}
-          transition={{ type: "tween" }}
-        />
+        <motion.div className="h0 absolute left-[6px] h-3/4 w-1 translate-y-3/4 bg-gray-300" />
       )}
     </motion.div>
   )
