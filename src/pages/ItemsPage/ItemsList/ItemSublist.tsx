@@ -58,6 +58,7 @@ export default function ItemSublist<T extends Task | Goal>({
         ? "GOALS"
         : "ALL",
     )
+    setEditItem(undefined)
   }
 
   const scaledWidth = isDesktop ? "90%" : "82%"

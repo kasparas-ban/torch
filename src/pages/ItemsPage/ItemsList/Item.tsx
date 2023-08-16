@@ -52,6 +52,7 @@ export default function Item<T extends GeneralItem>({
         ? "DREAMS"
         : "ALL",
     )
+    setEditItem(undefined)
   }
 
   return (
@@ -120,9 +121,10 @@ export default function Item<T extends GeneralItem>({
           <AnimatePresence initial={false}>
             {showEditPanel && (
               <ItemEditPanel<T>
-                key={`goal_${item.id}_edit_panel`}
+                key={`${itemType}_${item.id}_edit_panel`}
                 item={item}
                 sublistVisible={showSublist && showEditPanel}
+                showAddTask={itemType === "GOAL"}
               />
             )}
           </AnimatePresence>
@@ -150,9 +152,10 @@ export default function Item<T extends GeneralItem>({
           <AnimatePresence initial={false}>
             {showEditPanel && (
               <ItemEditPanel<T>
-                key={`goal_${item.id}_edit_panel`}
+                key={`${itemType}_${item.id}_edit_panel`}
                 item={item}
                 sublistVisible={showSublist && showEditPanel}
+                showAddTask={itemType === "GOAL"}
               />
             )}
           </AnimatePresence>

@@ -48,8 +48,10 @@ const TimerToast = () => {
           <motion.div
             layout
             className={clsx(
-              "flex w-fit items-center gap-4 rounded-3xl bg-gradient-to-b from-red-400 to-rose-500 px-4 py-1 drop-shadow max-sm:max-w-full",
-              timerState !== "running" && "from-red-200 to-rose-300",
+              "flex w-fit items-center gap-4 rounded-3xl bg-gradient-to-b px-4 py-1 drop-shadow max-sm:max-w-full",
+              timerState !== "running"
+                ? "from-red-200 to-rose-300"
+                : "from-red-400 to-rose-500",
             )}
             initial={{ background: "" }}
             animate={{ opacity: 1, y: 0 }}

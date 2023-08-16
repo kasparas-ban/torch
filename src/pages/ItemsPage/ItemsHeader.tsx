@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import useEditItem from "./useEditItem"
 import { capitalizeString } from "../../helpers"
 import { ItemType, ItemTypeLabel } from "../../types"
 import useModal from "../../components/Modals/useModal"
@@ -78,6 +79,7 @@ function ItemsTypeDropdown({
   itemType: ItemType
   setItemType: (type: ItemType) => void
 }) {
+  const { setEditItem } = useEditItem()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownSelectRef = useRef<HTMLDivElement | null>(null)
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null)
@@ -93,6 +95,7 @@ function ItemsTypeDropdown({
     const selectedType =
       type === "Tasks" ? "TASK" : type === "Goals" ? "GOAL" : "DREAM"
     setItemType(selectedType)
+    setEditItem(undefined)
   }
 
   useLayoutEffect(() => {

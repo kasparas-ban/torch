@@ -12,10 +12,12 @@ export default function ItemEditPanel<T extends GeneralItem>({
   item,
   sublistVisible,
   showBulletLine,
+  showAddTask,
 }: {
   item: T
   sublistVisible?: boolean
   showBulletLine?: boolean
+  showAddTask?: boolean
 }) {
   const { openTaskModal, openGoalModal, openDreamModal } = useModal()
   const { openModal: openConfirmModal } = useConfirmModal()
@@ -47,9 +49,9 @@ export default function ItemEditPanel<T extends GeneralItem>({
       <motion.div
         layout
         className={`mx-auto flex ${
-          item.type === "GOAL" || item.type === "DREAM"
-            ? "w-[400px] max-[500px]:w-full"
-            : "w-[320px] max-[400px]:w-full max-[400px]:px-6"
+          showAddTask
+            ? "w-[360px] max-[500px]:w-full"
+            : "w-[300px] max-[300px]:w-full max-[400px]:px-6"
         } justify-between`}
         initial={{ height: 0, opacity: 0 }}
         animate={{
@@ -66,7 +68,7 @@ export default function ItemEditPanel<T extends GeneralItem>({
           <TickIcon className="mx-auto h-5" />
           Done
         </motion.div>
-        {item.type === "GOAL" && (
+        {showAddTask && (
           <motion.div
             className="flex shrink-0 cursor-pointer select-none flex-col text-sm"
             whileHover={{ scale: 1.1 }}
