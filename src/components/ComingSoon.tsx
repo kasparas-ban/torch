@@ -3,12 +3,12 @@ import { motion } from "framer-motion"
 function ComingSoon() {
   return (
     <motion.div
-      className="mt-16 flex flex-col justify-center max-[768px]:px-6"
+      className="flex flex-col justify-center max-[768px]:px-6"
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "tween" }}
     >
-      <div className="text-center text-6xl font-bold tracking-wide text-gray-700">
+      <div className="text-center text-5xl font-bold tracking-wide text-gray-700">
         COMING SOON
       </div>
 

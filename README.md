@@ -20,17 +20,16 @@ An app that helps you track the time you spend pursuing your goals.
 - [ ] Implement `prefers-reduced-motion` media query
 - [x] Refactor the modal component (if possible)
 - [ ] Redo duration input to match what's in the Android timer (React Aria TimeField)
-- [ ] Make so that a user may work towards a goal when it has subtasks
+- [x] Make so that a user may work towards a goal when it has subtasks
 - [x] Connect "start timer" button in goals list to the timer page
 - [x] Add React Query
 - [x] Investigate which state management library to use for forms and list page
 - [x] Rewrite all of the state management in Goals list page with Jotai or Zustand
-- [ ] Disable edit mode when there are no items in the list
 - [x] Add timer toast
 - [x] Fix item input style in timer page
 - [x] Add timer to tab title
 - [ ] Implement item filter
-- [ ] Add fadeout gradient for lists
+- [x] Add fadeout gradient for lists
 - [ ] Rewrite forms with React Form Hook
 - [ ] Try adding Million.js for smoother animations
 - [ ] Limit animations in modal transitions to modal content instead of the whole modal
