@@ -39,7 +39,7 @@ export function AddTaskSections({
               recurring: { times: 1, period: "DAY" },
               inputOrder: [...task.inputOrder, "recurring"],
             }
-          : task
+          : task,
       ),
     }))
   const removeRecurring = () =>
@@ -51,10 +51,10 @@ export function AddTaskSections({
               ...task,
               recurring: undefined,
               inputOrder: task.inputOrder.filter(
-                input => input !== "recurring"
+                input => input !== "recurring",
               ),
             }
-          : task
+          : task,
       ),
     }))
 
@@ -68,7 +68,7 @@ export function AddTaskSections({
               targetDate: null,
               inputOrder: [...task.inputOrder, "targetDate"],
             }
-          : task
+          : task,
       ),
     }))
   const removeTargetDate = () =>
@@ -80,10 +80,10 @@ export function AddTaskSections({
               ...task,
               targetDate: undefined,
               inputOrder: task.inputOrder.filter(
-                input => input !== "targetDate"
+                input => input !== "targetDate",
               ),
             }
-          : task
+          : task,
       ),
     }))
 
@@ -97,7 +97,7 @@ export function AddTaskSections({
               priority: "MEDIUM",
               inputOrder: [...task.inputOrder, "priority"],
             }
-          : task
+          : task,
       ),
     }))
   const removePriority = () =>
@@ -110,7 +110,7 @@ export function AddTaskSections({
               priority: undefined,
               inputOrder: task.inputOrder.filter(input => input !== "priority"),
             }
-          : task
+          : task,
       ),
     }))
 
@@ -177,7 +177,7 @@ export function Subtasks({
 }) {
   const removeTask = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    id: number
+    id: number,
   ) => {
     e.preventDefault()
     setGoal(prev => ({
@@ -229,7 +229,7 @@ function SubtaskItem({
   subtask: ITask
   removeTask: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    id: number
+    id: number,
   ) => void
   setGoal: React.Dispatch<React.SetStateAction<IGoal>>
 }) {
@@ -266,7 +266,7 @@ function SubtaskItem({
                 setGoal(prev => ({
                   ...prev,
                   subtasks: prev.subtasks?.map(task =>
-                    task.id === subtask.id ? { ...task, title: input } : task
+                    task.id === subtask.id ? { ...task, title: input } : task,
                   ),
                 }))
               }
@@ -295,7 +295,7 @@ function SubtaskItem({
                             minutes: Number(minutes),
                           },
                         }
-                      : task
+                      : task,
                   ),
                 }))
               }
@@ -323,7 +323,7 @@ function SubtaskItem({
                         subtasks: prev.subtasks?.map(task =>
                           task.id === subtask.id
                             ? { ...task, priority: input }
-                            : task
+                            : task,
                         ),
                       }))
                     }
@@ -351,7 +351,7 @@ function SubtaskItem({
                         subtasks: prev.subtasks?.map(task =>
                           task.id === subtask.id
                             ? { ...task, targetDate: new Date(input) }
-                            : task
+                            : task,
                         ),
                       }))
                     }
@@ -379,7 +379,7 @@ function SubtaskItem({
                         subtasks: prev.subtasks?.map(task =>
                           task.id === subtask.id
                             ? { ...task, recurring: input }
-                            : task
+                            : task,
                         ),
                       }))
                     }

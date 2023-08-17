@@ -17,7 +17,7 @@ function GeneralForm() {
             <div className="text-2xl font-semibold">Add task</div>
             <div className="my-1">One time or recurring short task</div>
             <div className="text-sm text-gray-500">
-              Read 20 pages, run 3 km, study for 2 h...
+              Read 20 pages, run 3km, study for 2h...
             </div>
           </div>
         </motion.button>

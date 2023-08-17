@@ -15,7 +15,6 @@ function ItemsPage() {
       <div className="w-full max-w-[650px]">
         <ItemsHeader itemType={itemType} setItemType={setItemType} />
         <ItemsList<GeneralItem> groupedItems={data} itemType={itemType} />
-        <GeneralModal />
         <ConfirmModal />
       </div>
     </div>

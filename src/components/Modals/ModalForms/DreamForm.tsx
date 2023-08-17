@@ -33,7 +33,7 @@ function DreamForm() {
 
   return (
     <div className="px-0 pb-2 sm:px-10">
-      <form className="mt-6">
+      <form>
         <div className="flex flex-col gap-1">
           <AnimatePresence initial={false} mode="popLayout">
             <motion.div layout className="relative">
@@ -101,7 +101,7 @@ function DreamForm() {
 
         <AddDreamSections dream={dream} setDream={setDream} />
 
-        <div className="relative mb-2 flex justify-center">
+        <div className="relative flex justify-center">
           <motion.button
             layout
             className="px-3 py-1 text-xl font-medium"
