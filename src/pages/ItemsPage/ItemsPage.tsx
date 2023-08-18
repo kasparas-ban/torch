@@ -3,8 +3,6 @@ import { ItemsHeader } from "./ItemsHeader"
 import { useItemsList } from "../../API/api"
 import ItemsList from "./ItemsList/ItemsList"
 import { GeneralItem, ItemType } from "../../types"
-import GeneralModal from "../../components/Modals/GeneralModal/GeneralModal"
-import ConfirmModal from "../../components/Modals/ConfirmModal/ConfirmModal"
 
 function ItemsPage() {
   const [itemType, setItemType] = useState<ItemType>("GOAL")
@@ -15,7 +13,6 @@ function ItemsPage() {
       <div className="w-full max-w-[650px]">
         <ItemsHeader itemType={itemType} setItemType={setItemType} />
         <ItemsList<GeneralItem> groupedItems={data} itemType={itemType} />
-        <ConfirmModal />
       </div>
     </div>
   )

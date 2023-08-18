@@ -6,20 +6,6 @@ import { cn } from "@/lib/utils"
 import useModal from "@/components/Modals/useModal"
 import { LayoutGroup, motion } from "framer-motion"
 
-// const modalVariants = {
-//   default: {
-//     opacity: 1,
-//     scale: 1,
-//     transition: { duration: 0.4, ease: "easeOut" },
-//   },
-//   initial: { opacity: 0, scale: 0.1 },
-//   close: {
-//     opacity: 0,
-//     scale: 0.9,
-//     transition: { duration: 2 },
-//   },
-// }
-
 const Dialog = DialogPrimitive.Root
 
 const DialogTrigger = DialogPrimitive.Trigger
@@ -59,7 +45,7 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
-  const { closeModal, goBack, showBackButton } = useModal()
+  const { goBack, showBackButton } = useModal()
 
   return (
     <DialogPortal>
@@ -74,13 +60,7 @@ const DialogContent = React.forwardRef<
           {...props}
           asChild
         >
-          <motion.div
-            layout
-            // variants={modalVariants}
-            // initial="initial"
-            // animate="default"
-            // exit="close"
-          >
+          <motion.div layout>
             {children}
             {showBackButton && (
               <motion.button
@@ -95,7 +75,6 @@ const DialogContent = React.forwardRef<
             )}
             <DialogPrimitive.Close
               className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-              onClick={closeModal}
               asChild
             >
               <motion.button layout whileTap={{ scale: 0.9 }}>

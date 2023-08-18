@@ -25,7 +25,8 @@ const queryClient = new QueryClient()
 
 const Wrapper = () => {
   const { isOpen: isModalOpen, closeModal } = useModal()
-  const { isOpen: isConfirmOpen } = useConfirmModal()
+  const { isOpen: isConfirmOpen, closeModal: closeConfirmModal } =
+    useConfirmModal()
 
   return (
     <motion.div
