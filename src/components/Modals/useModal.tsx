@@ -125,6 +125,7 @@ const useModal = () => ({
 
   closeModal: useModalStore(state => state.closeModal),
   goBack: useModalStore(state => state.goBack),
+  showBackButton: useModalStore(state => state.openGeneralOnClose),
 })
 
 export default useModal

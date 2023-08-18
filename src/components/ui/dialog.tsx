@@ -59,7 +59,7 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
-  const { closeModal, goBack } = useModal()
+  const { closeModal, goBack, showBackButton } = useModal()
 
   return (
     <DialogPortal>
@@ -82,15 +82,17 @@ const DialogContent = React.forwardRef<
             // exit="close"
           >
             {children}
-            <motion.button
-              layout
-              className="absolute left-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-              onClick={goBack}
-              whileTap={{ scale: 0.9 }}
-            >
-              <ArrowLeft className="h-6 w-6" />
-              <span className="sr-only">Back</span>
-            </motion.button>
+            {showBackButton && (
+              <motion.button
+                layout
+                className="absolute left-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+                onClick={goBack}
+                whileTap={{ scale: 0.9 }}
+              >
+                <ArrowLeft className="h-6 w-6" />
+                <span className="sr-only">Back</span>
+              </motion.button>
+            )}
             <DialogPrimitive.Close
               className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
               onClick={closeModal}

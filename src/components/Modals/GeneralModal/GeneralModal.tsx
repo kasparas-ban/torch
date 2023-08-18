@@ -1,13 +1,10 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
 import useModal from "../useModal"
-import { ReactComponent as BackIcon } from "../../../assets/back.svg"
 import "../inputStyles.css"
 
 const modalVariants = {
@@ -25,7 +22,7 @@ const modalVariants = {
 }
 
 function GeneralModal() {
-  const { isOpen, modalContent, modalTitle, goBack } = useModal()
+  const { modalContent, modalTitle } = useModal()
 
   return (
     <DialogContent>
