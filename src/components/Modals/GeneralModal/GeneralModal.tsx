@@ -30,7 +30,9 @@ function GeneralModal() {
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>{modalTitle}</DialogTitle>
+        <DialogTitle asChild>
+          <motion.h1 layout>{modalTitle}</motion.h1>
+        </DialogTitle>
       </DialogHeader>
       {modalContent}
     </DialogContent>

@@ -5,7 +5,6 @@ function TimerPage() {
   return (
     <>
       <Timer />
-      <GeneralModal />
     </>
   )
 }

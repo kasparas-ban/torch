@@ -37,7 +37,10 @@ const Wrapper = () => {
       className="origin-top pb-24"
     >
       <ScrollRestoration />
-      <Dialog onOpenChange={isOpen => !isOpen && closeModal()}>
+      <Dialog
+        open={isModalOpen}
+        onOpenChange={isOpen => !isOpen && closeModal()}
+      >
         <GeneralModal />
         <QueryClientProvider client={queryClient}>
           <HelmetProvider>
