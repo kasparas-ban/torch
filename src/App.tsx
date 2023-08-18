@@ -8,7 +8,6 @@ import {
 import { motion } from "framer-motion"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { HelmetProvider } from "react-helmet-async"
-import { Dialog } from "./components/ui/dialog"
 import useConfirmModal from "./components/Modals/ConfirmModal/useConfirmModal"
 import NavigationBar from "./components/NavigationBar/NavigationBar"
 import useModal from "./components/Modals/useModal"
@@ -19,12 +18,11 @@ import CalendarPage from "./pages/CalendarPage"
 import WorldPage from "./pages/WorldPage"
 import StatisticsPage from "./pages/StatisticsPage"
 import TimerToast from "./components/TimerToast/TimerToast"
-import GeneralModal from "./components/Modals/GeneralModal/GeneralModal"
 
 const queryClient = new QueryClient()
 
 const Wrapper = () => {
-  const { isOpen: isModalOpen, closeModal } = useModal()
+  const { isOpen: isModalOpen } = useModal()
   const { isOpen: isConfirmOpen } = useConfirmModal()
 
   return (
@@ -37,18 +35,15 @@ const Wrapper = () => {
       className="origin-top pb-24"
     >
       <ScrollRestoration />
-      <Dialog onOpenChange={isOpen => !isOpen && closeModal()}>
-        <GeneralModal />
-        <QueryClientProvider client={queryClient}>
-          <HelmetProvider>
-            <TitleWrapper>
-              <NavigationBar />
-              <TimerToast />
-              <Outlet />
-            </TitleWrapper>
-          </HelmetProvider>
-        </QueryClientProvider>
-      </Dialog>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <TitleWrapper>
+            <NavigationBar />
+            <TimerToast />
+            <Outlet />
+          </TitleWrapper>
+        </HelmetProvider>
+      </QueryClientProvider>
     </motion.div>
   )
 }

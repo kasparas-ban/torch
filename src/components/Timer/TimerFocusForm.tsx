@@ -5,7 +5,7 @@ import useTimerStore from "./useTimer"
 import {
   SelectTypeFirstField,
   SelectTypeSecondField,
-} from "../../components/Inputs/SelectField"
+} from "../Inputs/SelectField"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
 import { GroupedOptionType, OptionType } from "../../types"
@@ -49,7 +49,7 @@ export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
                   getItemsByType(
                     input,
                     focusType,
-                    focusType === "TASKS" || focusType === "GOALS",
+                    focusType === "TASKS" || focusType === "GOALS"
                   )
                 }
                 formatOptionLabel={optionLabel}
@@ -59,11 +59,11 @@ export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
               />
               <SelectTypeSecondField
                 value={focusTypeOptions.find(
-                  option => option.value === focusType,
+                  option => option.value === focusType
                 )}
                 onChange={option => option && setFocusType(option.value)}
                 options={focusTypeOptions.filter(
-                  option => option.value !== focusType,
+                  option => option.value !== focusType
                 )}
               />
             </div>
@@ -117,7 +117,7 @@ export const TimerFocusInfo = forwardRef<
 
 const optionLabel = (
   option: OptionType,
-  { context }: { context: "menu" | "value" },
+  { context }: { context: "menu" | "value" }
 ) => {
   return (
     <div className="flex w-full items-center gap-2">

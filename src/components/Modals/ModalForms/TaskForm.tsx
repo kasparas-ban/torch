@@ -41,7 +41,7 @@ function TaskForm() {
         key =>
           initialTask?.[key as keyof Task] !== undefined &&
           key !== "taskId" &&
-          key !== "progress",
+          key !== "progress"
       )
     : []
 
@@ -63,7 +63,7 @@ function TaskForm() {
 
   return (
     <div className="px-0 pb-2 sm:px-10">
-      <form>
+      <form className="mt-6">
         <div className="flex flex-col gap-1">
           <AnimatePresence initial={false} mode="popLayout">
             <motion.div layout key="task_title" className="relative">
@@ -118,7 +118,7 @@ function TaskForm() {
                             : null
                         }
                         setItem={(
-                          goal: { label: string; value: Goal } | null,
+                          goal: { label: string; value: Goal } | null
                         ) =>
                           goal &&
                           setTask(prev => ({ ...prev, goal: goal.value }))
@@ -204,7 +204,7 @@ function TaskForm() {
 
         <AddTaskSections task={task} setTask={setTask} />
 
-        <div className="relative flex justify-center">
+        <div className="relative mb-2 flex justify-center">
           <motion.button
             layout
             className="px-3 py-1 text-xl font-medium"
