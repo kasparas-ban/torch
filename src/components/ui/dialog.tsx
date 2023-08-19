@@ -60,7 +60,7 @@ const DialogContent = React.forwardRef<
           {...props}
           asChild
         >
-          <motion.div layout>
+          <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             {children}
             {showBackButton && (
               <motion.button
@@ -124,7 +124,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-center text-5xl mb-3 font-semibold", className)}
+    className={cn("text-center text-5xl my-5 font-semibold", className)}
     {...props}
   />
 ))

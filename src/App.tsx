@@ -6,8 +6,9 @@ import {
   ScrollRestoration,
 } from "react-router-dom"
 import { motion } from "framer-motion"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { useMediaQuery } from "react-responsive"
 import { HelmetProvider } from "react-helmet-async"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import useConfirmModal from "./components/Modals/ConfirmModal/useConfirmModal"
 import NavigationBar from "./components/NavigationBar/NavigationBar"
 import useModal from "./components/Modals/useModal"
@@ -25,6 +26,10 @@ const Wrapper = () => {
   const { isOpen: isModalOpen } = useModal()
   const { isOpen: isConfirmOpen } = useConfirmModal()
 
+  const isDesktop = useMediaQuery({
+    query: "(min-width: 600px)",
+  })
+
   return (
     <motion.div
       initial={false}
@@ -39,7 +44,7 @@ const Wrapper = () => {
         <HelmetProvider>
           <TitleWrapper>
             <NavigationBar />
-            <TimerToast />
+            {!isDesktop && <TimerToast showBackdrop />}
             <Outlet />
           </TitleWrapper>
         </HelmetProvider>

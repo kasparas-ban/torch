@@ -6,6 +6,7 @@ import { useMediaQuery } from "react-responsive"
 import { AnimatePresence, motion } from "framer-motion"
 import { NavigationBarWrapper, useScrollPosition } from "./helpers"
 import useTimerStore from "../Timer/useTimer"
+import TimerToast from "../TimerToast/TimerToast"
 import { ReactComponent as CalendarIcon } from "../../assets/navigation_icons/calendar.svg"
 import { ReactComponent as TasksIcon } from "../../assets/navigation_icons/goals.svg"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
@@ -34,7 +35,7 @@ function NavbarMobile() {
   return (
     <div
       className={clsx(
-        "fixed bottom-0 w-full z-20 pt-2 pb-4 bg-transparent flex justify-center max-[768px]:px-3 shadow-lg",
+        "fixed bottom-0 w-full z-20 pt-2 pb-4 bg-transparent flex flex-col justify-center max-[768px]:px-3 shadow-lg",
         "before:from-60% before:absolute before:top-[-30px] before:z-[-1] before:h-[calc(100%+30px)] before:w-full before:bg-gradient-to-t before:from-white/80 before:content-['']",
       )}
     >
@@ -76,11 +77,11 @@ function NavbarContentDesktop() {
   return (
     <div
       className={clsx(
-        "sticky top-0 z-20 pt-4 bg-transparent flex justify-center max-[768px]:px-6",
+        "sticky top-0 z-20 pt-4 bg-transparent flex justify-center max-[768px]:px-6 flex-col",
         "before:from-60% before:absolute before:top-0 before:z-[-1] before:h-[calc(100%+35px)] before:w-full before:bg-gradient-to-b before:from-white/90 before:content-['']",
       )}
     >
-      <div className="w-full max-w-[650px]">
+      <div className="w-full max-w-[650px] mx-auto">
         <NavigationBarWrapper>
           <TorchLink />
           <ul className="flex h-12 space-x-1 overflow-visible rounded-[16px] px-4">
@@ -136,6 +137,7 @@ function NavbarContentDesktop() {
           </div>
         </NavigationBarWrapper>
       </div>
+      <TimerToast />
     </div>
   )
 }

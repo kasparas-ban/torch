@@ -18,7 +18,7 @@ const buttonVariants = {
   },
 }
 
-const TimerToast = () => {
+const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
   const time = useTimerStore.use.time()
   const startTimer = useTimerStore.use.startTimer()
   const pauseTimer = useTimerStore.use.pauseTimer()
@@ -40,7 +40,11 @@ const TimerToast = () => {
     <AnimatePresence mode="popLayout">
       {isShowing && (
         <motion.div
-          className="sticky z-20 top-[70px] mt-4 flex justify-center max-[768px]:px-6 md:space-x-36 max-[600px]:top-2"
+          className={clsx(
+            "sticky z-20 top-[70px] mt-4 flex justify-center max-[768px]:px-6 md:space-x-36 max-[600px]:top-2",
+            showBackdrop &&
+              "before:from-60% before:absolute before:top-[-8px] before:z-[-1] before:h-[calc(100%+30px)] before:w-full before:bg-gradient-to-b before:from-white/80 before:content-['']",
+          )}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: [1, 0.2, 0], y: [0, -10, -20] }}
@@ -48,7 +52,7 @@ const TimerToast = () => {
           <motion.div
             layout
             className={clsx(
-              "flex w-fit items-center gap-4 rounded-3xl bg-gradient-to-b px-4 py-1 drop-shadow max-sm:max-w-full",
+              "flex w-fit items-center gap-3 rounded-3xl bg-gradient-to-b px-4 py-1 drop-shadow max-sm:max-w-full",
               timerState !== "running"
                 ? "from-red-200 to-rose-300"
                 : "from-red-400 to-rose-500",
@@ -61,7 +65,7 @@ const TimerToast = () => {
               <motion.div
                 layout="position"
                 className={clsx(
-                  "max-w-sm truncate pl-2 pr-1 text-lg",
+                  "max-w-sm truncate sm:text-lg sm:pl-2 sm:pr-1",
                   timerState !== "running" ? "text-gray-600" : "text-white",
                 )}
               >
