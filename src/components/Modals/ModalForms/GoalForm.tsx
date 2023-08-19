@@ -91,7 +91,7 @@ function GoalForm() {
 
       setTimeout(() => {
         const taskTitleInput = document.getElementById(
-          `subtask_title_${goal.subtasks ? goal.subtasks.length + 1 : 0}`
+          `subtask_title_${goal.subtasks ? goal.subtasks.length + 1 : 0}`,
         )
         taskTitleInput?.focus()
       }, 1000)
@@ -117,13 +117,13 @@ function GoalForm() {
             top: 1000,
             behavior: "smooth",
           }),
-        100
+        100,
       )
   }
 
   return (
     <div className="px-0 pt-4 pb-2 sm:px-10">
-      <form className="mt-6">
+      <form>
         <div className="flex flex-col gap-1">
           <AnimatePresence initial={false} mode="popLayout">
             <motion.div layout className="relative">
@@ -162,7 +162,7 @@ function GoalForm() {
                             : null
                         }
                         setItem={(
-                          item: { label: string; value: Dream } | null
+                          item: { label: string; value: Dream } | null,
                         ) => setGoal(prev => ({ ...prev, dream: item?.value }))}
                         label="Dream"
                         options={[]}
@@ -224,7 +224,7 @@ function GoalForm() {
 
         <Subtasks goal={goal} setGoal={setGoal} />
 
-        <div className="relative mt-6 mb-5 flex justify-center">
+        <div className="relative mt-2 mb-5 flex justify-center">
           <motion.button
             layout
             className="flex px-3 py-1 text-[15px] text-gray-500"
@@ -239,7 +239,7 @@ function GoalForm() {
           </motion.button>
         </div>
 
-        <div className="relative mb-2 flex justify-center">
+        <div className="relative flex justify-center">
           <motion.button
             layout
             className="px-3 py-1 text-xl font-medium"

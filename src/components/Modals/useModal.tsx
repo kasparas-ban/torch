@@ -20,7 +20,7 @@ type ModalState = {
   openGoalModal: (
     item?: Goal,
     openGeneralOnClose?: boolean,
-    addTaskOnOpen?: boolean
+    addTaskOnOpen?: boolean,
   ) => void
   openDreamModal: (item?: Dream, openGeneralOnClose?: boolean) => void
   openGeneralModal: () => void
@@ -98,14 +98,14 @@ const useModalStore = create<ModalState>(set => ({
             isOpen: false,
             title: "",
             modalContent: undefined,
-          }
+          },
     ),
   closeModal: () =>
     set(() => ({
-      modalKey: "",
+      // modalKey: "",
       isOpen: false,
-      title: "",
-      modalContent: undefined,
+      // title: "",
+      // modalContent: undefined,
     })),
 }))
 

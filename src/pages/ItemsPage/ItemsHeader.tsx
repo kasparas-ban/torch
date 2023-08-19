@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import useEditItem from "./useEditItem"
 import { capitalizeString } from "../../helpers"
 import { ItemType, ItemTypeLabel } from "../../types"
+import { DialogTrigger } from "@/components/ui/dialog"
 import useModal from "../../components/Modals/useModal"
 import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
@@ -62,10 +63,12 @@ export function ItemsHeader({
           <FilterIcon className="cursor-pointer" />
         </motion.div>
         <motion.div layout whileHover={{ scale: 1.2 }}>
-          <PlusIcon
-            className="cursor-pointer"
-            onClick={() => openGeneralModal()}
-          />
+          <DialogTrigger>
+            <PlusIcon
+              className="cursor-pointer"
+              onClick={() => openGeneralModal()}
+            />
+          </DialogTrigger>
         </motion.div>
       </div>
     </div>

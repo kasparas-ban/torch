@@ -16,8 +16,8 @@ export const useItemsList = (itemType: ItemType) => {
             ? tasksData
             : itemType === "GOAL"
             ? goalsData
-            : dreamsData
-        )
+            : dreamsData,
+        ),
       )
       const groupedItems = groupItemsByParent(items, itemType)
       return groupedItems
@@ -30,7 +30,7 @@ export const useItemsList = (itemType: ItemType) => {
 export const getItemsByType = async (
   input: string,
   focusType: FocusType,
-  grouped?: boolean
+  grouped?: boolean,
 ) => {
   const items = await new Promise<GeneralItem[]>(resolve =>
     resolve(
@@ -40,8 +40,8 @@ export const getItemsByType = async (
         ? goalsData
         : focusType === "DREAMS"
         ? dreamsData
-        : [...tasksData, ...goalsData, ...dreamsData]
-    )
+        : [...tasksData, ...goalsData, ...dreamsData],
+    ),
   )
 
   const filteredItems = filterItems(items, input)
@@ -52,10 +52,10 @@ export const getItemsByType = async (
     const parents =
       focusType === "TASKS"
         ? goalsData.filter(goal =>
-            filteredItems.find(item => item.parent === goal.id)
+            filteredItems.find(item => item.parent === goal.id),
           )
         : dreamsData.filter(dream =>
-            filteredItems.find(item => item.parent === dream.id)
+            filteredItems.find(item => item.parent === dream.id),
           )
 
     const groupedItems = parents.map(parent => ({
