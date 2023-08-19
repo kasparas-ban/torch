@@ -5,7 +5,6 @@ import clsx from "clsx"
 import { useMediaQuery } from "react-responsive"
 import { AnimatePresence, motion } from "framer-motion"
 import { NavigationBarWrapper, useScrollPosition } from "./helpers"
-import useTimerStore from "../Timer/useTimer"
 import TimerToast from "../TimerToast/TimerToast"
 import { ReactComponent as CalendarIcon } from "../../assets/navigation_icons/calendar.svg"
 import { ReactComponent as TasksIcon } from "../../assets/navigation_icons/goals.svg"
@@ -81,7 +80,7 @@ function NavbarContentDesktop() {
         "before:from-60% before:absolute before:top-0 before:z-[-1] before:h-[calc(100%+35px)] before:w-full before:bg-gradient-to-b before:from-white/90 before:content-['']",
       )}
     >
-      <div className="w-full max-w-[650px] mx-auto">
+      <div className="w-full max-w-[650px] mx-auto z-30">
         <NavigationBarWrapper>
           <TorchLink />
           <ul className="flex h-12 space-x-1 overflow-visible rounded-[16px] px-4">
@@ -157,9 +156,6 @@ function NavigationLink({
   highlight,
   mobile,
 }: NavigationLinkProps) {
-  const timerState = useTimerStore.use.timerState()
-  const showLabel = timerState === "idle"
-
   return (
     <Link
       to={path}
@@ -181,7 +177,7 @@ function NavigationLink({
           {mobile && <span className="text-[11px]">{linkName}</span>}
         </div>
       )}
-      {!mobile && showLabel && (
+      {!mobile && (
         <div className="relative z-30 hidden translate-y-5 peer-hover:block">
           <div className="absolute z-50 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-red-200 p-1 shadow-lg">
             {linkName}

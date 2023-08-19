@@ -7,6 +7,7 @@ import useTimerStore from "./useTimer"
 import { TimerShape } from "./TimerShape"
 import useModal from "../Modals/useModal"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
+import { GeneralModal } from "../Modals/GeneralModal/GeneralModal"
 
 const buttonVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.6 } },
@@ -57,14 +58,16 @@ function Timer() {
             }}
             exit={{ opacity: 0, height: 0, transition: { duration: 0.01 } }}
           >
-            <motion.button
-              className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
-              whileHover={{ scale: 1.06 }}
-              onClick={openTimerSettingsModal}
-            >
-              <SettingsIcon className="mr-1 h-4 w-4" />
-              Settings
-            </motion.button>
+            <GeneralModal>
+              <motion.button
+                className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                whileHover={{ scale: 1.06 }}
+                onClick={openTimerSettingsModal}
+              >
+                <SettingsIcon className="mr-1 h-4 w-4" />
+                Settings
+              </motion.button>
+            </GeneralModal>
           </motion.div>
         )}
         {timerState === "idle" ? (
@@ -227,8 +230,7 @@ function TimerHistory() {
       exit={{ opacity: 0, transition: { duration: 0.1 } }}
     >
       <div className="mx-auto">
-        <div className="mx-4 grid grid-cols-[40px_240px_100px_100px_100px_80px] text-gray-500 max-[700px]:grid-cols-[40px_240px_100px_100px] max-[500px]:grid-cols-[20px_auto_auto_auto] max-[500px]:gap-x-3">
-          <div className="mb-2 font-semibold text-gray-600"></div>
+        <div className="mx-4 grid grid-cols-[240px_100px_100px_100px_80px] text-gray-500 max-[700px]:grid-cols-[240px_100px_100px] max-[500px]:grid-cols-[auto_auto_auto] max-[500px]:gap-x-3">
           <div className="mb-2 font-semibold text-gray-600">Focus on</div>
           <div className="mb-2 font-semibold text-gray-600">Progress</div>
           <div className="mb-2 font-semibold text-gray-600">Time spent</div>
@@ -240,7 +242,6 @@ function TimerHistory() {
           </div>
           {data.map((row, idx) => (
             <React.Fragment key={idx}>
-              <div className="mb-1">{idx + 1}</div>
               <div className="mb-1 mr-3 truncate max-[700px]:mr-2 max-[500px]:mr-0">
                 {row.focusOn}
               </div>
