@@ -27,7 +27,7 @@ function MarkItemDoneModal({
       open={isOpen}
       onOpenChange={isOpen => (isOpen ? setIsOpen(true) : close())}
     >
-      <DialogTrigger>{triggerElement}</DialogTrigger>
+      <DialogTrigger asChild>{triggerElement}</DialogTrigger>
       <DialogContent className="h-fit sm:max-w-fit">
         <div className="px-8">
           <DialogHeader>
@@ -75,7 +75,7 @@ function RemoveItemModal({
       open={isOpen}
       onOpenChange={isOpen => (isOpen ? setIsOpen(true) : close())}
     >
-      <DialogTrigger>{triggerElement}</DialogTrigger>
+      <DialogTrigger asChild>{triggerElement}</DialogTrigger>
       <DialogContent className="h-fit sm:max-w-fit">
         <div className="px-8">
           <DialogHeader>

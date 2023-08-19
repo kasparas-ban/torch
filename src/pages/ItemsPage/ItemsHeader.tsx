@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from "framer-motion"
 import useEditItem from "./useEditItem"
 import { capitalizeString } from "../../helpers"
 import { ItemType, ItemTypeLabel } from "../../types"
-import { DialogTrigger } from "@/components/ui/dialog"
 import useModal from "../../components/Modals/useModal"
+import { GeneralModal } from "@/components/Modals/GeneralModal/GeneralModal"
 import { ReactComponent as FilterIcon } from "../../assets/filter.svg"
 import { ReactComponent as ArrowIcon } from "../../assets/arrow.svg"
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
@@ -59,17 +59,17 @@ export function ItemsHeader({
     <div className="mb-8 flex">
       <ItemsTypeDropdown itemType={itemType} setItemType={setItemType} />
       <div className="mt-7 ml-auto flex space-x-4">
-        <motion.div layout whileHover={{ scale: 1.2 }}>
+        <motion.button layout whileHover={{ scale: 1.2 }}>
           <FilterIcon className="cursor-pointer" />
-        </motion.div>
-        <motion.div layout whileHover={{ scale: 1.2 }}>
-          <DialogTrigger>
+        </motion.button>
+        <GeneralModal>
+          <motion.div layout whileHover={{ scale: 1.2 }}>
             <PlusIcon
               className="cursor-pointer"
               onClick={() => openGeneralModal()}
             />
-          </DialogTrigger>
-        </motion.div>
+          </motion.div>
+        </GeneralModal>
       </div>
     </div>
   )

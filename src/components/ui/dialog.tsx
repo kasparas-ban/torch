@@ -36,7 +36,7 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 const LayoutGroupWrapper = React.forwardRef<HTMLButtonElement, any>(
   (props, forwardedRef) => (
     <LayoutGroup>
-      <div {...props} ref={forwardedRef}></div>
+      <motion.div layout {...props} ref={forwardedRef}></motion.div>
     </LayoutGroup>
   ),
 )
