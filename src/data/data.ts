@@ -78,7 +78,7 @@ const goals = [
   {
     id: 7,
     title: "Build muscle",
-    progress: 0.6,
+    progress: 0,
     type: "GOAL",
     taskIds: [20, 21, 22],
     dreamId: 2,
@@ -280,21 +280,33 @@ const tasks = [
     title: "Do weight lifting",
     type: "TASK",
     goalId: 7,
-    recurring: true,
+    recurring: {
+      times: 3,
+      period: "WEEK",
+      progress: 2,
+    },
   },
   {
     id: 21,
     title: "Go running",
     type: "TASK",
     goalId: 7,
-    recurring: true,
+    recurring: {
+      times: 2,
+      period: "DAY",
+      progress: 0,
+    },
   },
   {
     id: 22,
     title: "Do morning yoga",
     type: "TASK",
     goalId: 7,
-    recurring: true,
+    recurring: {
+      times: 1,
+      period: "DAY",
+      progress: 1,
+    },
   },
   {
     id: 23,

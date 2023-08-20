@@ -1,16 +1,12 @@
 import React, { Fragment } from "react"
-import { useNavigate } from "react-router-dom"
 import { useMediaQuery } from "react-responsive"
 import { AnimatePresence, motion } from "framer-motion"
 import clsx from "clsx"
-import { ROUTES } from "../../../routes"
-import ItemProgress from "./ProgressBar"
 import useEditItem from "../useEditItem"
 import ItemEditPanel from "./ItemEditPanel"
 import { Goal, Task } from "../../../types"
-import useTimerForm from "../../../components/Timer/useTimerForm"
-import { ReactComponent as DotsIcon } from "../../../assets/dots.svg"
-import { ReactComponent as TimerStartIcon } from "../../../assets/timer_start.svg"
+import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
+import { RotateCw } from "lucide-react"
 
 export default function ItemSublist<T extends Task | Goal>({
   subitems,
@@ -27,9 +23,7 @@ export default function ItemSublist<T extends Task | Goal>({
     query: "(min-width: 600px)",
   })
 
-  const navigate = useNavigate()
   const { editItem, setEditItem } = useEditItem()
-  const { setFocusOn, setFocusType } = useTimerForm()
 
   const showEditPanel = (subitem: T) =>
     subitem.type === editItem?.type && subitem.id === editItem?.id
@@ -48,20 +42,9 @@ export default function ItemSublist<T extends Task | Goal>({
         : (subitem as Goal).dream?.id
     }_${subitem.id}`
 
-  const handleTimerClick = (item: Task | Goal) => {
-    navigate(ROUTES.index.path)
-    setFocusOn({ value: item.id, label: item.title, progress: item.progress })
-    setFocusType(
-      subitemType === "TASK"
-        ? "TASKS"
-        : subitemType === "GOAL"
-        ? "GOALS"
-        : "ALL",
-    )
-    setEditItem(undefined)
-  }
-
   const scaledWidth = isDesktop ? "90%" : "82%"
+
+  const isRecurring = (item: T) => !!(item as Task).recurring
 
   return (
     <motion.div layout>
@@ -81,7 +64,7 @@ export default function ItemSublist<T extends Task | Goal>({
                 scale: showSublist ? 1 : 0.98 - 0.03 * idx,
                 width:
                   !showSublist && isParentEditActive ? scaledWidth : "100%",
-                y: showSublist ? 0 : -(54 + 50 * idx + 6 * idx),
+                y: showSublist ? 0 : -(56 + 50 * idx + 8 * idx),
                 zIndex: showSublist ? 0 : subitems.length - 1 - idx,
                 opacity: showSublist ? 1 : idx > 1 ? 0 : 1,
               }}
@@ -92,61 +75,22 @@ export default function ItemSublist<T extends Task | Goal>({
                 showEditPanel={showEditPanel}
                 subitems={subitems}
               />
-              <motion.div
-                className={clsx(
-                  "relative items-center ml-3 h-12 flex w-full cursor-pointer overflow-hidden rounded-2xl border border-gray-700 pl-6 pr-1 md:rounded-3xl",
-                  editItem
-                    ? showEditPanel(subitem)
-                      ? "bg-red-300"
-                      : "bg-gray-300"
-                    : "bg-red-300",
-                )}
-              >
-                {showSublist && (
-                  <ItemProgress
-                    progress={subitem.progress || 0}
-                    showEditPanel={showEditPanel(subitem)}
-                  />
-                )}
-                <motion.div
-                  className="z-10 select-none truncate"
-                  animate={{ opacity: showSublist ? 1 : 0 }}
-                >
-                  {subitem.title}
-                </motion.div>
-                <div
-                  className={clsx(
-                    "rounded-full shrink-0 z-0 ml-auto h-10 w-10 flex items-center justify-center group",
-                    !editItem
-                      ? "hover:bg-red-200"
-                      : showEditPanel(subitem)
-                      ? "hover:bg-red-200"
-                      : "hover:bg-gray-100",
-                  )}
-                  onClick={e => toggleEditClick(e, subitem)}
-                >
-                  <motion.div
-                    layout
-                    className="text-gray-600 group-hover:text-gray-800"
-                  >
-                    <DotsIcon />
-                  </motion.div>
-                </div>
-              </motion.div>
-              <AnimatePresence>
-                {showEditPanel(subitem) && (
-                  <motion.div
-                    className="my-auto aspect-square w-12 ml-3 cursor-pointer rounded-full bg-red-400"
-                    whileHover={{ scale: 1.1 }}
-                    onClick={() => handleTimerClick(subitem)}
-                    initial={{ width: 0, opacity: 0, marginLeft: 0 }}
-                    animate={{ width: 48, opacity: 1, marginLeft: 12 }}
-                    exit={{ width: 0, opacity: 0, marginLeft: 0 }}
-                  >
-                    <TimerStartIcon className="m-auto h-full" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {isRecurring(subitem) ? (
+                <RecurringItemStrip
+                  item={subitem as Task}
+                  showEditPanel={showEditPanel(subitem)}
+                  toggleEditClick={e => toggleEditClick(e, subitem)}
+                />
+              ) : (
+                <ItemStrip
+                  item={subitem}
+                  itemType={subitemType}
+                  showEditPanel={showEditPanel(subitem)}
+                  toggleEditClick={(
+                    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+                  ) => toggleEditClick(e, subitem)}
+                />
+              )}
             </motion.li>
             <AnimatePresence initial={false}>
               {showEditPanel(subitem) && (
@@ -164,7 +108,7 @@ export default function ItemSublist<T extends Task | Goal>({
   )
 }
 
-function BulletPoint<T>({
+function BulletPoint<T extends Task | Goal>({
   idx,
   showSublist,
   subitems,
@@ -174,16 +118,41 @@ function BulletPoint<T>({
   showEditPanel: (subitem: T) => boolean
   subitems: T[]
 }) {
+  const { editItem } = useEditItem()
+  const currentItem = subitems[idx]
+  const isRecurring = (currentItem as Task).recurring
+
+  const editItemActive =
+    editItem?.type === currentItem.type && editItem?.id === currentItem.id
+
+  const bulletColor = editItem
+    ? editItemActive && isRecurring
+      ? "bg-blue-200"
+      : "bg-gray-300"
+    : isRecurring
+    ? "bg-blue-200"
+    : "bg-gray-300"
+
   return (
     <motion.div
-      className="relative flex"
+      className="relative flex mr-3"
       animate={{
         width: showSublist ? "auto" : 0,
         opacity: showSublist ? 1 : 0,
       }}
       transition={{ duration: 0.1 }}
     >
-      <div className="my-auto aspect-square w-4 rounded-full bg-gray-300"></div>
+      <div
+        className={clsx(
+          "relative my-auto w-4 aspect-square z-10 rounded-full",
+          bulletColor,
+        )}
+      ></div>
+      {isRecurring && (
+        <div className="absolute left-[-4px] top-[13px] z-[15] text-gray-500">
+          <RotateCw />
+        </div>
+      )}
       {/* Upper line */}
       {idx !== 0 && (
         <motion.div className="h0 absolute left-[6px] h-1/2 w-1 bg-gray-300" />

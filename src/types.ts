@@ -56,6 +56,7 @@ export type TimerState = "idle" | "paused" | "running"
 export type RecurringType = {
   times: number
   period: ReccuringPeriod
+  progress?: number
 }
 
 export type ReccuringPeriod = "DAY" | "WEEK" | "MONTH"
