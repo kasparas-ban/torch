@@ -127,10 +127,10 @@ function BulletPoint<T extends Task | Goal>({
 
   const bulletColor = editItem
     ? editItemActive && isRecurring
-      ? "bg-blue-200"
+      ? "bg-amber-200"
       : "bg-gray-300"
     : isRecurring
-    ? "bg-blue-200"
+    ? "bg-amber-200"
     : "bg-gray-300"
 
   return (

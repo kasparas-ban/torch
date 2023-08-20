@@ -16,12 +16,12 @@ function ItemProgress({
   const getProgressColor = () => {
     if (editItem) {
       if (showEditPanel) {
-        return isRecurring ? "bg-blue-300" : "bg-red-400"
+        return isRecurring ? "bg-amber-500" : "bg-red-400"
       }
       return "bg-gray-400"
     }
 
-    return isRecurring ? "bg-blue-300" : "bg-red-400"
+    return isRecurring ? "bg-amber-500" : "bg-red-400"
   }
 
   return (

@@ -8,6 +8,7 @@ import ItemProgress from "./ProgressBar"
 import useEditItem from "../useEditItem"
 import { ReactComponent as DotsIcon } from "../../../assets/dots.svg"
 import { ReactComponent as TimerStartIcon } from "../../../assets/timer_start.svg"
+import { useMediaQuery } from "react-responsive"
 
 function ItemStrip<T extends GeneralItem>({
   item,
@@ -122,6 +123,10 @@ function RecurringItemStrip({
 }) {
   const { editItem } = useEditItem()
 
+  const isDesktop = useMediaQuery({
+    query: "(min-width: 600px)",
+  })
+
   const itemProgress = item.recurring
     ? (item.recurring?.progress || 0) / item.recurring?.times
     : 0
@@ -134,9 +139,9 @@ function RecurringItemStrip({
           "relative border border-gray-700 flex w-full cursor-pointer items-center overflow-hidden rounded-2xl pl-6 pr-1 md:rounded-3xl",
           editItem
             ? showEditPanel
-              ? "bg-blue-200"
+              ? "bg-amber-300"
               : "bg-gray-300"
-            : "bg-blue-200",
+            : "bg-amber-300",
         )}
       >
         <ItemProgress
@@ -144,8 +149,9 @@ function RecurringItemStrip({
           showEditPanel={showEditPanel}
           isRecurring
         />
-        <motion.div className="z-10 select-none py-3 truncate">
-          {item.title}
+        <motion.div className="py-1 z-10 flex flex-col min-w-0">
+          <div className="select-none truncate">{item.title}</div>
+          <div className="text-xs text-gray-700 truncate">Resets tomorrow</div>
         </motion.div>
         <div
           className={clsx(
@@ -155,7 +161,10 @@ function RecurringItemStrip({
         >
           <motion.div
             layout
-            className="relative top-[-2px] text-gray-600 font-bold text-3xl shrink-0 tracking-wider sm:tracking-widest"
+            className={clsx(
+              "relative top-[-2px] font-bold text-3xl shrink-0 tracking-wider sm:tracking-widest",
+              itemProgress === 1 ? "text-gray-600/50" : "text-gray-600",
+            )}
           >
             {item.recurring?.progress || 0}/{item.recurring?.times}
           </motion.div>
@@ -164,9 +173,9 @@ function RecurringItemStrip({
           className={clsx(
             "rounded-full z-0 h-10 w-10 flex shrink-0 items-center justify-center group",
             !editItem
-              ? "hover:bg-blue-100"
+              ? "hover:bg-amber-200"
               : showEditPanel
-              ? "hover:bg-blue-100"
+              ? "hover:bg-amber-200"
               : "hover:bg-gray-100",
           )}
           onClick={toggleEditClick}
@@ -183,11 +192,15 @@ function RecurringItemStrip({
         {showEditPanel && (
           <motion.div
             key="add_recurring"
-            className="flex font-bold justify-center items-center text-xl text-gray-700 my-auto aspect-square w-12 ml-3 cursor-pointer rounded-full bg-blue-400"
+            className="flex font-bold justify-center items-center text-xl text-gray-700 my-auto aspect-square cursor-pointer rounded-full bg-amber-400"
             whileHover={{ scale: 1.1 }}
             // onClick={handleTimerClick}
             initial={{ width: 0, opacity: 0, marginLeft: 0 }}
-            animate={{ width: 48, opacity: 1, marginLeft: 12 }}
+            animate={{
+              width: isDesktop ? 48 : 64,
+              opacity: 1,
+              marginLeft: isDesktop ? 12 : 6,
+            }}
             exit={{ width: 0, opacity: 0, marginLeft: 0 }}
           >
             +1
@@ -196,11 +209,15 @@ function RecurringItemStrip({
         {showEditPanel && (
           <motion.div
             key="subtract_recurring"
-            className="flex font-bold justify-center items-center text-xl text-gray-700 my-auto aspect-square w-12 ml-3 cursor-pointer rounded-full bg-blue-400"
+            className="flex font-bold justify-center items-center text-xl text-gray-700 my-auto aspect-square cursor-pointer rounded-full bg-amber-400"
             whileHover={{ scale: 1.1 }}
             // onClick={handleTimerClick}
             initial={{ width: 0, opacity: 0, marginLeft: 0 }}
-            animate={{ width: 48, opacity: 1, marginLeft: 12 }}
+            animate={{
+              width: isDesktop ? 48 : 64,
+              opacity: 1,
+              marginLeft: isDesktop ? 12 : 6,
+            }}
             exit={{ width: 0, opacity: 0, marginLeft: 0 }}
           >
             -1
