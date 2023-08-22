@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
+import { useMediaQuery } from "react-responsive"
+import clsx from "clsx"
 import { GeneralItem, Goal, ItemType, Task } from "@/types"
 import useTimerForm from "@/components/Timer/useTimerForm"
-import clsx from "clsx"
 import { ROUTES } from "@/routes"
 import ItemProgress from "./ProgressBar"
 import useEditItem from "../useEditItem"
 import { ReactComponent as DotsIcon } from "../../../assets/dots.svg"
 import { ReactComponent as TimerStartIcon } from "../../../assets/timer_start.svg"
-import { useMediaQuery } from "react-responsive"
 
 function ItemStrip<T extends GeneralItem>({
   item,
@@ -162,8 +162,7 @@ function RecurringItemStrip({
           <motion.div
             layout
             className={clsx(
-              "relative top-[-2px] font-bold text-3xl shrink-0 tracking-wider sm:tracking-widest",
-              itemProgress === 1 ? "text-gray-600/50" : "text-gray-600",
+              "relative top-[-2px] font-bold text-2xl shrink-0 tracking-wider sm:tracking-widest text-gray-600",
             )}
           >
             {item.recurring?.progress || 0}/{item.recurring?.times}

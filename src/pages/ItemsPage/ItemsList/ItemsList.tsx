@@ -1,8 +1,8 @@
 import { useEffect } from "react"
 import { motion, stagger, useAnimate } from "framer-motion"
-import { GeneralItem, GroupedItems, ItemType } from "../../../types"
-import useModal from "../../../components/Modals/useModal"
 import Item from "./Item"
+import useModal from "../../../components/Modals/useModal"
+import { GeneralItem, GroupedItems, ItemType } from "../../../types"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 
 export default function ItemsList<T extends GeneralItem>({
@@ -13,31 +13,6 @@ export default function ItemsList<T extends GeneralItem>({
   itemType: ItemType
 }) {
   const { openTaskModal, openGoalModal, openDreamModal } = useModal()
-  const [total_scope, animate] = useAnimate()
-
-  useEffect(() => {
-    if (!total_scope.current) return
-    animate(
-      "ul",
-      { y: [-40, 0], opacity: [0, 1] },
-      {
-        duration: 0.3,
-        type: "spring",
-        bounce: 0.4,
-        delay: stagger(0.025),
-      },
-    )
-    animate(
-      "li",
-      { y: [-40, 0], opacity: [0, 1] },
-      {
-        duration: 0.3,
-        type: "spring",
-        bounce: 0.4,
-        delay: stagger(0.025),
-      },
-    )
-  }, [itemType, groupedItems])
 
   const handleAddItem = () =>
     itemType === "TASK"
@@ -46,30 +21,40 @@ export default function ItemsList<T extends GeneralItem>({
       ? openGoalModal()
       : openDreamModal()
 
+  let totalIndex = 0
+
   return (
     <>
       {groupedItems && Object.keys(groupedItems) ? (
-        <motion.ul
-          ref={total_scope}
-          key={`list_${itemType}`}
-          className="space-y-3"
-        >
-          {Object.keys(groupedItems).map(group => {
-            const parentLabel = groupedItems[group].parentLabel
-            const items = groupedItems[group].items
+        <motion.ul key={`list_${itemType}`} className="space-y-3">
+          {Object.keys(groupedItems).map((groupKey, groupIdx) => {
+            const parentLabel = groupedItems[groupKey].parentLabel
+            const items = groupedItems[groupKey].items
+
+            if (groupIdx - 1 >= 0) {
+              const prevKey = Object.keys(groupedItems)[groupIdx - 1]
+              totalIndex += groupedItems[prevKey].items.length
+            }
 
             return (
-              <motion.li key={`group_${group}`}>
+              <motion.li key={`group_${groupKey}`}>
                 {parentLabel && (
-                  <motion.div layout className="mb-2 text-gray-500">
+                  <motion.div
+                    layout
+                    className="mb-2 text-gray-500"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1 }}
+                  >
                     {parentLabel}
                   </motion.div>
                 )}
                 {items?.length && (
                   <motion.ul className="space-y-3">
-                    {items.map(item => (
+                    {items.map((item, itemIdx) => (
                       <Item<T>
-                        key={`${group}_${itemType}_${item.id}`}
+                        idx={totalIndex + itemIdx}
+                        key={`${groupKey}_${itemType}_${item.id}`}
                         item={item}
                         itemType={itemType}
                       />

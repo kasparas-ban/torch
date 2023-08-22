@@ -1,20 +1,58 @@
-import React, { useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
-import ItemSublist from "./ItemSublist"
+import React, { useEffect, useState } from "react"
+import { AnimatePresence, motion, stagger, useAnimate } from "framer-motion"
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
-import useEditItem from "../useEditItem"
-import ItemEditPanel from "./ItemEditPanel"
 import { GeneralItem, ItemType, Task } from "../../../types"
+import ItemEditPanel from "./ItemEditPanel"
+import useListStore from "../useListStore"
+import useEditItem from "../useEditItem"
+import ItemSublist from "./ItemSublist"
 
 export default function Item<T extends GeneralItem>({
+  idx,
   item,
   itemType,
 }: {
+  idx: number
   item: T
   itemType: ItemType
 }) {
+  const { isItemCollapsed, saveCollapseState } = useListStore()
   const { editItem, setEditItem } = useEditItem()
-  const [showSublist, setShowSublist] = useState(true)
+  const [showSublist, setShowSublist] = useState(!isItemCollapsed(item))
+
+  const [item_scope, animate] = useAnimate()
+
+  useEffect(() => {
+    if (!item_scope.current) return
+    animate(
+      item_scope.current,
+      {
+        y: [-40, 0],
+        opacity: [0, 1],
+      },
+      {
+        duration: 1,
+        type: "spring",
+        bounce: 0.4,
+        delay: 0.05 * idx,
+      },
+    )
+    showSublist &&
+      containsSublist &&
+      animate(
+        "li",
+        {
+          y: [-40, 0],
+          opacity: [0, 1],
+        },
+        {
+          duration: 1,
+          type: "spring",
+          bounce: 0.4,
+          delay: stagger(0.025),
+        },
+      )
+  }, [])
 
   const itemSublist =
     item.type === "GOAL"
@@ -24,7 +62,11 @@ export default function Item<T extends GeneralItem>({
       : undefined
   const containsSublist = !!itemSublist?.length
 
-  const toggleSublist = () => setShowSublist(prev => !prev)
+  const toggleSublist = () => {
+    const newState = !showSublist
+    setShowSublist(newState)
+    saveCollapseState({ itemId: item.id, itemType: item.type }, !newState)
+  }
 
   const showEditPanel = editItem?.type === item.type && editItem?.id === item.id
 
@@ -36,7 +78,11 @@ export default function Item<T extends GeneralItem>({
   const recurringInfo = itemType === "TASK" && (item as Task).recurring
 
   return (
-    <motion.li layout>
+    <motion.li
+      layout
+      ref={item_scope}
+      id={`li_${item.id}${showSublist ? "" : "_COLLAPSED"}`}
+    >
       {recurringInfo ? (
         <RecurringItemStrip
           item={item as Task}

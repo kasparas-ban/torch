@@ -32,8 +32,12 @@ An app that helps you track the time you spend pursuing your goals.
 - [x] Add fadeout gradient for lists
 - [ ] Rewrite forms with React Form Hook
 - [ ] Try adding Million.js for smoother animations
-- [ ] Limit animations in modal transitions to modal content instead of the whole modal
+- [x] Limit animations in modal transitions to modal content instead of the whole modal
 - [ ] Adjust all sizes to make sure they look good on mobile
 - [ ] Add a loading skeleton for lists
 - [x] Make navbar sticky
 - [x] Remake navbar to stick to the bottom of the screen on mobile
+- [x] Save collapsed list items in local storage
+- [ ] Have the ability to reorder list items by dragging them
+- [ ] Make timer toast text to slide infinitely (like Spotify)
+- [ ] Add dark mode

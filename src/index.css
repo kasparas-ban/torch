@@ -77,8 +77,8 @@
 
 html {
   -webkit-tap-highlight-color: transparent;
-  scrollbar-gutter: stable;
-  overflow-x: hidden;
+  /* scrollbar-gutter: stable;
+  overflow-x: hidden; */
 }
 
 .bg-multi-color {
