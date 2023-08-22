@@ -59,14 +59,14 @@ function Timer() {
             exit={{ opacity: 0, height: 0, transition: { duration: 0.01 } }}
           >
             <GeneralModal>
-              <motion.button
+              <motion.div
                 className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
                 whileHover={{ scale: 1.06 }}
                 onClick={openTimerSettingsModal}
               >
                 <SettingsIcon className="mr-1 h-4 w-4" />
                 Settings
-              </motion.button>
+              </motion.div>
             </GeneralModal>
           </motion.div>
         )}

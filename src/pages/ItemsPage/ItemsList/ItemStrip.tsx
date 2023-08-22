@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom"
-import { AnimatePresence, motion } from "framer-motion"
-import { useMediaQuery } from "react-responsive"
 import clsx from "clsx"
+import { useNavigate } from "react-router-dom"
+import { useMediaQuery } from "react-responsive"
+import { AnimatePresence, motion } from "framer-motion"
 import { GeneralItem, Goal, ItemType, Task } from "@/types"
 import useTimerForm from "@/components/Timer/useTimerForm"
 import { ROUTES } from "@/routes"
@@ -72,7 +72,7 @@ function ItemStrip<T extends GeneralItem>({
           progress={item.progress || 0}
           showEditPanel={showEditPanel}
         />
-        <motion.div className="z-10 select-none py-3 truncate">
+        <motion.div className="z-10 select-none py-3 truncate text-gray-800">
           {item.title}
         </motion.div>
         <div

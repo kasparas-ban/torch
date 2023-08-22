@@ -41,3 +41,5 @@ An app that helps you track the time you spend pursuing your goals.
 - [ ] Have the ability to reorder list items by dragging them
 - [ ] Make timer toast text to slide infinitely (like Spotify)
 - [ ] Add dark mode
+- [ ] Make a Not Found page
+- [ ] Make an error page

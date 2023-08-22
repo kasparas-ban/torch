@@ -1,5 +1,4 @@
-import { useEffect } from "react"
-import { motion, stagger, useAnimate } from "framer-motion"
+import { motion } from "framer-motion"
 import Item from "./Item"
 import useModal from "../../../components/Modals/useModal"
 import { GeneralItem, GroupedItems, ItemType } from "../../../types"
@@ -41,7 +40,7 @@ export default function ItemsList<T extends GeneralItem>({
                 {parentLabel && (
                   <motion.div
                     layout
-                    className="mb-2 text-gray-500"
+                    className="mb-2 text-gray-500 font-medium"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1 }}

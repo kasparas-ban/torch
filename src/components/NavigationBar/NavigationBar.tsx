@@ -5,6 +5,7 @@ import clsx from "clsx"
 import { useMediaQuery } from "react-responsive"
 import { AnimatePresence, motion } from "framer-motion"
 import { NavigationBarWrapper, useScrollPosition } from "./helpers"
+import { ROUTES } from "@/routes"
 import TimerToast from "../TimerToast/TimerToast"
 import { ReactComponent as CalendarIcon } from "../../assets/navigation_icons/calendar.svg"
 import { ReactComponent as TasksIcon } from "../../assets/navigation_icons/goals.svg"
@@ -50,20 +51,35 @@ function NavbarMobile() {
 function NavbarContentMobile() {
   return (
     <ul className="flex h-13 space-x-1 overflow-visible rounded-[16px] w-full justify-between px-3">
-      <NavigationLink path="items" Icon={TasksIcon} linkName={"Tasks"} mobile />
-      <NavigationLink path="stats" Icon={StatsIcon} linkName={"Stats"} mobile />
       <NavigationLink
-        path=""
+        path={ROUTES.items.path}
+        Icon={TasksIcon}
+        linkName={ROUTES.items.label}
+        mobile
+      />
+      <NavigationLink
+        path={ROUTES.stats.path}
+        Icon={StatsIcon}
+        linkName={ROUTES.stats.label}
+        mobile
+      />
+      <NavigationLink
+        path={ROUTES.index.path}
         Icon={TimerIcon}
-        linkName="Timer"
+        linkName={ROUTES.index.label}
         highlight
         mobile
       />
-      <NavigationLink path="world" Icon={WorldIcon} linkName={"World"} mobile />
       <NavigationLink
-        path="account"
+        path={ROUTES.world.path}
+        Icon={WorldIcon}
+        linkName={ROUTES.world.label}
+        mobile
+      />
+      <NavigationLink
+        path={ROUTES.account.path}
         Icon={UserIcon}
-        linkName={"Account"}
+        linkName={ROUTES.account.label}
         mobile
       />
     </ul>
@@ -84,20 +100,32 @@ function NavbarContentDesktop() {
         <NavigationBarWrapper>
           <TorchLink />
           <ul className="flex h-12 space-x-1 overflow-visible rounded-[16px] px-4">
-            <NavigationLink path="items" Icon={TasksIcon} linkName={"Tasks"} />
             <NavigationLink
-              path="calendar"
-              Icon={CalendarIcon}
-              linkName="Calendar"
+              path={ROUTES.items.path}
+              Icon={TasksIcon}
+              linkName={ROUTES.items.label}
             />
             <NavigationLink
-              path=""
+              path={ROUTES.calendar.path}
+              Icon={CalendarIcon}
+              linkName={ROUTES.items.label}
+            />
+            <NavigationLink
+              path={ROUTES.index.path}
               Icon={TimerIcon}
-              linkName="Timer"
+              linkName={ROUTES.index.label}
               highlight
             />
-            <NavigationLink path="world" Icon={WorldIcon} linkName={"World"} />
-            <NavigationLink path="stats" Icon={StatsIcon} linkName={"Stats"} />
+            <NavigationLink
+              path={ROUTES.world.path}
+              Icon={WorldIcon}
+              linkName={ROUTES.world.label}
+            />
+            <NavigationLink
+              path={ROUTES.stats.path}
+              Icon={StatsIcon}
+              linkName={ROUTES.stats.label}
+            />
           </ul>
           <div
             id="accountDropdownButton"
@@ -248,13 +276,15 @@ function AccountDropdown({
       ref={dropdownRef}
       className="z-10 w-44 divide-y divide-gray-100 overflow-hidden rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700"
     >
-      <div className="rounded-t-lg px-4 py-3 text-sm text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white">
-        <div>Bonnie Green</div>
-        <div className="truncate font-medium">name@email.com</div>
-        <div className="mx-2 mt-2 truncate rounded-lg bg-gray-300 py-1 text-center text-xs font-medium text-gray-700">
-          Free account
+      <Link to={ROUTES.account.path}>
+        <div className="rounded-t-lg px-4 py-3 text-sm text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white">
+          <div>Bonnie Green</div>
+          <div className="truncate font-medium">name@email.com</div>
+          <div className="mx-2 mt-2 truncate rounded-lg bg-gray-300 py-1 text-center text-xs font-medium text-gray-700">
+            Free account
+          </div>
         </div>
-      </div>
+      </Link>
       <ul
         className="text-sm text-gray-700 dark:text-gray-200"
         aria-labelledby="accountDropdownButton"

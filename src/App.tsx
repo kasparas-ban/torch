@@ -11,14 +11,16 @@ import { HelmetProvider } from "react-helmet-async"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import useConfirmModal from "./components/Modals/ConfirmModal/useConfirmModal"
 import NavigationBar from "./components/NavigationBar/NavigationBar"
+import TimerToast from "./components/TimerToast/TimerToast"
 import useModal from "./components/Modals/useModal"
 import TimerPage from "./pages/TimerPage"
 import ItemsPage from "./pages/ItemsPage/ItemsPage"
 import TitleWrapper from "./pages/TitleWrapper"
 import CalendarPage from "./pages/CalendarPage"
-import WorldPage from "./pages/WorldPage"
 import StatisticsPage from "./pages/StatisticsPage"
-import TimerToast from "./components/TimerToast/TimerToast"
+import WorldPage from "./pages/WorldPage"
+import AccountPage from "./pages/AccountPage"
+import { ROUTES } from "./routes"
 
 const queryClient = new QueryClient()
 
@@ -63,20 +65,24 @@ const routes: RouteObject[] = [
         element: <TimerPage />,
       },
       {
-        path: "items",
+        path: ROUTES.items.path,
         element: <ItemsPage />,
       },
       {
-        path: "calendar",
+        path: ROUTES.calendar.path,
         element: <CalendarPage />,
       },
       {
-        path: "world",
+        path: ROUTES.world.path,
         element: <WorldPage />,
       },
       {
-        path: "stats",
+        path: ROUTES.stats.path,
         element: <StatisticsPage />,
+      },
+      {
+        path: ROUTES.account.path,
+        element: <AccountPage />,
       },
     ],
   },
