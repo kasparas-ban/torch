@@ -4,11 +4,11 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
-import useModal from "../useModal"
-import { Goal, RecurringType, Task } from "../../../types"
 import PriorityInput from "../../Inputs/PriorityInput"
-import RecurringInput from "../../Inputs/RecurringInput"
 import { TimeField } from "../../Inputs/DurationInput"
+import RecurringInput from "../../Inputs/RecurringInput"
+import { Task } from "../../../types"
+import useModal from "../useModal"
 import {
   Form,
   FormControl,
@@ -34,8 +34,9 @@ const taskFormSchema = z.object({
     hours: z.number().nullable(),
     minutes: z.number().nullable(),
   }),
-  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
+  goal: z.any().optional(), // TODO: Need to fix this
   targetDate: z.date().nullable().optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
   recurring: z
     .object({
       times: z.number(),
@@ -43,19 +44,11 @@ const taskFormSchema = z.object({
       progress: z.number().optional(),
     })
     .optional(),
-  goal: z.any().optional(), // TODO: Need to fix this
-  inputOrder: z.array(z.string()),
 })
 
-interface TaskForm {
-  title: string
-  duration: { hours: number | null; minutes: number | null }
-  priority?: "LOW" | "MEDIUM" | "HIGH"
-  targetDate?: Date | null
-  recurring?: RecurringType
-  goal?: Goal | null
-  inputOrder: string[]
-}
+type TaskForm = Omit<Task, "id" | "type">
+
+type InputType = keyof z.infer<typeof taskFormSchema>
 
 const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.35 } },
@@ -67,50 +60,32 @@ const formVariants = {
   },
 }
 
-const getInitialTaskForm = (initialTask: Task): TaskForm => {
-  const inputOrder = initialTask
-    ? Object.keys(initialTask).filter(
-        key =>
-          initialTask?.[key as keyof Task] !== undefined &&
-          key !== "taskId" &&
-          key !== "progress",
-      )
-    : []
-
-  const initialTaskForm = {
-    title: initialTask?.title || "",
-    duration: initialTask?.duration || { hours: 0, minutes: 30 },
-    priority: initialTask?.priority,
-    targetDate: initialTask?.targetDate,
-    recurring: initialTask?.recurring,
-    goal: initialTask?.goal,
-    inputOrder: inputOrder,
-  }
-
-  return initialTaskForm
-}
+const getInitialTaskForm = (initialTask: Task): TaskForm => ({
+  title: initialTask?.title || "",
+  duration: initialTask?.duration || { hours: 0, minutes: 30 },
+  priority: initialTask?.priority,
+  targetDate: initialTask?.targetDate,
+  recurring: initialTask?.recurring,
+  goal: initialTask?.goal,
+})
 
 function TaskForm() {
   const { editItem } = useModal()
   const defaultTask = getInitialTaskForm(editItem as Task)
 
-  const form = useForm<any>({
+  const defaultInputOrder = Object.keys(defaultTask).filter(
+    key => !!defaultTask[key as InputType],
+  ) as InputType[]
+  const [inputOrder, setInputOrder] = useState(defaultInputOrder)
+
+  const form = useForm<z.infer<typeof taskFormSchema>>({
     resolver: zodResolver(taskFormSchema),
     defaultValues: defaultTask,
   })
 
-  const [task, setTask] = useState<TaskForm>(defaultTask)
-
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: z.infer<typeof taskFormSchema>) => {
     console.log("onSubmit", data)
   }
-
-  const formData = form.watch()
-  console.log({ formData })
-
-  // useEffect(() => {
-  //   setTask(defaultTask)
-  // }, [editItem])
 
   return (
     <div className="px-0 pb-2 sm:px-10">
@@ -165,7 +140,7 @@ function TaskForm() {
                 />
               </motion.div>
 
-              {task.inputOrder.map(input => {
+              {inputOrder.map(input => {
                 if (input === "goal") {
                   const groupedGoals = groupItemsByParent(goalsData, "GOAL")
                   const goalOptions = Object.keys(groupedGoals).map(
@@ -179,119 +154,112 @@ function TaskForm() {
                   )
 
                   return (
-                    task.goal !== undefined && (
-                      <motion.div
-                        layout
-                        key="task_goal"
-                        className="relative"
-                        variants={formVariants}
-                        initial="addInitial"
-                        animate="default"
-                        exit="remove"
-                      >
-                        <FormField
-                          control={form.control}
-                          name="goal"
-                          render={({ field }) => {
-                            return (
-                              <FormItem>
-                                <FormLabel className="pl-3 tracking-wide">
-                                  Goal
-                                </FormLabel>
-                                <FormControl>
-                                  <SelectField
-                                    name="goal"
-                                    value={field.value || null}
-                                    onChange={field.onChange}
-                                    options={goalOptions}
-                                    isClearable
-                                    menuPosition="fixed"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )
-                          }}
-                        />
-                      </motion.div>
-                    )
+                    <motion.div
+                      layout
+                      key="task_goal"
+                      className="relative"
+                      variants={formVariants}
+                      initial="addInitial"
+                      animate="default"
+                      exit="remove"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="goal"
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel className="pl-3 tracking-wide">
+                                Goal
+                              </FormLabel>
+                              <FormControl>
+                                <SelectField
+                                  name="goal"
+                                  value={field.value || null}
+                                  onChange={field.onChange}
+                                  options={goalOptions}
+                                  isClearable
+                                  menuPosition="fixed"
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )
+                        }}
+                      />
+                    </motion.div>
                   )
                 }
 
                 if (input === "priority")
                   return (
-                    task.priority && (
-                      <motion.div
-                        layout
-                        key="task_priority"
-                        className="relative"
-                        variants={formVariants}
-                        initial="addInitial"
-                        animate="default"
-                        exit="remove"
-                      >
-                        <FormField
-                          control={form.control}
-                          name="priority"
-                          render={({ field }) => {
-                            return (
-                              <FormItem>
-                                <FormLabel className="pl-3 tracking-wide">
-                                  Goal
-                                </FormLabel>
-                                <FormControl>
-                                  <PriorityInput
-                                    id="task_priority"
-                                    value={field.value || "MEDIUM"}
-                                    setValue={field.onChange}
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )
-                          }}
-                        />
-                      </motion.div>
-                    )
+                    <motion.div
+                      layout
+                      key="task_priority"
+                      className="relative"
+                      variants={formVariants}
+                      initial="addInitial"
+                      animate="default"
+                      exit="remove"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="priority"
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel className="pl-3 tracking-wide">
+                                Goal
+                              </FormLabel>
+                              <FormControl>
+                                <PriorityInput
+                                  id="task_priority"
+                                  value={field.value || "MEDIUM"}
+                                  setValue={field.onChange}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )
+                        }}
+                      />
+                    </motion.div>
                   )
 
                 if (input === "recurring")
                   return (
-                    task.recurring && (
-                      <motion.div
-                        layout
-                        key="task_recurring"
-                        className="relative"
-                        variants={formVariants}
-                        initial="addInitial"
-                        animate="default"
-                        exit="remove"
-                      >
-                        <FormField
-                          control={form.control}
-                          name="recurring"
-                          render={({ field }) => {
-                            return (
-                              <FormItem>
-                                <FormLabel className="pl-3 tracking-wide">
-                                  Recurring
-                                </FormLabel>
-                                <FormControl>
-                                  <RecurringInput
-                                    value={
-                                      field.value || { times: 1, period: "DAY" }
-                                    }
-                                    setValue={field.onChange}
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )
-                          }}
-                        />
-                      </motion.div>
-                    )
+                    <motion.div
+                      layout
+                      key="task_recurring"
+                      className="relative"
+                      variants={formVariants}
+                      initial="addInitial"
+                      animate="default"
+                      exit="remove"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="recurring"
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel className="pl-3 tracking-wide">
+                                Recurring
+                              </FormLabel>
+                              <FormControl>
+                                <RecurringInput
+                                  value={
+                                    field.value || { times: 1, period: "DAY" }
+                                  }
+                                  setValue={field.onChange}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )
+                        }}
+                      />
+                    </motion.div>
                   )
                 return (
-                  input === "targetDate" &&
-                  task.targetDate !== undefined && (
+                  input === "targetDate" && (
                     <motion.div
                       layout
                       key="task_target_date"
@@ -346,7 +314,10 @@ function TaskForm() {
             </AnimatePresence>
           </div>
 
-          <AddTaskSections task={task} setTask={setTask} />
+          <AddTaskSections
+            inputOrder={inputOrder}
+            setInputOrder={setInputOrder}
+          />
 
           <div className="relative flex justify-center">
             <motion.button
@@ -364,78 +335,34 @@ function TaskForm() {
 }
 
 function AddTaskSections({
-  task,
-  setTask,
+  inputOrder,
+  setInputOrder,
 }: {
-  task: TaskForm
-  setTask: React.Dispatch<React.SetStateAction<TaskForm>>
+  inputOrder: InputType[]
+  setInputOrder: React.Dispatch<React.SetStateAction<InputType[]>>
 }) {
-  const addTargetDate = () =>
-    setTask(prev => ({
-      ...prev,
-      targetDate: null,
-      inputOrder: [...prev.inputOrder, "targetDate"],
-    }))
-  const removeTargetDate = () =>
-    setTask(prev => ({
-      ...prev,
-      targetDate: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "targetDate"),
-    }))
+  const addInput = (input: InputType) => setInputOrder(prev => [...prev, input])
+  const removeInput = (input: InputType) =>
+    setInputOrder(prev => prev.filter(inp => inp !== input))
 
-  const addPriority = () =>
-    setTask(prev => ({
-      ...prev,
-      priority: "MEDIUM",
-      inputOrder: [...prev.inputOrder, "priority"],
-    }))
-  const removePriority = () =>
-    setTask(prev => ({
-      ...prev,
-      priority: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "priority"),
-    }))
-
-  const addGoal = () =>
-    setTask(prev => ({
-      ...prev,
-      goal: null,
-      inputOrder: [...prev.inputOrder, "goal"],
-    }))
-  const removeGoal = () =>
-    setTask(prev => ({
-      ...prev,
-      goal: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "goal"),
-    }))
-
-  const addRecurring = () =>
-    setTask(prev => ({
-      ...prev,
-      recurring: { times: 1, period: "DAY" },
-      inputOrder: [...prev.inputOrder, "recurring"],
-    }))
-  const removeRecurring = () =>
-    setTask(prev => ({
-      ...prev,
-      recurring: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "recurring"),
-    }))
+  const getInput = (input: InputType) => inputOrder.find(inp => inp === input)
 
   return (
     <motion.div layout className="my-4 flex flex-wrap justify-center gap-2">
       <button
         className={`flex rounded-xl ${
-          task.recurring ? "bg-[#d0d0d0]" : "bg-gray-200"
+          getInput("recurring") ? "bg-[#d0d0d0]" : "bg-gray-200"
         } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
-          task.recurring ? removeRecurring() : addRecurring()
+          getInput("recurring")
+            ? removeInput("recurring")
+            : addInput("recurring")
         }}
       >
         Recurring
         <div className="relative top-1 ml-0.5">
-          {task.recurring ? (
+          {getInput("recurring") ? (
             <MinusSmallIcon className="h-4 w-4" />
           ) : (
             <PlusSmallIcon className="h-4 w-4" />
@@ -444,34 +371,36 @@ function AddTaskSections({
       </button>
       <button
         className={`flex rounded-xl ${
-          task.priority ? "bg-[#d0d0d0]" : "bg-gray-200"
+          getInput("priority") ? "bg-[#d0d0d0]" : "bg-gray-200"
         } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
-          task.priority ? removePriority() : addPriority()
+          getInput("priority") ? removeInput("priority") : addInput("priority")
         }}
       >
         Priority
         <div className="relative top-1 ml-0.5">
-          {!task.priority ? (
-            <PlusSmallIcon className="h-4 w-4" />
-          ) : (
+          {getInput("priority") ? (
             <MinusSmallIcon className="h-4 w-4" />
+          ) : (
+            <PlusSmallIcon className="h-4 w-4" />
           )}
         </div>
       </button>
       <button
         className={`flex rounded-xl ${
-          task.targetDate !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
+          getInput("targetDate") !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
         } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
-          task.targetDate === undefined ? addTargetDate() : removeTargetDate()
+          getInput("targetDate") === undefined
+            ? addInput("targetDate")
+            : removeInput("targetDate")
         }}
       >
         Target date
         <div className="relative top-1 ml-0.5">
-          {task.targetDate === undefined ? (
+          {getInput("targetDate") === undefined ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
@@ -480,16 +409,18 @@ function AddTaskSections({
       </button>
       <button
         className={`flex rounded-xl ${
-          task.goal !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
+          getInput("goal") !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
         } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
         onClick={e => {
           e.preventDefault()
-          task.goal === undefined ? addGoal() : removeGoal()
+          getInput("goal") === undefined
+            ? addInput("goal")
+            : removeInput("goal")
         }}
       >
         Assign goal
         <div className="relative top-1 ml-0.5">
-          {task.goal === undefined ? (
+          {getInput("goal") === undefined ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
