@@ -208,7 +208,7 @@ function TaskForm() {
                           return (
                             <FormItem>
                               <FormLabel className="pl-3 tracking-wide">
-                                Goal
+                                Priority
                               </FormLabel>
                               <FormControl>
                                 <PriorityInput
@@ -350,9 +350,10 @@ function AddTaskSections({
   return (
     <motion.div layout className="my-4 flex flex-wrap justify-center gap-2">
       <button
-        className={`flex rounded-xl ${
-          getInput("recurring") ? "bg-[#d0d0d0]" : "bg-gray-200"
-        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
+        className={clsx(
+          "flex rounded-xl px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300",
+          getInput("recurring") ? "bg-[#d0d0d0]" : "bg-gray-200",
+        )}
         onClick={e => {
           e.preventDefault()
           getInput("recurring")
@@ -370,9 +371,10 @@ function AddTaskSections({
         </div>
       </button>
       <button
-        className={`flex rounded-xl ${
-          getInput("priority") ? "bg-[#d0d0d0]" : "bg-gray-200"
-        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
+        className={clsx(
+          "flex rounded-xl px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300",
+          getInput("priority") ? "bg-[#d0d0d0]" : "bg-gray-200",
+        )}
         onClick={e => {
           e.preventDefault()
           getInput("priority") ? removeInput("priority") : addInput("priority")
@@ -388,9 +390,10 @@ function AddTaskSections({
         </div>
       </button>
       <button
-        className={`flex rounded-xl ${
-          getInput("targetDate") !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
-        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
+        className={clsx(
+          "flex rounded-xl px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300",
+          getInput("targetDate") ? "bg-[#d0d0d0]" : "bg-gray-200",
+        )}
         onClick={e => {
           e.preventDefault()
           getInput("targetDate") === undefined
@@ -400,7 +403,7 @@ function AddTaskSections({
       >
         Target date
         <div className="relative top-1 ml-0.5">
-          {getInput("targetDate") === undefined ? (
+          {getInput("targetDate") ? (
             <PlusSmallIcon className="h-4 w-4" />
           ) : (
             <MinusSmallIcon className="h-4 w-4" />
@@ -408,9 +411,10 @@ function AddTaskSections({
         </div>
       </button>
       <button
-        className={`flex rounded-xl ${
-          getInput("goal") !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
-        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
+        className={clsx(
+          "flex rounded-xl px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300",
+          getInput("goal") ? "bg-[#d0d0d0]" : "bg-gray-200",
+        )}
         onClick={e => {
           e.preventDefault()
           getInput("goal") === undefined

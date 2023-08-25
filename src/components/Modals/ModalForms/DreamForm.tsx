@@ -1,11 +1,36 @@
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { AnimatePresence, motion } from "framer-motion"
+import clsx from "clsx"
+import { z } from "zod"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Dream } from "@/types"
+import useModal from "../useModal"
+import { Input } from "@/components/ui/input"
+import PriorityInput from "../../Inputs/PriorityInput"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
-import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
-import TextInput from "../../Inputs/TextInput"
-import DateInputLegacy from "../../Inputs/DateInput"
-import "../inputStyles.css"
+
+const dreamFormSchema = z.object({
+  title: z
+    .string()
+    .min(2, { message: "Title must be longer than 2 characters." })
+    .max(50, { message: "Title must be shorter than 50 characters." }),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
+  targetDate: z.date().nullable().optional(),
+})
+
+type DreamForm = Omit<Dream, "id" | "type" | "progress">
+
+type InputType = keyof z.infer<typeof dreamFormSchema>
 
 interface IDream {
   title: string
@@ -24,34 +49,61 @@ const formVariants = {
   },
 }
 
+const getInitialDreamForm = (initialDream: Dream): DreamForm => ({
+  title: initialDream?.title || "",
+  priority: initialDream?.priority,
+  targetDate: initialDream?.targetDate,
+})
+
 function DreamForm() {
-  const defaultDream = {
-    title: "",
-    inputOrder: [],
+  const { editItem } = useModal()
+  const defaultDream = getInitialDreamForm(editItem as Dream)
+
+  const defaultInputOrder = Object.keys(defaultDream).filter(
+    key => !!defaultDream[key as InputType],
+  ) as InputType[]
+  const [inputOrder, setInputOrder] = useState(defaultInputOrder)
+
+  const form = useForm<z.infer<typeof dreamFormSchema>>({
+    resolver: zodResolver(dreamFormSchema),
+    defaultValues: defaultDream,
+  })
+
+  const onSubmit = (data: z.infer<typeof dreamFormSchema>) => {
+    console.log("onSubmit", data)
   }
-  const [dream, setDream] = useState<IDream>(defaultDream)
 
   return (
     <div className="px-0 pb-2 sm:px-10">
-      <form>
-        <div className="flex flex-col gap-1">
-          <AnimatePresence initial={false} mode="popLayout">
-            <motion.div layout className="relative">
-              <TextInput
-                id="dream_title"
-                value={dream.title}
-                setValue={(input: string) =>
-                  setDream(prev => ({ ...prev, title: input }))
-                }
-                inputName="dream_title"
-                label="Dream title"
-              />
-            </motion.div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex flex-col gap-1">
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.div layout className="relative">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="pl-3 tracking-wide">
+                        Dream title
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Aa..."
+                          className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="pl-3" />
+                    </FormItem>
+                  )}
+                />
+              </motion.div>
 
-            {dream.inputOrder.map(input => {
-              if (input === "priority")
-                return (
-                  dream.priority && (
+              {inputOrder.map(input => {
+                if (input === "priority")
+                  return (
                     <motion.div
                       layout
                       key="dream_priority"
@@ -61,18 +113,29 @@ function DreamForm() {
                       animate="default"
                       exit="remove"
                     >
-                      <PriorityInput
-                        id="dream_priority"
-                        value={dream.priority}
-                        setValue={(input: PriorityType) =>
-                          setDream(prev => ({ ...prev, priority: input }))
-                        }
+                      <FormField
+                        control={form.control}
+                        name="priority"
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel className="pl-3 tracking-wide">
+                                Priority
+                              </FormLabel>
+                              <FormControl>
+                                <PriorityInput
+                                  id="dream_priority"
+                                  value={field.value || "MEDIUM"}
+                                  setValue={field.onChange}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )
+                        }}
                       />
                     </motion.div>
                   )
-                )
-              return (
-                dream.targetDate !== undefined && (
+                return (
                   <motion.div
                     layout
                     key="dream_target_date"
@@ -82,102 +145,122 @@ function DreamForm() {
                     animate="default"
                     exit="remove"
                   >
-                    <DateInputLegacy
-                      value={dream.targetDate}
-                      setValue={(input: string) =>
-                        setDream(prev => ({
-                          ...prev,
-                          targetDate: new Date(input),
-                        }))
-                      }
+                    <FormField
+                      control={form.control}
+                      name="targetDate"
+                      render={({ field }) => {
+                        return (
+                          <FormItem>
+                            <FormLabel className="pl-3 tracking-wide">
+                              Target date
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className={clsx(
+                                  "bg-gray-200 focus:bg-white placeholder:text-red-200",
+                                  field.value
+                                    ? "text-gray-800"
+                                    : "text-gray-400",
+                                )}
+                                type="date"
+                                min={new Date().toLocaleDateString("en-CA")}
+                                onFocus={e => e.target.showPicker()}
+                                onClick={e =>
+                                  (e.target as HTMLInputElement).showPicker()
+                                }
+                                value={
+                                  field.value
+                                    ? field.value?.toLocaleDateString("en-CA")
+                                    : ""
+                                }
+                                onChange={e =>
+                                  field.onChange(new Date(e.target.value))
+                                }
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )
+                      }}
                     />
                   </motion.div>
                 )
-              )
-            })}
-          </AnimatePresence>
-        </div>
+              })}
+            </AnimatePresence>
+          </div>
 
-        <AddDreamSections dream={dream} setDream={setDream} />
+          <AddDreamSections
+            inputOrder={inputOrder}
+            setInputOrder={setInputOrder}
+          />
 
-        <div className="relative flex justify-center">
-          <motion.button
-            layout
-            className="px-3 py-1 text-xl font-medium"
-            whileTap={{ scale: 0.95 }}
-          >
-            Save
-          </motion.button>
-        </div>
-      </form>
+          <div className="relative flex justify-center">
+            <motion.button
+              layout
+              className="px-3 py-1 text-xl font-medium"
+              whileTap={{ scale: 0.95 }}
+            >
+              Save
+            </motion.button>
+          </div>
+        </form>
+      </Form>
     </div>
   )
 }
 
 function AddDreamSections({
-  dream,
-  setDream,
+  inputOrder,
+  setInputOrder,
 }: {
-  dream: IDream
-  setDream: React.Dispatch<React.SetStateAction<IDream>>
+  inputOrder: InputType[]
+  setInputOrder: React.Dispatch<React.SetStateAction<InputType[]>>
 }) {
-  const addTargetDate = () =>
-    setDream(prev => ({
-      ...prev,
-      targetDate: null,
-      inputOrder: [...prev.inputOrder, "targetDate"],
-    }))
-  const removeTargetDate = () =>
-    setDream(prev => ({
-      ...prev,
-      targetDate: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "targetDate"),
-    }))
+  const addInput = (input: InputType) => setInputOrder(prev => [...prev, input])
+  const removeInput = (input: InputType) =>
+    setInputOrder(prev => prev.filter(inp => inp !== input))
 
-  const addPriority = () =>
-    setDream(prev => ({
-      ...prev,
-      priority: "MEDIUM",
-      inputOrder: [...prev.inputOrder, "priority"],
-    }))
-  const removePriority = () =>
-    setDream(prev => ({
-      ...prev,
-      priority: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "priority"),
-    }))
+  const getInput = (input: InputType) => inputOrder.find(inp => inp === input)
 
   return (
     <motion.div layout className="my-4 flex flex-wrap justify-center gap-2">
       <button
-        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        className={clsx(
+          "flex rounded-xl px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300",
+          getInput("priority") ? "bg-[#d0d0d0]" : "bg-gray-200",
+        )}
         onClick={e => {
           e.preventDefault()
-          dream.priority ? removePriority() : addPriority()
+          getInput("priority") ? removeInput("priority") : addInput("priority")
         }}
       >
         Priority
         <div className="relative top-1 ml-0.5">
-          {!dream.priority ? (
-            <PlusSmallIcon className="h-4 w-4" />
-          ) : (
+          {getInput("priority") ? (
             <MinusSmallIcon className="h-4 w-4" />
+          ) : (
+            <PlusSmallIcon className="h-4 w-4" />
           )}
         </div>
       </button>
       <button
-        className="flex rounded-xl bg-gray-200 px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300"
+        className={clsx(
+          "flex rounded-xl px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300",
+          getInput("targetDate") ? "bg-[#d0d0d0]" : "bg-gray-200",
+        )}
         onClick={e => {
           e.preventDefault()
-          dream.targetDate === undefined ? addTargetDate() : removeTargetDate()
+          getInput("targetDate")
+            ? removeInput("targetDate")
+            : addInput("targetDate")
         }}
       >
         Target date
         <div className="relative top-1 ml-0.5">
-          {dream.targetDate === undefined ? (
-            <PlusSmallIcon className="h-4 w-4" />
-          ) : (
+          {getInput("targetDate") ? (
             <MinusSmallIcon className="h-4 w-4" />
+          ) : (
+            <PlusSmallIcon className="h-4 w-4" />
           )}
         </div>
       </button>

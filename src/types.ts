@@ -37,6 +37,7 @@ export type Dream = {
   type: "DREAM"
   goals?: Goal[]
   targetDate?: Date | null
+  priority?: "LOW" | "MEDIUM" | "HIGH"
 }
 
 export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
