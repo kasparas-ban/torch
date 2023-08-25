@@ -1,18 +1,53 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import clsx from "clsx"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
+import { zodResolver } from "@hookform/resolvers/zod"
 import useModal from "../useModal"
 import { Goal, RecurringType, Task } from "../../../types"
+import PriorityInput from "../../Inputs/PriorityInput"
+import RecurringInput from "../../Inputs/RecurringInput"
+import { TimeField } from "../../Inputs/DurationInput"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { goalsData } from "@/data/data"
+import { Input } from "@/components/ui/input"
+import { groupItemsByParent } from "@/API/helpers"
+import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
-import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
-import RecurringInput from "../../Inputs/RecurringInput"
-import DurationInput from "../../Inputs/DurationInput"
-import SelectInput from "../../Inputs/SelectInput"
-import DateInput from "../../Inputs/DateInput"
-import TextInput from "../../Inputs/TextInput"
 import "../inputStyles.css"
 
-interface ITask {
+const taskFormSchema = z.object({
+  title: z
+    .string()
+    .min(2, { message: "Title must be longer than 2 characters." })
+    .max(50, { message: "Title must be shorter than 50 characters." }),
+  duration: z.object({
+    hours: z.number().nullable(),
+    minutes: z.number().nullable(),
+  }),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
+  targetDate: z.date().nullable().optional(),
+  recurring: z
+    .object({
+      times: z.number(),
+      period: z.enum(["DAY", "WEEK", "MONTH"]),
+      progress: z.number().optional(),
+    })
+    .optional(),
+  goal: z.any().optional(), // TODO: Need to fix this
+  inputOrder: z.array(z.string()),
+})
+
+interface TaskForm {
   title: string
   duration: { hours: number | null; minutes: number | null }
   priority?: "LOW" | "MEDIUM" | "HIGH"
@@ -32,10 +67,7 @@ const formVariants = {
   },
 }
 
-function TaskForm() {
-  const { editItem } = useModal()
-  const initialTask = editItem as Task
-
+const getInitialTaskForm = (initialTask: Task): TaskForm => {
   const inputOrder = initialTask
     ? Object.keys(initialTask).filter(
         key =>
@@ -45,7 +77,7 @@ function TaskForm() {
       )
     : []
 
-  const defaultTask = {
+  const initialTaskForm = {
     title: initialTask?.title || "",
     duration: initialTask?.duration || { hours: 0, minutes: 30 },
     priority: initialTask?.priority,
@@ -55,165 +87,278 @@ function TaskForm() {
     inputOrder: inputOrder,
   }
 
-  const [task, setTask] = useState<ITask>(defaultTask)
+  return initialTaskForm
+}
 
-  useEffect(() => {
-    setTask(defaultTask)
-  }, [initialTask])
+function TaskForm() {
+  const { editItem } = useModal()
+  const defaultTask = getInitialTaskForm(editItem as Task)
+
+  const form = useForm<any>({
+    resolver: zodResolver(taskFormSchema),
+    defaultValues: defaultTask,
+  })
+
+  const [task, setTask] = useState<TaskForm>(defaultTask)
+
+  const onSubmit = (data: any) => {
+    console.log("onSubmit", data)
+  }
+
+  const formData = form.watch()
+  console.log({ formData })
+
+  // useEffect(() => {
+  //   setTask(defaultTask)
+  // }, [editItem])
 
   return (
     <div className="px-0 pb-2 sm:px-10">
-      <form>
-        <div className="flex flex-col gap-1">
-          <AnimatePresence initial={false} mode="popLayout">
-            <motion.div layout key="task_title" className="relative">
-              <TextInput
-                id="task_title"
-                value={task.title}
-                setValue={(input: string) =>
-                  setTask(prev => ({ ...prev, title: input }))
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex flex-col gap-1">
+            <AnimatePresence initial={false} mode="popLayout">
+              {/* Title */}
+              <motion.div layout key="task_title" className="relative">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="pl-3 tracking-wide">
+                        Task title
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Aa..."
+                          className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="pl-3" />
+                    </FormItem>
+                  )}
+                />
+              </motion.div>
+
+              {/* Duration */}
+              <motion.div layout key="task_duration" className="relative">
+                <FormField
+                  control={form.control}
+                  name="duration"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="pl-3 tracking-wide">
+                        Duration
+                      </FormLabel>
+                      <FormControl>
+                        <TimeField
+                          hourCycle={24}
+                          aria-label="Duration"
+                          onChange={e =>
+                            field.onChange({ hours: e.hour, minutes: e.minute })
+                          }
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </motion.div>
+
+              {task.inputOrder.map(input => {
+                if (input === "goal") {
+                  const groupedGoals = groupItemsByParent(goalsData, "GOAL")
+                  const goalOptions = Object.keys(groupedGoals).map(
+                    dreamId => ({
+                      label: groupedGoals[dreamId].parentLabel,
+                      options: groupedGoals[dreamId].items.map(goal => ({
+                        label: goal.title,
+                        value: goal,
+                      })),
+                    }),
+                  )
+
+                  return (
+                    task.goal !== undefined && (
+                      <motion.div
+                        layout
+                        key="task_goal"
+                        className="relative"
+                        variants={formVariants}
+                        initial="addInitial"
+                        animate="default"
+                        exit="remove"
+                      >
+                        <FormField
+                          control={form.control}
+                          name="goal"
+                          render={({ field }) => {
+                            return (
+                              <FormItem>
+                                <FormLabel className="pl-3 tracking-wide">
+                                  Goal
+                                </FormLabel>
+                                <FormControl>
+                                  <SelectField
+                                    name="goal"
+                                    value={field.value || null}
+                                    onChange={field.onChange}
+                                    options={goalOptions}
+                                    isClearable
+                                    menuPosition="fixed"
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )
+                          }}
+                        />
+                      </motion.div>
+                    )
+                  )
                 }
-                inputName="task_title"
-                label="Task title"
-              />
-            </motion.div>
 
-            <motion.div layout key="task_duration" className="relative">
-              <DurationInput
-                id={`task_duration`}
-                duration={task.duration}
-                setDuration={(hours: string, minutes: string) =>
-                  setTask(prev => ({
-                    ...prev,
-                    duration: {
-                      hours: Number(hours),
-                      minutes: Number(minutes),
-                    },
-                  }))
-                }
-              />
-            </motion.div>
+                if (input === "priority")
+                  return (
+                    task.priority && (
+                      <motion.div
+                        layout
+                        key="task_priority"
+                        className="relative"
+                        variants={formVariants}
+                        initial="addInitial"
+                        animate="default"
+                        exit="remove"
+                      >
+                        <FormField
+                          control={form.control}
+                          name="priority"
+                          render={({ field }) => {
+                            return (
+                              <FormItem>
+                                <FormLabel className="pl-3 tracking-wide">
+                                  Goal
+                                </FormLabel>
+                                <FormControl>
+                                  <PriorityInput
+                                    id="task_priority"
+                                    value={field.value || "MEDIUM"}
+                                    setValue={field.onChange}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )
+                          }}
+                        />
+                      </motion.div>
+                    )
+                  )
 
-            {task.inputOrder.map(input => {
-              if (input === "goal")
+                if (input === "recurring")
+                  return (
+                    task.recurring && (
+                      <motion.div
+                        layout
+                        key="task_recurring"
+                        className="relative"
+                        variants={formVariants}
+                        initial="addInitial"
+                        animate="default"
+                        exit="remove"
+                      >
+                        <FormField
+                          control={form.control}
+                          name="recurring"
+                          render={({ field }) => {
+                            return (
+                              <FormItem>
+                                <FormLabel className="pl-3 tracking-wide">
+                                  Recurring
+                                </FormLabel>
+                                <FormControl>
+                                  <RecurringInput
+                                    value={
+                                      field.value || { times: 1, period: "DAY" }
+                                    }
+                                    setValue={field.onChange}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )
+                          }}
+                        />
+                      </motion.div>
+                    )
+                  )
                 return (
-                  task.goal !== undefined && (
+                  input === "targetDate" &&
+                  task.targetDate !== undefined && (
                     <motion.div
                       layout
-                      key="task_goal"
+                      key="task_target_date"
                       className="relative"
                       variants={formVariants}
                       initial="addInitial"
                       animate="default"
                       exit="remove"
                     >
-                      <SelectInput<Goal>
-                        id="task_goal"
-                        item={
-                          task.goal
-                            ? {
-                                label: task.goal.title,
-                                value: task.goal,
-                              }
-                            : null
-                        }
-                        setItem={(
-                          goal: { label: string; value: Goal } | null,
-                        ) =>
-                          goal &&
-                          setTask(prev => ({ ...prev, goal: goal.value }))
-                        }
-                        label="Goal"
-                        options={[]}
+                      <FormField
+                        control={form.control}
+                        name="targetDate"
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel className="pl-3 tracking-wide">
+                                Target date
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  className={clsx(
+                                    "bg-gray-200 focus:bg-white placeholder:text-red-200",
+                                    field.value
+                                      ? "text-gray-800"
+                                      : "text-gray-400",
+                                  )}
+                                  type="date"
+                                  min={new Date().toLocaleDateString("en-CA")}
+                                  onFocus={e => e.target.showPicker()}
+                                  onClick={e =>
+                                    (e.target as HTMLInputElement).showPicker()
+                                  }
+                                  value={
+                                    field.value
+                                      ? new Date(
+                                          field.value,
+                                        )?.toLocaleDateString("en-CA")
+                                      : ""
+                                  }
+                                  onChange={e => field.onChange(e.target.value)}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )
+                        }}
                       />
                     </motion.div>
                   )
                 )
-              if (input === "priority")
-                return (
-                  task.priority && (
-                    <motion.div
-                      layout
-                      key="task_priority"
-                      className="relative"
-                      variants={formVariants}
-                      initial="addInitial"
-                      animate="default"
-                      exit="remove"
-                    >
-                      <PriorityInput
-                        id="task_priority"
-                        value={task.priority}
-                        setValue={(input: PriorityType) =>
-                          setTask(prev => ({ ...prev, priority: input }))
-                        }
-                      />
-                    </motion.div>
-                  )
-                )
-              if (input === "recurring")
-                return (
-                  task.recurring && (
-                    <motion.div
-                      layout
-                      key="task_recurring"
-                      className="relative"
-                      variants={formVariants}
-                      initial="addInitial"
-                      animate="default"
-                      exit="remove"
-                    >
-                      <RecurringInput
-                        id="task_recurring"
-                        value={task.recurring}
-                        setValue={(input: RecurringType) =>
-                          setTask(prev => ({ ...prev, recurring: input }))
-                        }
-                      />
-                    </motion.div>
-                  )
-                )
-              return (
-                input === "targetDate" &&
-                task.targetDate !== undefined && (
-                  <motion.div
-                    layout
-                    key="task_target_date"
-                    className="relative"
-                    variants={formVariants}
-                    initial="addInitial"
-                    animate="default"
-                    exit="remove"
-                  >
-                    <DateInput
-                      id="task_target_date"
-                      value={task.targetDate}
-                      setValue={(input: string) =>
-                        setTask(prev => ({
-                          ...prev,
-                          targetDate: new Date(input),
-                        }))
-                      }
-                    />
-                  </motion.div>
-                )
-              )
-            })}
-          </AnimatePresence>
-        </div>
+              })}
+            </AnimatePresence>
+          </div>
 
-        <AddTaskSections task={task} setTask={setTask} />
+          <AddTaskSections task={task} setTask={setTask} />
 
-        <div className="relative flex justify-center">
-          <motion.button
-            layout
-            className="px-3 py-1 text-xl font-medium"
-            whileTap={{ scale: 0.95 }}
-          >
-            Save
-          </motion.button>
-        </div>
-      </form>
+          <div className="relative flex justify-center">
+            <motion.button
+              layout
+              className="px-3 py-1 text-xl font-medium"
+              whileTap={{ scale: 0.95 }}
+            >
+              Save
+            </motion.button>
+          </div>
+        </form>
+      </Form>
     </div>
   )
 }
@@ -222,8 +367,8 @@ function AddTaskSections({
   task,
   setTask,
 }: {
-  task: ITask
-  setTask: React.Dispatch<React.SetStateAction<ITask>>
+  task: TaskForm
+  setTask: React.Dispatch<React.SetStateAction<TaskForm>>
 }) {
   const addTargetDate = () =>
     setTask(prev => ({

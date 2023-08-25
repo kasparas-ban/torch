@@ -1,17 +1,3 @@
-/* Date input */
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none;
-}
-
-input[type="date"]::-webkit-input-placeholder {
-  color: orange;
-}
-
-.empty-date {
-  color: #999;
-}
-
 /* Number input */
 
 input::-webkit-outer-spin-button,

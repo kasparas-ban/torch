@@ -4,7 +4,7 @@ import { Subtasks } from "./Subtasks"
 import useModal from "../useModal"
 import { Dream, Goal, RecurringType } from "../../../types"
 import TextInput from "../../Inputs/TextInput"
-import DateInput from "../../Inputs/DateInput"
+import DateInputLegacy from "../../Inputs/DateInput"
 import SelectInput from "../../Inputs/SelectInput"
 import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
@@ -152,7 +152,7 @@ function GoalForm() {
                       exit="remove"
                     >
                       <SelectInput<Dream>
-                        id="goal_dream"
+                        name="goal_dream"
                         item={
                           goal.dream
                             ? {
@@ -164,7 +164,6 @@ function GoalForm() {
                         setItem={(
                           item: { label: string; value: Dream } | null,
                         ) => setGoal(prev => ({ ...prev, dream: item?.value }))}
-                        label="Dream"
                         options={[]}
                       />
                     </motion.div>
@@ -203,8 +202,7 @@ function GoalForm() {
                     animate="default"
                     exit="remove"
                   >
-                    <DateInput
-                      id="goal_target_date"
+                    <DateInputLegacy
                       value={goal.targetDate}
                       setValue={(input: string) =>
                         setGoal(prev => ({

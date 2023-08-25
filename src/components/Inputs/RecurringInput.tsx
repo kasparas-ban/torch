@@ -22,46 +22,33 @@ const selectMenuMotion = {
 }
 
 export default function RecurringInput({
-  id,
   value,
   setValue,
 }: {
-  id: string
   value?: RecurringType
   setValue: (input: RecurringType) => void
 }) {
   return (
-    <>
-      <label
-        htmlFor="recurring"
-        className="cursor-text px-4 text-sm text-gray-600 transition-all peer-placeholder-shown:text-sm peer-focus:text-sm peer-focus:text-gray-600"
-      >
-        Recurring
-      </label>
-      <div className="flex">
-        <input
-          type="number"
-          className="peer h-10 w-full flex-1 rounded-2xl bg-gray-200 px-4 text-center text-gray-900 focus:bg-white focus:outline-2 focus:outline-blue-500/50"
-          name="recurring_times"
-          min={1}
-          max={99}
-          value={value?.times ?? 1}
-          onChange={e =>
-            setValue({
-              times: Number(e.target.value),
-              period: value?.period || "DAY",
-            })
-          }
-        />
-        <div className="mx-3 flex items-center whitespace-nowrap">
-          times per
-        </div>
-        <PeriodSelect
-          value={value}
-          setPeriod={period => setValue({ times: value?.times || 1, period })}
-        />
-      </div>
-    </>
+    <div className="flex">
+      <input
+        type="number"
+        className="peer h-10 w-full flex-1 outline-none rounded-2xl bg-gray-200 px-4 text-center text-gray-900 focus:bg-white focus:ring-2 focus:ring-ring"
+        min={1}
+        max={99}
+        value={value?.times ?? 1}
+        onChange={e =>
+          setValue({
+            times: Number(e.target.value),
+            period: value?.period || "DAY",
+          })
+        }
+      />
+      <div className="mx-3 flex items-center whitespace-nowrap">times per</div>
+      <PeriodSelect
+        value={value}
+        setPeriod={period => setValue({ times: value?.times || 1, period })}
+      />
+    </div>
   )
 }
 
@@ -84,11 +71,11 @@ function PeriodSelect({
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev)
 
   const selectedOption = periodOptions.find(
-    option => option.value === value?.period
+    option => option.value === value?.period,
   )
 
   const availableOptions = periodOptions.filter(
-    option => option.value !== selectedOption?.value
+    option => option.value !== selectedOption?.value,
   )
 
   useLayoutEffect(() => {
@@ -112,7 +99,7 @@ function PeriodSelect({
         key="period-select"
         className={clsx(
           "flex h-10 flex-1 cursor-pointer items-center gap-1 rounded-2xl bg-gray-200 pr-3 pl-5",
-          isDropdownOpen ? "bg-white outline outline-2 outline-blue-500/50" : ""
+          isDropdownOpen ? "bg-white ring-2 ring-ring" : "",
         )}
         ref={dropdownSelectRef}
         onClick={toggleDropdown}
@@ -136,7 +123,7 @@ function PeriodSelect({
             <motion.div
               className={clsx(
                 "absolute top-10 right-1 z-20 mt-2 w-32 origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none",
-                isDropdownOpen ? "bg-white outline-2 outline-blue-500/50" : ""
+                isDropdownOpen ? "bg-white outline-2 outline-blue-500/50" : "",
               )}
               role="menu"
               tabIndex={-1}
@@ -154,7 +141,7 @@ function PeriodSelect({
                         ? "rounded-t-xl"
                         : idx === availableOptions.length - 1
                         ? "rounded-b-xl"
-                        : ""
+                        : "",
                     )}
                     role="menuitem"
                     tabIndex={-1}

@@ -6,7 +6,7 @@ import { ReactComponent as CloseIcon } from "../../../assets/close.svg"
 import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
 import DurationInput from "../../Inputs/DurationInput"
 import TextInput from "../../Inputs/TextInput"
-import DateInput from "../../Inputs/DateInput"
+import DateInputLegacy from "../../Inputs/DateInput"
 import { RecurringType } from "../../../types"
 import RecurringInput from "../../Inputs/RecurringInput"
 
@@ -281,7 +281,6 @@ function SubtaskItem({
             className="relative"
           >
             <DurationInput
-              id={`subtask_duration_${subtask.id}`}
               duration={subtask.duration}
               setDuration={(hours: string, minutes: string) =>
                 setGoal(prev => ({
@@ -342,8 +341,7 @@ function SubtaskItem({
                   animate="default"
                   exit="remove"
                 >
-                  <DateInput
-                    id={`subtask_target_date_${subtask.id}`}
+                  <DateInputLegacy
                     value={subtask.targetDate}
                     setValue={(input: string) =>
                       setGoal(prev => ({
@@ -371,7 +369,6 @@ function SubtaskItem({
                   exit="remove"
                 >
                   <RecurringInput
-                    id={`subtask_recurring_${subtask.id}`}
                     value={subtask.recurring}
                     setValue={(input: RecurringType) =>
                       setGoal(prev => ({

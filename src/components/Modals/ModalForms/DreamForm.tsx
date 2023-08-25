@@ -4,7 +4,7 @@ import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
 import TextInput from "../../Inputs/TextInput"
-import DateInput from "../../Inputs/DateInput"
+import DateInputLegacy from "../../Inputs/DateInput"
 import "../inputStyles.css"
 
 interface IDream {
@@ -82,8 +82,7 @@ function DreamForm() {
                     animate="default"
                     exit="remove"
                   >
-                    <DateInput
-                      id="dream_target_date"
+                    <DateInputLegacy
                       value={dream.targetDate}
                       setValue={(input: string) =>
                         setDream(prev => ({

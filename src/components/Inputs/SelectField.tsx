@@ -7,13 +7,13 @@ import AsyncSelect, { AsyncProps } from "react-select/async"
 type SelectProps<
   Option,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 > = Props<Option, IsMulti, Group>
 
 type AsyncSelectProps<
   Option,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 > = AsyncProps<Option, IsMulti, Group>
 
 const cache = createCache({
@@ -21,21 +21,12 @@ const cache = createCache({
   insertionPoint: document.querySelector("title")!,
 })
 
-const styles = {
-  dropdownIndicator: (provided: any) => ({
-    ...provided,
-    svg: {
-      fill: "rgb(156, 163, 175)",
-    },
-  }),
-}
-
 export const SelectField = <
   Option,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 >(
-  props: SelectProps<Option, IsMulti, Group>
+  props: SelectProps<Option, IsMulti, Group>,
 ) => {
   return (
     <CacheProvider value={cache}>
@@ -46,10 +37,26 @@ export const SelectField = <
             classNames(
               "h-10 w-full rounded-2xl bg-gray-200 px-2 text-gray-900 border-none",
               isFocused &&
-                "!shadow-none !border-none !outline-2 !outline !outline-blue-500/50 bg-white"
+                "!shadow-none !border-none !ring-2 !ring-ring bg-white",
             ),
+          menu: () =>
+            classNames(
+              "rounded-lg overflow-hidden max-[320px]:w-[calc(100vw-2rem)] max-[400px]:w-[calc(100vw-3rem)]",
+            ),
+          menuList: () => classNames("p-0"),
+          dropdownIndicator: ({ isFocused }) =>
+            classNames(isFocused && "fill-red-300"),
         }}
-        styles={styles}
+        theme={theme => ({
+          ...theme,
+          borderRadius: 0,
+          colors: {
+            ...theme.colors,
+            primary50: "rgb(217, 221, 226)",
+            primary25: "rgb(230, 230, 230)",
+            primary: "rgb(179, 179, 179)",
+          },
+        })}
       />
     </CacheProvider>
   )
@@ -58,9 +65,9 @@ export const SelectField = <
 export const SelectTypeFirstField = <
   Option,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 >(
-  props: AsyncSelectProps<Option, IsMulti, Group>
+  props: AsyncSelectProps<Option, IsMulti, Group>,
 ) => {
   return (
     <CacheProvider value={cache}>
@@ -70,11 +77,11 @@ export const SelectTypeFirstField = <
           control: ({ isFocused }) =>
             classNames(
               "h-10 rounded-l-2xl rounded-r-none bg-gray-200 px-2 text-gray-900 border-0 border-r border-solid border-gray-300",
-              isFocused && "!shadow-none !border-none bg-gray-100"
+              isFocused && "!shadow-none !border-none bg-gray-100",
             ),
           menu: () =>
             classNames(
-              "rounded-lg overflow-hidden max-[320px]:w-[calc(100vw-2rem)] max-[400px]:w-[calc(100vw-3rem)]"
+              "rounded-lg overflow-hidden max-[320px]:w-[calc(100vw-2rem)] max-[400px]:w-[calc(100vw-3rem)]",
             ),
           menuList: () => classNames("p-0"),
           indicatorSeparator: () => classNames("hidden"),
@@ -82,11 +89,10 @@ export const SelectTypeFirstField = <
           option: state =>
             classNames(
               "cursor-pointer",
-              state.isSelected && "bg-blue-200 text-black"
+              state.isSelected && "bg-blue-200 text-black",
             ),
           singleValue: () => classNames("[&>div>div]:truncate"),
         }}
-        styles={styles}
       />
     </CacheProvider>
   )
@@ -95,9 +101,9 @@ export const SelectTypeFirstField = <
 export const SelectTypeSecondField = <
   Option,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 >(
-  props: SelectProps<Option, IsMulti, Group>
+  props: SelectProps<Option, IsMulti, Group>,
 ) => {
   return (
     <CacheProvider value={cache}>
@@ -107,7 +113,7 @@ export const SelectTypeSecondField = <
           control: ({ isFocused }) =>
             classNames(
               "w-28 h-10 rounded-l-none rounded-r-2xl bg-gray-200 text-gray-900 border-none",
-              isFocused && "!shadow-none !border-none bg-gray-100"
+              isFocused && "!shadow-none !border-none bg-gray-100",
             ),
           menu: () => classNames("rounded-lg overflow-hidden"),
           menuList: () => classNames("p-0"),
@@ -115,7 +121,6 @@ export const SelectTypeSecondField = <
           clearIndicator: () => classNames("cursor-pointer"),
           option: () => classNames("cursor-pointer"),
         }}
-        styles={styles}
       />
     </CacheProvider>
   )

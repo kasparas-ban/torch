@@ -1,12 +1,95 @@
+import { Fragment, forwardRef, useRef } from "react"
+import {
+  useTimeFieldState,
+  TimeFieldState,
+  DateSegment as DateSegmentType,
+} from "@react-stately/datepicker"
+import {
+  useTimeField,
+  AriaTimeFieldProps,
+  TimeValue,
+} from "@react-aria/datepicker"
+import { useLocale } from "@react-aria/i18n"
+import { useDateSegment } from "@react-aria/datepicker"
+
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
 import { ReactComponent as MinusIcon } from "../../assets/minus.svg"
 
+export const TimeField = forwardRef<HTMLElement, AriaTimeFieldProps<TimeValue>>(
+  props => {
+    let { locale } = useLocale()
+    let state = useTimeFieldState({
+      ...props,
+      locale,
+    })
+
+    let fieldRef = useRef(null)
+    let { fieldProps } = useTimeField(props, state, fieldRef)
+
+    return (
+      <div
+        {...fieldProps}
+        ref={fieldRef}
+        className="flex bg-gray-200 rounded-2xl focus-within:bg-white transition-colors focus-within:ring-2 focus-within:ring-ring pr-8 py-2 px-4"
+      >
+        {state.segments.map((segment, i) => (
+          <Fragment key={i}>
+            {i !== 1 && <DateSegment key={i} segment={segment} state={state} />}
+            {i === 0 && <span className="px-1 text-gray-400">h</span>}
+            {i === 2 && <span className="px-1 text-gray-400">min</span>}
+          </Fragment>
+        ))}
+      </div>
+    )
+  },
+)
+
+function DateSegment({
+  segment,
+  state,
+}: {
+  segment: DateSegmentType
+  state: TimeFieldState
+}) {
+  let ref = useRef(null)
+  let { segmentProps } = useDateSegment(segment, state, ref)
+
+  return (
+    <div
+      {...segmentProps}
+      ref={ref}
+      style={{
+        ...segmentProps.style,
+        ...(segment.maxValue != null && {
+          minWidth: String(segment.maxValue).length + "ch",
+        }),
+      }}
+      className={`px-0.5 box-content tabular-nums text-right outline-none rounded-sm focus:bg-gray-500 focus:text-white group ${
+        !segment.isEditable ? "text-gray-500" : "text-gray-800"
+      }`}
+    >
+      {/* Always reserve space for the placeholder, to prevent layout shift when editing. */}
+      <span
+        aria-hidden="true"
+        className="block w-full text-center italic text-gray-500 group-focus:text-white"
+        style={{
+          // @ts-ignore
+          visibility: segment.isPlaceholder ? "" : "hidden",
+          height: segment.isPlaceholder ? "" : 0,
+          pointerEvents: "none",
+        }}
+      >
+        {segment.placeholder}
+      </span>
+      {segment.isPlaceholder ? "" : segment.text}
+    </div>
+  )
+}
+
 export default function DurationInput({
-  id,
   duration,
   setDuration,
 }: {
-  id: string
   duration?: { hours?: number | null; minutes?: number | null }
   setDuration: (hours: string, minutes: string) => void
 }) {
@@ -43,7 +126,7 @@ function TimerInput({
                 duration?.hours && duration.hours > 0
                   ? (Number(duration.hours) - 1).toString()
                   : "0",
-                duration?.minutes?.toString() ?? ""
+                duration?.minutes?.toString() ?? "",
               )
             }}
           >
@@ -69,7 +152,7 @@ function TimerInput({
               e.preventDefault()
               setDuration(
                 duration?.hours ? (Number(duration.hours) + 1).toString() : "1",
-                duration?.minutes?.toString() ?? ""
+                duration?.minutes?.toString() ?? "",
               )
             }}
           >
@@ -91,7 +174,7 @@ function TimerInput({
                 duration?.hours?.toString() ?? "",
                 duration?.minutes && duration.minutes > 0
                   ? Math.max(Number(duration.minutes) - 5, 0).toString()
-                  : "0"
+                  : "0",
               )
             }}
           >
@@ -119,7 +202,7 @@ function TimerInput({
                 duration?.hours?.toString() ?? "",
                 !isNaN(Number(duration?.minutes))
                   ? Math.min(Number(duration?.minutes) + 5, 60).toString()
-                  : "0"
+                  : "0",
               )
             }}
           >

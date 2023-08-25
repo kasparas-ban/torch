@@ -13,13 +13,36 @@ An app that helps you track the time you spend pursuing your goals.
 
 ## TODO
 
+Necessary
+
+- [ ] Rewrite forms with React Form Hook
+- [ ] Make an Account page
+- [ ] Make an initial page
+- [ ] Add a loading skeleton for lists
+- [ ] Make a Not Found page
+- [ ] Make an error page
+
+Nice to have
+
+- [ ] Redo duration input to match what's in the Android timer (React Aria TimeField)
+- [ ] Adjust all sizes to make sure they look good on mobile
+- [ ] Have the ability to reorder list items by dragging them
+- [ ] Make timer toast text to slide infinitely (like Spotify)
+- [ ] Implement item filter
+- [ ] Add dark mode
+
+If there's time
+
+- [ ] Implement `prefers-reduced-motion` media query
+- [ ] Try adding Million.js for smoother animations
+
+Done
+
 - [x] Tasks/Goals/Dreams list page
 - [x] Task form modal
 - [x] Goal form modal
 - [x] Dream form modal
-- [ ] Implement `prefers-reduced-motion` media query
 - [x] Refactor the modal component (if possible)
-- [ ] Redo duration input to match what's in the Android timer (React Aria TimeField)
 - [x] Make so that a user may work towards a goal when it has subtasks
 - [x] Connect "start timer" button in goals list to the timer page
 - [x] Add React Query
@@ -28,18 +51,8 @@ An app that helps you track the time you spend pursuing your goals.
 - [x] Add timer toast
 - [x] Fix item input style in timer page
 - [x] Add timer to tab title
-- [ ] Implement item filter
 - [x] Add fadeout gradient for lists
-- [ ] Rewrite forms with React Form Hook
-- [ ] Try adding Million.js for smoother animations
 - [x] Limit animations in modal transitions to modal content instead of the whole modal
-- [ ] Adjust all sizes to make sure they look good on mobile
-- [ ] Add a loading skeleton for lists
 - [x] Make navbar sticky
 - [x] Remake navbar to stick to the bottom of the screen on mobile
 - [x] Save collapsed list items in local storage
-- [ ] Have the ability to reorder list items by dragging them
-- [ ] Make timer toast text to slide infinitely (like Spotify)
-- [ ] Add dark mode
-- [ ] Make a Not Found page
-- [ ] Make an error page
