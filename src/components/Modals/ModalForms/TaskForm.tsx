@@ -20,13 +20,16 @@ import {
 import { goalsData } from "@/data/data"
 import { taskFormSchema } from "./schemas"
 import { Input } from "@/components/ui/input"
+import { Time } from "@internationalized/date"
 import { groupItemsByParent } from "@/API/helpers"
 import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import "../inputStyles.css"
 
-type TaskForm = Omit<Task, "id" | "type" | "progress">
+type TaskForm = Omit<Task, "id" | "type" | "progress" | "goal"> & {
+  goal?: { label: string; value: number }
+}
 
 type InputType = keyof z.infer<typeof taskFormSchema>
 
@@ -46,7 +49,9 @@ const getInitialTaskForm = (initialTask: Task): TaskForm => ({
   priority: initialTask?.priority,
   targetDate: initialTask?.targetDate,
   recurring: initialTask?.recurring,
-  goal: initialTask?.goal,
+  goal: initialTask?.goal
+    ? { label: initialTask.goal.title, value: initialTask.goal.id }
+    : undefined,
 })
 
 function TaskForm() {
@@ -110,6 +115,14 @@ function TaskForm() {
                         <TimeField
                           hourCycle={24}
                           aria-label="Duration"
+                          value={
+                            field.value?.hours || field.value?.minutes
+                              ? new Time(
+                                  field.value.hours || 0,
+                                  field.value.minutes || 0,
+                                )
+                              : null
+                          }
                           onChange={e =>
                             field.onChange({ hours: e.hour, minutes: e.minute })
                           }
@@ -125,10 +138,10 @@ function TaskForm() {
                   const groupedGoals = groupItemsByParent(goalsData, "GOAL")
                   const goalOptions = Object.keys(groupedGoals).map(
                     dreamId => ({
-                      label: groupedGoals[dreamId].parentLabel,
+                      label: groupedGoals[dreamId].parentLabel || "Other",
                       options: groupedGoals[dreamId].items.map(goal => ({
                         label: goal.title,
-                        value: goal,
+                        value: goal.id,
                       })),
                     }),
                   )
@@ -155,7 +168,7 @@ function TaskForm() {
                               <FormControl>
                                 <SelectField
                                   name="goal"
-                                  value={field.value || null}
+                                  value={field.value}
                                   onChange={field.onChange}
                                   options={goalOptions}
                                   isClearable

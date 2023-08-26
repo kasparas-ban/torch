@@ -1,16 +1,15 @@
 import { useLayoutEffect, useRef, useState } from "react"
+import { useFieldArray, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Subtasks } from "./Subtasks"
+import clsx from "clsx"
+import { z } from "zod"
 import useModal from "../useModal"
+import { Subtasks } from "./Subtasks"
 import { Goal } from "../../../types"
 import PriorityInput from "../../Inputs/PriorityInput"
-import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
-import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
-import "../inputStyles.css"
-import { z } from "zod"
 import { goalFormSchema } from "./schemas"
-import { useFieldArray, useForm } from "react-hook-form"
+import { dreamsData } from "@/data/data"
 import {
   Form,
   FormControl,
@@ -20,9 +19,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { dreamsData } from "@/data/data"
 import SelectField from "@/components/Inputs/SelectField"
-import clsx from "clsx"
+import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
+import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
+import "../inputStyles.css"
 
 type GoalForm = Omit<Goal, "id" | "type" | "progress" | "dream"> & {
   dream?: { label: string; value: number }
@@ -85,19 +85,8 @@ function GoalForm() {
         const addTaskButton = document.getElementById("add_subtask_button")
         addTaskButton?.click()
       }, 100)
-
-      // setTimeout(() => {
-      //   const subtasks = form.watch("tasks")
-      //   const taskTitleInput = document.getElementById(
-      //     `subtask_title_${subtasks ? subtasks.length + 1 : 0}`,
-      //   )
-      //   taskTitleInput?.focus()
-      // }, 1000)
     }
   }, [])
-
-  const formData = form.getValues()
-  console.log({ formData })
 
   const addSubtask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()

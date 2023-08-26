@@ -46,10 +46,19 @@ function ItemStrip<T extends GeneralItem>({
     setEditItem(undefined)
   }
 
+  const handleStripClick = () => {
+    const itemInEdit = item.id === editItem?.id && item.type === editItem?.type
+    if (itemInEdit) {
+      setEditItem(undefined)
+    } else if (!editItem && toggleSublist) {
+      toggleSublist()
+    }
+  }
+
   return (
     <motion.div
       layout
-      onClick={() => !editItem && toggleSublist && toggleSublist()}
+      onClick={handleStripClick}
       className={clsx(
         "relative flex w-full min-w-0",
         containsSublist && "mb-3",

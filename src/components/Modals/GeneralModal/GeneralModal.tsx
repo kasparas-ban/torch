@@ -18,6 +18,7 @@ function GeneralModal({ children }: { children: ReactNode }) {
     <Dialog open={isOpen} onOpenChange={isOpen => !isOpen && closeModal()}>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent
+        id={modalKey}
         className={clsx(modalKey === "general_modal" && "overflow-y-hidden")}
       >
         <DialogHeader>

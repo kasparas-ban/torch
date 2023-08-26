@@ -102,7 +102,7 @@ const useModalStore = create<ModalState>(set => ({
     ),
   closeModal: () =>
     set(() => ({
-      // modalKey: "",
+      modalKey: "",
       isOpen: false,
       // title: "",
       // modalContent: undefined,

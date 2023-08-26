@@ -145,14 +145,14 @@ function SubtaskItem({
             className="relative"
           >
             <FormItem>
-              <FormLabel className="pl-3 tracking-wide">Task title</FormLabel>
+              <FormLabel className="pl-3 tracking-wide">Duration</FormLabel>
               <FormControl>
                 <TimeField
                   hourCycle={24}
                   aria-label="Duration"
                   value={(() => {
                     const time = form.watch(`tasks.${index}.duration`)
-                    return time.hours && time.minutes
+                    return time?.hours || time?.minutes
                       ? new Time(time.hours || 0, time.minutes || 0)
                       : null
                   })()}

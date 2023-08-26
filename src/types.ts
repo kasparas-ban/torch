@@ -12,7 +12,7 @@ export type Task = {
   title: string
   progress?: number
   type: "TASK"
-  duration: { hours: number | null; minutes: number | null }
+  duration?: { hours: number | null; minutes: number | null }
   priority?: "LOW" | "MEDIUM" | "HIGH"
   targetDate?: Date | null
   recurring?: RecurringType

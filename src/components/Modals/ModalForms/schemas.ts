@@ -14,11 +14,18 @@ export const taskFormSchema = z.object({
     .string()
     .min(2, { message: "Title must be longer than 2 characters." })
     .max(50, { message: "Title must be shorter than 50 characters." }),
-  duration: z.object({
-    hours: z.number().nullable(),
-    minutes: z.number().nullable(),
-  }),
-  goal: z.any().optional(), // TODO: Need to fix this
+  duration: z
+    .object({
+      hours: z.number().nullable(),
+      minutes: z.number().nullable(),
+    })
+    .optional(),
+  goal: z
+    .object({
+      label: z.string(),
+      options: z.array(z.object({ label: z.string(), value: z.number() })),
+    })
+    .optional(),
   targetDate: z.date().nullable().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
   recurring: z

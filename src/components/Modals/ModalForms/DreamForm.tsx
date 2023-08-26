@@ -120,56 +120,57 @@ function DreamForm() {
                       />
                     </motion.div>
                   )
-                return (
-                  <motion.div
-                    layout
-                    key="dream_target_date"
-                    className="relative"
-                    variants={formVariants}
-                    initial="addInitial"
-                    animate="default"
-                    exit="remove"
-                  >
-                    <FormField
-                      control={form.control}
-                      name="targetDate"
-                      render={({ field }) => {
-                        return (
-                          <FormItem>
-                            <FormLabel className="pl-3 tracking-wide">
-                              Target date
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                className={clsx(
-                                  "bg-gray-200 focus:bg-white placeholder:text-red-200",
-                                  field.value
-                                    ? "text-gray-800"
-                                    : "text-gray-400",
-                                )}
-                                type="date"
-                                min={new Date().toLocaleDateString("en-CA")}
-                                onFocus={e => e.target.showPicker()}
-                                onClick={e =>
-                                  (e.target as HTMLInputElement).showPicker()
-                                }
-                                value={
-                                  field.value
-                                    ? field.value?.toLocaleDateString("en-CA")
-                                    : ""
-                                }
-                                onChange={e =>
-                                  field.onChange(new Date(e.target.value))
-                                }
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )
-                      }}
-                    />
-                  </motion.div>
-                )
+                if (input === "targetDate")
+                  return (
+                    <motion.div
+                      layout
+                      key="dream_target_date"
+                      className="relative"
+                      variants={formVariants}
+                      initial="addInitial"
+                      animate="default"
+                      exit="remove"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="targetDate"
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel className="pl-3 tracking-wide">
+                                Target date
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  className={clsx(
+                                    "bg-gray-200 focus:bg-white placeholder:text-red-200",
+                                    field.value
+                                      ? "text-gray-800"
+                                      : "text-gray-400",
+                                  )}
+                                  type="date"
+                                  min={new Date().toLocaleDateString("en-CA")}
+                                  onFocus={e => e.target.showPicker()}
+                                  onClick={e =>
+                                    (e.target as HTMLInputElement).showPicker()
+                                  }
+                                  value={
+                                    field.value
+                                      ? field.value?.toLocaleDateString("en-CA")
+                                      : ""
+                                  }
+                                  onChange={e =>
+                                    field.onChange(new Date(e.target.value))
+                                  }
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )
+                        }}
+                      />
+                    </motion.div>
+                  )
               })}
             </AnimatePresence>
           </div>
