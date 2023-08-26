@@ -5,7 +5,7 @@ type WithSelectors<S> = S extends { getState: () => infer T }
   : never
 
 export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
-  _store: S
+  _store: S,
 ) => {
   let store = _store as WithSelectors<typeof _store>
   store.use = {}
@@ -37,4 +37,32 @@ export const toPercent = (input?: number) => {
   if (percent !== 100 && rounded === 100) return "99%"
 
   return `${rounded.toString()}%`
+}
+
+export const formatTimeSpent = ({
+  hours,
+  minutes,
+  seconds,
+}: {
+  hours: number
+  minutes: number
+  seconds: number
+}) => {
+  if (hours) {
+    return `${hours} h ${minutes} min`
+  }
+  if (minutes) {
+    return `${minutes} min`
+  }
+  return `${seconds} sec`
+}
+
+export const formatPercentages = (fraction?: number) => {
+  if (!fraction) return "-"
+  const rounded = Math.round(fraction * 100 * 10) / 10
+
+  if (rounded === 0 && fraction !== 0) return "<0.1%"
+  if (rounded === 100 && fraction !== 1) return ">99%"
+
+  return `${rounded}%`
 }

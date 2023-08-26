@@ -1,8 +1,23 @@
 import { useQuery } from "@tanstack/react-query"
-import { dreamsData, goalsData, tasksData } from "../data/data"
 import { groupItemsByParent } from "./helpers"
-import { GeneralItem, Goal, ItemType, Task } from "../types"
+import { timerHistoryData } from "@/data/timerHistory"
 import { FocusType } from "../components/Timer/useTimerForm"
+import { dreamsData, goalsData, tasksData } from "../data/data"
+import { GeneralItem, Goal, ItemType, Task, TimerHistoryRecord } from "../types"
+
+export const useTimerHistory = () => {
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["timer-history"],
+    queryFn: async () => {
+      const items = await new Promise<TimerHistoryRecord[]>(resolve => {
+        setTimeout(() => resolve(timerHistoryData), 200)
+      })
+      return items
+    },
+  })
+
+  return { isLoading, error, data }
+}
 
 export const useItemsList = (itemType: ItemType) => {
   const { isLoading, error, data } = useQuery({
@@ -10,15 +25,19 @@ export const useItemsList = (itemType: ItemType) => {
       itemType === "TASK" ? "tasks" : itemType === "GOAL" ? "goals" : "dreams",
     ],
     queryFn: async () => {
-      const items = await new Promise<GeneralItem[]>(resolve =>
-        resolve(
-          itemType === "TASK"
-            ? tasksData
-            : itemType === "GOAL"
-            ? goalsData
-            : dreamsData,
-        ),
-      )
+      const items = await new Promise<GeneralItem[]>(resolve => {
+        setTimeout(
+          () =>
+            resolve(
+              itemType === "TASK"
+                ? tasksData
+                : itemType === "GOAL"
+                ? goalsData
+                : dreamsData,
+            ),
+          2000,
+        )
+      })
       const groupedItems = groupItemsByParent(items, itemType)
       return groupedItems
     },

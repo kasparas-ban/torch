@@ -1,13 +1,13 @@
-import React, { forwardRef } from "react"
-import dayjs from "dayjs"
+import { forwardRef } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { TimerFocusForm, TimerFocusInfo } from "./TimerFocusForm"
-import useTimerForm from "./useTimerForm"
 import useTimerStore from "./useTimer"
+import useTimerForm from "./useTimerForm"
 import { TimerShape } from "./TimerShape"
 import useModal from "../Modals/useModal"
-import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
+import TimerHistory from "./TimerHistory"
+import { TimerFocusForm, TimerFocusInfo } from "./TimerFocusForm"
 import { GeneralModal } from "../Modals/GeneralModal/GeneralModal"
+import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
 
 const buttonVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.6 } },
@@ -176,93 +176,5 @@ const TimerClock = forwardRef<HTMLDivElement>((_, ref) => {
     </motion.div>
   )
 })
-
-function TimerHistory() {
-  const data = [
-    {
-      timerTime: "25 min",
-      focusOn: 'Finish reading "The Shape of Space"',
-      progress: "45%",
-      difference: "3%",
-      startTime: new Date(),
-      finishDate: new Date(),
-    },
-    {
-      timerTime: "25 min",
-      focusOn: 'Finish reading "The Shape of Space"',
-      progress: "45%",
-      difference: "3%",
-      startTime: new Date(),
-      finishDate: new Date(),
-    },
-    {
-      timerTime: "25 min",
-      focusOn: 'Finish reading "The Shape of Space"',
-      progress: "45%",
-      difference: "3%",
-      startTime: new Date(),
-      finishDate: new Date(),
-    },
-    {
-      timerTime: "25 min",
-      focusOn: 'Finish reading "The Shape of Space"',
-      progress: "45%",
-      difference: "3%",
-      startTime: new Date(),
-      finishDate: new Date(),
-    },
-    {
-      timerTime: "25 min",
-      focusOn: 'Finish reading "The Shape of Space"',
-      progress: "45%",
-      difference: "3%",
-      startTime: new Date(),
-      finishDate: new Date(),
-    },
-  ]
-
-  return (
-    <motion.div
-      layout
-      className="mt-8 mb-4 flex"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.1 } }}
-    >
-      <div className="mx-auto">
-        <div className="mx-4 grid grid-cols-[240px_100px_100px_100px_80px] text-gray-500 max-[700px]:grid-cols-[240px_100px_100px] max-[500px]:grid-cols-[auto_auto_auto] max-[500px]:gap-x-3">
-          <div className="mb-2 font-semibold text-gray-600">Focus on</div>
-          <div className="mb-2 font-semibold text-gray-600">Progress</div>
-          <div className="mb-2 font-semibold text-gray-600">Time spent</div>
-          <div className="mb-2 font-semibold text-gray-600 max-[700px]:hidden">
-            Start time
-          </div>
-          <div className="mb-2 font-semibold text-gray-600 max-[700px]:hidden">
-            Finish time
-          </div>
-          {data.map((row, idx) => (
-            <React.Fragment key={idx}>
-              <div className="mb-1 mr-3 truncate max-[700px]:mr-2 max-[500px]:mr-0">
-                {row.focusOn}
-              </div>
-              <div className="mb-1">
-                {row.progress}
-                {` + `}
-                <span className="font-bold">{row.difference}</span>
-              </div>
-              <div className="mb-1">{row.timerTime}</div>
-              <div className="mb-1 max-[700px]:hidden">
-                {dayjs(row.startTime).format("HH:mm A")}
-              </div>
-              <div className="mb-1 max-[700px]:hidden">
-                {dayjs(row.finishDate).format("HH:mm A")}
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  )
-}
 
 export default Timer
