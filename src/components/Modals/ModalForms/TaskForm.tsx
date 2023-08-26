@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { goalsData } from "@/data/data"
+import { taskFormSchema } from "./schemas"
 import { Input } from "@/components/ui/input"
 import { groupItemsByParent } from "@/API/helpers"
 import SelectField from "@/components/Inputs/SelectField"
@@ -25,28 +26,7 @@ import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import "../inputStyles.css"
 
-const taskFormSchema = z.object({
-  title: z
-    .string()
-    .min(2, { message: "Title must be longer than 2 characters." })
-    .max(50, { message: "Title must be shorter than 50 characters." }),
-  duration: z.object({
-    hours: z.number().nullable(),
-    minutes: z.number().nullable(),
-  }),
-  goal: z.any().optional(), // TODO: Need to fix this
-  targetDate: z.date().nullable().optional(),
-  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
-  recurring: z
-    .object({
-      times: z.number(),
-      period: z.enum(["DAY", "WEEK", "MONTH"]),
-      progress: z.number().optional(),
-    })
-    .optional(),
-})
-
-type TaskForm = Omit<Task, "id" | "type">
+type TaskForm = Omit<Task, "id" | "type" | "progress">
 
 type InputType = keyof z.infer<typeof taskFormSchema>
 

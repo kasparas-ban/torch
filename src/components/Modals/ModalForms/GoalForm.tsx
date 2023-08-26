@@ -1,35 +1,34 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Subtasks } from "./Subtasks"
 import useModal from "../useModal"
-import { Dream, Goal, RecurringType } from "../../../types"
-import TextInput from "../../Inputs/TextInput"
-import DateInputLegacy from "../../Inputs/DateInput"
-import SelectInput from "../../Inputs/SelectInput"
-import PriorityInput, { PriorityType } from "../../Inputs/PriorityInput"
+import { Goal } from "../../../types"
+import PriorityInput from "../../Inputs/PriorityInput"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import "../inputStyles.css"
+import { z } from "zod"
+import { goalFormSchema } from "./schemas"
+import { useFieldArray, useForm } from "react-hook-form"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { dreamsData } from "@/data/data"
+import SelectField from "@/components/Inputs/SelectField"
+import clsx from "clsx"
 
-export interface IGoal {
-  goalId?: number
-  title: string
-  priority?: "LOW" | "MEDIUM" | "HIGH"
-  targetDate?: Date | null
-  dream?: Dream | null
-  subtasks?: ITask[]
-  inputOrder: string[]
+type GoalForm = Omit<Goal, "id" | "type" | "progress" | "dream"> & {
+  dream?: { label: string; value: number }
 }
 
-export interface ITask {
-  id: number
-  title: string
-  priority?: "LOW" | "MEDIUM" | "HIGH"
-  duration?: { hours: number | null; minutes: number | null }
-  targetDate?: Date | null
-  recurring?: RecurringType
-  inputOrder: string[]
-}
+type InputType = keyof z.infer<typeof goalFormSchema>
 
 const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.35 } },
@@ -41,41 +40,39 @@ const formVariants = {
   },
 }
 
+const getInitialGoalForm = (initialGoal: Goal): GoalForm => ({
+  title: initialGoal?.title || "",
+  priority: initialGoal?.priority,
+  targetDate: initialGoal?.targetDate,
+  tasks: initialGoal?.tasks || [],
+  dream: initialGoal?.dream
+    ? { label: initialGoal.dream.title, value: initialGoal.dream.id }
+    : undefined,
+})
+
 function GoalForm() {
   const { editItem, addTaskOnOpen, modalKey } = useModal()
-  const initialGoal = editItem as Goal
+  const defaultGoal = getInitialGoalForm(editItem as Goal)
 
-  const inputOrder = initialGoal
-    ? [
-        ...(initialGoal.priority ? ["priority"] : []),
-        ...(initialGoal.targetDate ? ["targetDate"] : []),
-        ...(initialGoal.dream ? ["dream"] : []),
-      ]
-    : []
+  const defaultInputOrder = (Object.keys(defaultGoal) as InputType[]).filter(
+    key => !!defaultGoal[key],
+  )
+  const [inputOrder, setInputOrder] = useState(defaultInputOrder)
 
-  const defaultGoal: IGoal = {
-    title: initialGoal?.title || "",
-    ...(initialGoal?.priority ? { priority: initialGoal?.priority } : {}),
-    ...(initialGoal?.targetDate ? { targetDate: initialGoal?.targetDate } : {}),
-    ...(initialGoal?.dream ? { dream: initialGoal?.dream } : {}),
-    subtasks:
-      initialGoal?.tasks?.map((task, idx) => ({
-        id: idx,
-        title: task.title,
-        ...(task.priority ? { priority: task.priority } : {}),
-        ...(task.duration ? { duration: task.duration } : {}),
-        ...(task.targetDate ? { targetDate: task.targetDate } : {}),
-        ...(task.recurring ? { recurring: task.recurring } : {}),
-        inputOrder: [
-          ...(task.priority ? ["priority"] : []),
-          ...(task.duration ? ["duration"] : []),
-          ...(task.targetDate ? ["targetDate"] : []),
-        ],
-      })) ?? [],
-    inputOrder,
+  const form = useForm<z.infer<typeof goalFormSchema>>({
+    resolver: zodResolver(goalFormSchema),
+    defaultValues: defaultGoal,
+  })
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "tasks",
+  })
+
+  const onSubmit = (data: z.infer<typeof goalFormSchema>) => {
+    console.log("onSubmit", data)
   }
 
-  const [goal, setGoal] = useState<IGoal>(defaultGoal)
   const modalRef = useRef<HTMLElement | null>(null)
   const initialized = useRef(false)
 
@@ -89,26 +86,23 @@ function GoalForm() {
         addTaskButton?.click()
       }, 100)
 
-      setTimeout(() => {
-        const taskTitleInput = document.getElementById(
-          `subtask_title_${goal.subtasks ? goal.subtasks.length + 1 : 0}`,
-        )
-        taskTitleInput?.focus()
-      }, 1000)
+      // setTimeout(() => {
+      //   const subtasks = form.watch("tasks")
+      //   const taskTitleInput = document.getElementById(
+      //     `subtask_title_${subtasks ? subtasks.length + 1 : 0}`,
+      //   )
+      //   taskTitleInput?.focus()
+      // }, 1000)
     }
   }, [])
 
-  const subtaskIdRef = useRef(goal.subtasks ? goal.subtasks.length : 0)
+  const formData = form.getValues()
+  console.log({ formData })
 
   const addSubtask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    setGoal(prev => ({
-      ...prev,
-      subtasks: [
-        ...(prev.subtasks ? prev.subtasks : []),
-        { id: ++subtaskIdRef.current, title: "", inputOrder: [] },
-      ],
-    }))
+    const defaultTask = { title: "", duration: { hours: null, minutes: null } }
+    append(defaultTask)
 
     if (modalRef.current)
       setTimeout(
@@ -121,27 +115,50 @@ function GoalForm() {
       )
   }
 
+  const removeSubtask = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    index: number,
+  ) => {
+    e.preventDefault()
+    remove(index)
+  }
+
   return (
     <div className="px-0 pt-4 pb-2 sm:px-10">
-      <form>
-        <div className="flex flex-col gap-1">
-          <AnimatePresence initial={false} mode="popLayout">
-            <motion.div layout className="relative">
-              <TextInput
-                id="goal_title"
-                value={goal.title}
-                setValue={(input: string) =>
-                  setGoal(prev => ({ ...prev, title: input }))
-                }
-                inputName="goal_title"
-                label="Goal title"
-              />
-            </motion.div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex flex-col gap-1">
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.div layout className="relative">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="pl-3 tracking-wide">
+                        Goal title
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Aa..."
+                          className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="pl-3" />
+                    </FormItem>
+                  )}
+                />
+              </motion.div>
 
-            {goal.inputOrder.map(input => {
-              if (input === "dream")
-                return (
-                  goal.dream !== undefined && (
+              {inputOrder.map(input => {
+                if (input === "dream") {
+                  const dreamOptions = dreamsData.map(dream => ({
+                    label: dream.title,
+                    value: dream.id,
+                  }))
+
+                  return (
                     <motion.div
                       layout
                       key="goal_dream"
@@ -151,27 +168,34 @@ function GoalForm() {
                       animate="default"
                       exit="remove"
                     >
-                      <SelectInput<Dream>
-                        name="goal_dream"
-                        item={
-                          goal.dream
-                            ? {
-                                label: goal.dream.title,
-                                value: goal.dream,
-                              }
-                            : null
-                        }
-                        setItem={(
-                          item: { label: string; value: Dream } | null,
-                        ) => setGoal(prev => ({ ...prev, dream: item?.value }))}
-                        options={[]}
+                      <FormField
+                        control={form.control}
+                        name="dream"
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel className="pl-3 tracking-wide">
+                                Dream
+                              </FormLabel>
+                              <FormControl>
+                                <SelectField
+                                  name="dream"
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  options={dreamOptions}
+                                  isClearable
+                                  menuPosition="fixed"
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )
+                        }}
                       />
                     </motion.div>
                   )
-                )
-              if (input === "priority")
-                return (
-                  goal.priority && (
+                }
+                if (input === "priority")
+                  return (
                     <motion.div
                       layout
                       key="goal_priority"
@@ -181,175 +205,197 @@ function GoalForm() {
                       animate="default"
                       exit="remove"
                     >
-                      <PriorityInput
-                        id="goal_priority"
-                        value={goal.priority}
-                        setValue={(input: PriorityType) =>
-                          setGoal(prev => ({ ...prev, priority: input }))
-                        }
+                      <FormField
+                        control={form.control}
+                        name="priority"
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel className="pl-3 tracking-wide">
+                                Priority
+                              </FormLabel>
+                              <FormControl>
+                                <PriorityInput
+                                  id="goal_priority"
+                                  value={field.value || "MEDIUM"}
+                                  setValue={field.onChange}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )
+                        }}
                       />
                     </motion.div>
                   )
-                )
-              return (
-                goal.targetDate !== undefined && (
-                  <motion.div
-                    layout
-                    key="goal_target_date"
-                    className="relative"
-                    variants={formVariants}
-                    initial="addInitial"
-                    animate="default"
-                    exit="remove"
-                  >
-                    <DateInputLegacy
-                      value={goal.targetDate}
-                      setValue={(input: string) =>
-                        setGoal(prev => ({
-                          ...prev,
-                          targetDate: new Date(input),
-                        }))
-                      }
-                    />
-                  </motion.div>
-                )
-              )
-            })}
-          </AnimatePresence>
-        </div>
+                if (input === "targetDate")
+                  return (
+                    <motion.div
+                      layout
+                      key="goal_target_date"
+                      className="relative"
+                      variants={formVariants}
+                      initial="addInitial"
+                      animate="default"
+                      exit="remove"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="targetDate"
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel className="pl-3 tracking-wide">
+                                Target date
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  className={clsx(
+                                    "bg-gray-200 focus:bg-white placeholder:text-red-200",
+                                    field.value
+                                      ? "text-gray-800"
+                                      : "text-gray-400",
+                                  )}
+                                  type="date"
+                                  min={new Date().toLocaleDateString("en-CA")}
+                                  onFocus={e => e.target.showPicker()}
+                                  onClick={e =>
+                                    (e.target as HTMLInputElement).showPicker()
+                                  }
+                                  value={
+                                    field.value
+                                      ? new Date(
+                                          field.value,
+                                        )?.toLocaleDateString("en-CA")
+                                      : ""
+                                  }
+                                  onChange={e =>
+                                    field.onChange(new Date(e.target.value))
+                                  }
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )
+                        }}
+                      />
+                    </motion.div>
+                  )
+              })}
+            </AnimatePresence>
+          </div>
 
-        <AddGoalSections goal={goal} setGoal={setGoal} />
+          <AddGoalSections
+            inputOrder={inputOrder}
+            setInputOrder={setInputOrder}
+          />
 
-        <Subtasks goal={goal} setGoal={setGoal} />
+          <Subtasks
+            form={form}
+            subtasks={fields}
+            removeSubtask={removeSubtask}
+          />
 
-        <div className="relative mt-2 mb-5 flex justify-center">
-          <motion.button
-            layout
-            className="flex px-3 py-1 text-[15px] text-gray-500"
-            onClick={addSubtask}
-            whileTap={{ scale: 0.95 }}
-            id="add_subtask_button"
-          >
-            <div className="relative bottom-px">
-              <PlusSmallIcon />
-            </div>
-            Add Subtask
-          </motion.button>
-        </div>
+          <div className="relative mt-2 mb-5 flex justify-center">
+            <motion.button
+              layout
+              className="flex px-3 py-1 text-[15px] text-gray-500"
+              onClick={addSubtask}
+              whileTap={{ scale: 0.95 }}
+              id="add_subtask_button"
+            >
+              <div className="relative bottom-px">
+                <PlusSmallIcon />
+              </div>
+              Add Subtask
+            </motion.button>
+          </div>
 
-        <div className="relative flex justify-center">
-          <motion.button
-            layout
-            className="px-3 py-1 text-xl font-medium"
-            whileTap={{ scale: 0.95 }}
-          >
-            Save
-          </motion.button>
-        </div>
-      </form>
+          <div className="relative flex justify-center">
+            <motion.button
+              layout
+              className="px-3 py-1 text-xl font-medium"
+              whileTap={{ scale: 0.95 }}
+            >
+              Save
+            </motion.button>
+          </div>
+        </form>
+      </Form>
     </div>
   )
 }
 
 function AddGoalSections({
-  goal,
-  setGoal,
+  inputOrder,
+  setInputOrder,
 }: {
-  goal: IGoal
-  setGoal: React.Dispatch<React.SetStateAction<IGoal>>
+  inputOrder: InputType[]
+  setInputOrder: React.Dispatch<React.SetStateAction<InputType[]>>
 }) {
-  const addTargetDate = () =>
-    setGoal(prev => ({
-      ...prev,
-      targetDate: null,
-      inputOrder: [...prev.inputOrder, "targetDate"],
-    }))
-  const removeTargetDate = () =>
-    setGoal(prev => ({
-      ...prev,
-      targetDate: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "targetDate"),
-    }))
+  const addInput = (input: InputType) => setInputOrder(prev => [...prev, input])
+  const removeInput = (input: InputType) =>
+    setInputOrder(prev => prev.filter(inp => inp !== input))
 
-  const addPriority = () =>
-    setGoal(prev => ({
-      ...prev,
-      priority: "MEDIUM",
-      inputOrder: [...prev.inputOrder, "priority"],
-    }))
-  const removePriority = () =>
-    setGoal(prev => ({
-      ...prev,
-      priority: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "priority"),
-    }))
-
-  const addDream = () =>
-    setGoal(prev => ({
-      ...prev,
-      dream: null,
-      inputOrder: [...prev.inputOrder, "dream"],
-    }))
-  const removeDream = () =>
-    setGoal(prev => ({
-      ...prev,
-      dream: undefined,
-      inputOrder: prev.inputOrder.filter(input => input !== "dream"),
-    }))
+  const getInput = (input: InputType) => inputOrder.find(inp => inp === input)
 
   return (
     <motion.div layout className="my-4 flex flex-wrap justify-center gap-2">
       <button
-        className={`flex rounded-xl ${
-          goal.dream !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
-        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
+        className={clsx(
+          "flex rounded-xl px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300",
+          getInput("dream") ? "bg-[#d0d0d0]" : "bg-gray-200",
+        )}
         onClick={e => {
           e.preventDefault()
-          goal.dream === undefined ? addDream() : removeDream()
+          getInput("dream") ? removeInput("dream") : addInput("dream")
         }}
       >
         Assign Dream
         <div className="relative top-1 ml-0.5">
-          {goal.dream === undefined ? (
-            <PlusSmallIcon className="h-4 w-4" />
-          ) : (
+          {getInput("dream") ? (
             <MinusSmallIcon className="h-4 w-4" />
+          ) : (
+            <PlusSmallIcon className="h-4 w-4" />
           )}
         </div>
       </button>
       <button
-        className={`flex rounded-xl ${
-          goal.targetDate !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
-        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
+        className={clsx(
+          "flex rounded-xl px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300",
+          getInput("targetDate") ? "bg-[#d0d0d0]" : "bg-gray-200",
+        )}
         onClick={e => {
           e.preventDefault()
-          goal.targetDate === undefined ? addTargetDate() : removeTargetDate()
+          getInput("targetDate")
+            ? removeInput("targetDate")
+            : addInput("targetDate")
         }}
       >
         Target date
         <div className="relative top-1 ml-0.5">
-          {goal.targetDate === undefined ? (
-            <PlusSmallIcon className="h-4 w-4" />
-          ) : (
+          {getInput("targetDate") ? (
             <MinusSmallIcon className="h-4 w-4" />
+          ) : (
+            <PlusSmallIcon className="h-4 w-4" />
           )}
         </div>
       </button>
       <button
-        className={`flex rounded-xl ${
-          goal.priority !== undefined ? "bg-[#d0d0d0]" : "bg-gray-200"
-        } px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300`}
+        className={clsx(
+          "flex rounded-xl px-3 py-1 text-[15px] text-gray-500 drop-shadow hover:bg-gray-300",
+          getInput("priority") ? "bg-[#d0d0d0]" : "bg-gray-200",
+        )}
         onClick={e => {
           e.preventDefault()
-          goal.priority ? removePriority() : addPriority()
+          getInput("priority") ? removeInput("priority") : addInput("priority")
         }}
       >
         Priority
         <div className="relative top-1 ml-0.5">
-          {!goal.priority ? (
-            <PlusSmallIcon className="h-4 w-4" />
-          ) : (
+          {getInput("priority") ? (
             <MinusSmallIcon className="h-4 w-4" />
+          ) : (
+            <PlusSmallIcon className="h-4 w-4" />
           )}
         </div>
       </button>

@@ -8,15 +8,15 @@ import {
   useTimeField,
   AriaTimeFieldProps,
   TimeValue,
+  useDateSegment,
 } from "@react-aria/datepicker"
 import { useLocale } from "@react-aria/i18n"
-import { useDateSegment } from "@react-aria/datepicker"
 
 import { ReactComponent as PlusIcon } from "../../assets/plus.svg"
 import { ReactComponent as MinusIcon } from "../../assets/minus.svg"
 
 export const TimeField = forwardRef<HTMLElement, AriaTimeFieldProps<TimeValue>>(
-  props => {
+  (props, ref) => {
     let { locale } = useLocale()
     let state = useTimeFieldState({
       ...props,

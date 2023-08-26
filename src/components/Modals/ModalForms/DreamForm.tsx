@@ -14,30 +14,15 @@ import {
 } from "@/components/ui/form"
 import { Dream } from "@/types"
 import useModal from "../useModal"
+import { dreamFormSchema } from "./schemas"
 import { Input } from "@/components/ui/input"
 import PriorityInput from "../../Inputs/PriorityInput"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 
-const dreamFormSchema = z.object({
-  title: z
-    .string()
-    .min(2, { message: "Title must be longer than 2 characters." })
-    .max(50, { message: "Title must be shorter than 50 characters." }),
-  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
-  targetDate: z.date().nullable().optional(),
-})
-
 type DreamForm = Omit<Dream, "id" | "type" | "progress">
 
 type InputType = keyof z.infer<typeof dreamFormSchema>
-
-interface IDream {
-  title: string
-  priority?: "LOW" | "MEDIUM" | "HIGH"
-  targetDate?: Date | null
-  inputOrder: string[]
-}
 
 const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.35 } },
