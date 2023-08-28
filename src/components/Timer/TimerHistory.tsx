@@ -16,6 +16,9 @@ function TimerHistory() {
         exit={{ opacity: 0, transition: { duration: 0.1 } }}
       >
         <div className="mx-auto">
+          <div className="ml-3 mb-3 font-bold text-2xl text-gray-800">
+            Timer history
+          </div>
           <div className="mx-4 grid grid-cols-[240px_100px_100px_100px_80px] text-gray-500 max-[700px]:grid-cols-[240px_100px_100px] max-[500px]:grid-cols-[auto_auto_auto] max-[500px]:gap-x-3">
             <div className="mb-2 font-semibold text-gray-600">Focus on</div>
             <div className="mb-2 font-semibold text-gray-600">Progress</div>

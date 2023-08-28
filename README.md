@@ -16,12 +16,12 @@ An app that helps you track the time you spend pursuing your goals.
 Necessary
 
 - [x] Rewrite forms with React Form Hook
-- [ ] Make an Account page
+- [x] Make an Account page
 - [ ] Make an initial page
 - [x] Add a loading skeleton for lists
-- [ ] Add a loading skeleton for timer history
 - [ ] Make a Not Found page
 - [ ] Make an error page
+- [ ] Change timer design for breaks
 
 Nice to have
 
