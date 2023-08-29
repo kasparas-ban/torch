@@ -22,7 +22,7 @@ Necessary
 - [ ] Add loading buttons where appropriate (from shadcn)
 - [ ] Make a Not Found page
 - [ ] Make an error page
-- [ ] Change timer design for breaks
+- [x] Change timer design for breaks
 
 Nice to have
 
@@ -32,6 +32,7 @@ Nice to have
 - [ ] Make timer toast text to slide infinitely (like Spotify)
 - [ ] Implement item filter
 - [ ] Add dark mode
+- [ ] Add ability for users to add their social media links, description about themselves
 
 If there's time
 

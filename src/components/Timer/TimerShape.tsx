@@ -4,16 +4,18 @@ import "./timer.css"
 export const TimerShape = ({
   initialTime,
   currentTime,
+  isBreakActive,
 }: {
   initialTime: number
   currentTime: number
+  isBreakActive: boolean
 }) => {
   const fractionComplete = 1 - currentTime / initialTime
 
   const size = 318
   const { path } = getPathProps(size, 5, "counterclockwise")
   const strokeWidth = fractionComplete ? 5 : 0
-  const stroke = "#E11D48"
+  const stroke = isBreakActive ? "#60A5FA" : "#E11D48"
   const strokeLinecap = "round"
 
   return (
@@ -48,7 +50,7 @@ export const TimerShape = ({
 const getPathProps = (
   size: number,
   strokeWidth: number,
-  rotation: "clockwise" | "counterclockwise"
+  rotation: "clockwise" | "counterclockwise",
 ) => {
   const halfSize = size / 2
   const halfStrokeWith = strokeWidth / 2

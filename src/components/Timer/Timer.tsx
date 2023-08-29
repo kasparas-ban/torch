@@ -160,8 +160,18 @@ function Timer() {
 
 const TimerClock = forwardRef<HTMLDivElement>((_, ref) => {
   const time = useTimerStore.use.time()
-  const initialTime = useTimerStore.use.initialTime()
   const timerState = useTimerStore.use.timerState()
+
+  const initialTimerTime = useTimerStore.use.initialTime()
+  const isBreakActive = useTimerStore.use.break()
+  const isLongBreakActive = useTimerStore.use.timerCount() >= 4
+  const longBreakTime = useTimerStore.use.longBreakTime()
+  const breakTime = useTimerStore.use.breakTime()
+  const initialTime = isBreakActive
+    ? isLongBreakActive
+      ? longBreakTime
+      : breakTime
+    : initialTimerTime
 
   const minutes = Math.floor(time / 60)
   const seconds = time - minutes * 60
@@ -171,10 +181,18 @@ const TimerClock = forwardRef<HTMLDivElement>((_, ref) => {
       layout
       ref={ref}
       className={`m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border ${
-        timerState === "idle" ? "border-rose-600" : ""
+        isBreakActive && timerState === "idle"
+          ? "border-blue-400"
+          : timerState === "idle"
+          ? "border-rose-600"
+          : ""
       }`}
     >
-      <TimerShape initialTime={initialTime} currentTime={time} />
+      <TimerShape
+        initialTime={initialTime}
+        currentTime={time}
+        isBreakActive={isBreakActive}
+      />
       <div className="text-center text-8xl font-thin tabular-nums max-[300px]:text-7xl">
         {`${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}
       </div>

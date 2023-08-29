@@ -24,6 +24,7 @@ const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
   const pauseTimer = useTimerStore.use.pauseTimer()
   const resetTimer = useTimerStore.use.resetTimer()
   const timerState = useTimerStore.use.timerState()
+  const isBreakActive = useTimerStore.use.break()
 
   const { focusOn } = useTimerForm()
 
@@ -36,14 +37,22 @@ const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
     location.pathname !== "/" &&
     (timerState === "running" || timerState === "paused")
 
+  const toastColor = isBreakActive
+    ? timerState !== "running"
+      ? "from-blue-200 to-blue-300"
+      : "from-blue-400 to-blue-500"
+    : timerState !== "running"
+    ? "from-red-200 to-rose-300"
+    : "from-red-400 to-rose-500"
+
   return (
     <AnimatePresence mode="popLayout">
       {isShowing && (
         <motion.div
           className={clsx(
-            "sticky z-20 top-[70px] mt-4 flex justify-center max-[768px]:px-6 md:space-x-36 max-[600px]:top-2",
+            "sticky top-[70px] z-20 mt-4 flex justify-center max-[768px]:px-6 max-[600px]:top-2 md:space-x-36",
             showBackdrop &&
-              "before:from-60% before:absolute before:top-[-8px] before:z-[-1] before:h-[calc(100%+30px)] before:w-full before:bg-gradient-to-b before:from-white/80 before:content-['']",
+              "before:absolute before:top-[-8px] before:z-[-1] before:h-[calc(100%+30px)] before:w-full before:bg-gradient-to-b before:from-white/80 before:from-60% before:content-['']",
           )}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -53,9 +62,7 @@ const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
             layout
             className={clsx(
               "flex w-fit items-center gap-3 rounded-3xl bg-gradient-to-b px-4 py-1 drop-shadow max-sm:max-w-full",
-              timerState !== "running"
-                ? "from-red-200 to-rose-300"
-                : "from-red-400 to-rose-500",
+              toastColor,
             )}
             initial={{ background: "" }}
             animate={{ opacity: 1, y: 0 }}
@@ -65,7 +72,7 @@ const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
               <motion.div
                 layout="position"
                 className={clsx(
-                  "max-w-sm truncate sm:text-lg sm:pl-2 sm:pr-1",
+                  "max-w-sm truncate sm:pl-2 sm:pr-1 sm:text-lg",
                   timerState !== "running" ? "text-gray-600" : "text-white",
                 )}
               >
@@ -76,7 +83,7 @@ const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
             <motion.div
               layout
               className={clsx(
-                "min-w-[90px] pl-2 pr-1 pb-[3px] text-3xl font-semibold",
+                "min-w-[90px] pb-[3px] pl-2 pr-1 text-3xl font-semibold",
                 timerState !== "running" ? "text-gray-600" : "text-white",
               )}
             >
@@ -97,7 +104,8 @@ const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
                     key="play_btn"
                     onClick={startTimer}
                     className={clsx(
-                      "group flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-600",
+                      "group flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:text-gray-600",
+                      isBreakActive ? "hover:bg-blue-200" : "hover:bg-rose-200",
                     )}
                     whileHover={{ scale: 1.06 }}
                     variants={buttonVariants}
@@ -114,7 +122,10 @@ const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
                     layout
                     key="pause_btn"
                     onClick={pauseTimer}
-                    className="flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-700"
+                    className={clsx(
+                      "flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-700",
+                      isBreakActive ? "hover:bg-blue-200" : "hover:bg-rose-200",
+                    )}
                     whileHover={{ scale: 1.06 }}
                     variants={buttonVariants}
                     initial="initial"
@@ -130,7 +141,12 @@ const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
                     layout
                     key="reset_btn"
                     onClick={resetTimer}
-                    className="group flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-700"
+                    className={
+                      (clsx(
+                        "group flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-700",
+                      ),
+                      isBreakActive ? "hover:bg-blue-200" : "hover:bg-rose-200")
+                    }
                     whileHover={{ scale: 1.06 }}
                     variants={buttonVariants}
                     initial="initial"
