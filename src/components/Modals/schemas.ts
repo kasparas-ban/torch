@@ -95,9 +95,6 @@ export const passwordFormSchema = z
 
 export const deleteAccountFormSchema = z.object({
   password: z
-    .string()
-    .min(1, { message: "Enter your password" })
-    .refine(value => value, {
-      message: "Enter your password",
-    }),
+    .string({ required_error: "Enter your password" })
+    .min(1, { message: "Enter your password" }),
 })

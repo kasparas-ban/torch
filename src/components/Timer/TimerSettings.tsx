@@ -9,7 +9,7 @@ function TimerSettings() {
   })
 
   return (
-    <div className="mx-auto">
+    <div className="mx-auto flex h-full w-full flex-col">
       <div className="flex flex-col gap-3 px-0 pb-2 sm:px-4">
         <div className="mt-4 inline-flex w-full items-center justify-center">
           <hr className="my-2 h-0.5 w-full rounded border-0 bg-gray-200 dark:bg-gray-700"></hr>
@@ -53,9 +53,9 @@ function TimerSettings() {
           />
         </div>
       </div>
-      <div className="flex justify-center">
+      <div className="mb-4 mt-auto flex justify-center">
         <motion.button
-          className="mt-4 text-lg font-semibold"
+          className="mt-4 text-xl font-semibold"
           whileHover={{ scale: 1.06 }}
         >
           Save

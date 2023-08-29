@@ -5,7 +5,10 @@ function PasswordChangeComplete() {
   const { closeModal } = useModal()
 
   return (
-    <motion.div layout className="px-0 pb-2 sm:px-10">
+    <motion.div
+      layout
+      className="mt-4 flex h-full flex-col px-0 pb-2 sm:mt-0 sm:px-10"
+    >
       <p className="text-center text-gray-700">
         A confirmation link was sent to your email.
       </p>
@@ -13,7 +16,7 @@ function PasswordChangeComplete() {
         Click it to complete the change.
       </p>
 
-      <div className="relative flex justify-center">
+      <div className="relative mt-auto flex justify-center">
         <motion.button
           layout
           className="px-3 py-1 text-xl font-medium"

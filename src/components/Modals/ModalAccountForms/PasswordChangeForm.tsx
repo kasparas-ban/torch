@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import useModal from "../useModal"
-import { passwordFormSchema } from "../ModalItemForms/schemas"
+import { passwordFormSchema } from "../schemas"
 import { Input } from "@/components/ui/input"
 
 function PasswordChangeForm() {
@@ -30,9 +30,12 @@ function PasswordChangeForm() {
   }
 
   return (
-    <div className="px-0 pb-2 sm:px-10">
+    <div className="mt-4 h-full px-0 pb-2 sm:mt-0 sm:px-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="flex h-full flex-col"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col space-y-2">
             <FormField
               control={form.control}
@@ -92,7 +95,7 @@ function PasswordChangeForm() {
             />
           </div>
 
-          <div className="relative flex justify-center">
+          <div className="relative mt-auto flex justify-center">
             <motion.button
               layout
               className="mt-6 px-3 py-1 text-xl font-medium"

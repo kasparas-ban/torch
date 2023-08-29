@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { goalsData } from "@/data/data"
-import { taskFormSchema } from "./schemas"
+import { taskFormSchema } from "../schemas"
 import { Input } from "@/components/ui/input"
 import { Time } from "@internationalized/date"
 import { groupItemsByParent } from "@/API/helpers"
@@ -72,9 +72,12 @@ function TaskForm() {
   }
 
   return (
-    <div className="px-0 pb-2 sm:px-10">
+    <div className="grow px-0 pb-2 sm:px-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="flex h-full flex-col"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col gap-1">
             <AnimatePresence initial={false} mode="popLayout">
               {/* Title */}
@@ -311,7 +314,7 @@ function TaskForm() {
             setInputOrder={setInputOrder}
           />
 
-          <div className="relative flex justify-center">
+          <div className="relative mt-auto flex justify-center">
             <motion.button
               layout
               className="px-3 py-1 text-xl font-medium"

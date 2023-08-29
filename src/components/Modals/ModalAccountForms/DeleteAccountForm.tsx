@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import useModal from "../useModal"
-import { deleteAccountFormSchema } from "../ModalItemForms/schemas"
+import { deleteAccountFormSchema } from "../schemas"
 import { Input } from "@/components/ui/input"
 
 function DeleteAccountForm() {
@@ -25,9 +25,12 @@ function DeleteAccountForm() {
   }
 
   return (
-    <motion.div layout className="px-0 pb-2 sm:px-10">
+    <motion.div layout className="mt-4 h-full px-0 pb-2 sm:mt-0 sm:px-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="flex h-full flex-col"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <p className="mb-2 text-center">
             Are you sure you want to delete your account and all the data
             related to it?
@@ -36,25 +39,27 @@ function DeleteAccountForm() {
             Enter your password to confirm the deletion.
           </p>
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="ml-3">Password</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Aa..."
-                    className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage className="pl-3" />
-              </FormItem>
-            )}
-          />
+          <div className="mb-4">
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="ml-3">Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Aa..."
+                      className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="pl-3" />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          <p className="mt-4 text-center font-bold">
+          <p className="mt-auto text-center font-bold">
             This step is irreversible!
           </p>
 
@@ -62,7 +67,7 @@ function DeleteAccountForm() {
             <motion.button
               layout
               className="mt-3 rounded-xl bg-red-400 px-8 py-1 text-xl font-medium text-gray-100 transition-colors hover:bg-red-700"
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.96 }}
             >
               Delete account
             </motion.button>

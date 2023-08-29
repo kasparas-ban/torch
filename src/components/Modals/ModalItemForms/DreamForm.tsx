@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form"
 import { Dream } from "@/types"
 import useModal from "../useModal"
-import { dreamFormSchema } from "./schemas"
+import { dreamFormSchema } from "../schemas"
 import { Input } from "@/components/ui/input"
 import PriorityInput from "../../Inputs/PriorityInput"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
@@ -59,9 +59,12 @@ function DreamForm() {
   }
 
   return (
-    <div className="px-0 pb-2 sm:px-10">
+    <div className="grow px-0 pb-2 sm:px-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="flex h-full flex-col"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col gap-1">
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div layout className="relative">
@@ -76,7 +79,7 @@ function DreamForm() {
                       <FormControl>
                         <Input
                           placeholder="Aa..."
-                          className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                          className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
                           {...field}
                         />
                       </FormControl>
@@ -144,7 +147,7 @@ function DreamForm() {
                                 <Input
                                   {...field}
                                   className={clsx(
-                                    "bg-gray-200 focus:bg-white placeholder:text-red-200",
+                                    "bg-gray-200 placeholder:text-red-200 focus:bg-white",
                                     field.value
                                       ? "text-gray-800"
                                       : "text-gray-400",
@@ -180,7 +183,7 @@ function DreamForm() {
             setInputOrder={setInputOrder}
           />
 
-          <div className="relative flex justify-center">
+          <div className="relative mt-auto flex justify-center">
             <motion.button
               layout
               className="px-3 py-1 text-xl font-medium"

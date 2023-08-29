@@ -18,7 +18,10 @@ function GeneralModal({ children }: { children: ReactNode }) {
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent
         id={modalKey}
-        className={clsx(modalKey === "general_modal" && "overflow-y-hidden")}
+        className={clsx(
+          "flex flex-col",
+          modalKey === "general_modal" && "overflow-y-hidden",
+        )}
       >
         <DialogHeader>
           <DialogTitle asChild>

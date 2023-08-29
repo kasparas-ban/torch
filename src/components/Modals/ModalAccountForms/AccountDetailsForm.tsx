@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { accountFormSchema } from "../ModalItemForms/schemas"
+import { accountFormSchema } from "../schemas"
 import { Input } from "@/components/ui/input"
 import SelectField from "@/components/Inputs/SelectField"
 import { getAllCountries } from "@/helpers"
@@ -44,9 +44,12 @@ function AccountDetailsForm() {
   }
 
   return (
-    <div className="px-0 pb-2 sm:px-10">
+    <div className="mt-4 h-full px-0 pb-2 sm:mt-0 sm:px-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="flex h-full flex-col"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col gap-1">
             <FormField
               control={form.control}
@@ -142,7 +145,7 @@ function AccountDetailsForm() {
             />
           </div>
 
-          <div className="relative flex justify-center">
+          <div className="relative mt-auto flex justify-center">
             <motion.button
               layout
               className="mt-8 px-3 py-1 text-xl font-medium"

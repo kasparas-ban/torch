@@ -8,7 +8,7 @@ import useModal from "../useModal"
 import { Subtasks } from "./Subtasks"
 import { Goal } from "../../../types"
 import PriorityInput from "../../Inputs/PriorityInput"
-import { goalFormSchema } from "./schemas"
+import { goalFormSchema } from "../schemas"
 import { dreamsData } from "@/data/data"
 import {
   Form,
@@ -112,9 +112,12 @@ function GoalForm() {
   }
 
   return (
-    <div className="px-0 pb-2 pt-4 sm:px-10">
+    <div className="grow px-0 pb-2 pt-4 sm:px-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="flex h-full flex-col"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col gap-1">
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div layout className="relative">
@@ -298,7 +301,7 @@ function GoalForm() {
             </motion.button>
           </div>
 
-          <div className="relative flex justify-center">
+          <div className="relative mt-auto flex justify-center">
             <motion.button
               layout
               className="px-3 py-1 text-xl font-medium"

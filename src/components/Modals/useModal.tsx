@@ -113,7 +113,7 @@ const useModalStore = create<ModalState>(set => ({
   openEmailChangeCompleteModal: () =>
     set(() => ({
       isOpen: true,
-      title: "Confirm change",
+      title: "Confirmation sent",
       modalKey: "confirm_email_change_modal",
       modalContent: <EmailChangeComplete />,
     })),

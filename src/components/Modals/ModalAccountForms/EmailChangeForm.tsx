@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import useModal from "../useModal"
-import { emailFormSchema } from "../ModalItemForms/schemas"
+import { emailFormSchema } from "../schemas"
 import { Input } from "@/components/ui/input"
 
 const defaultEmail = "kasparas@gmail.com"
@@ -28,9 +28,12 @@ function EmailChangeForm() {
   }
 
   return (
-    <div className="px-0 pb-2 sm:px-10">
+    <div className="mt-4 h-full px-0 pb-2 sm:mt-0 sm:px-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="flex h-full flex-col"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <FormField
             control={form.control}
             name="email"
@@ -51,7 +54,7 @@ function EmailChangeForm() {
             )}
           />
 
-          <div className="relative flex justify-center">
+          <div className="relative mt-auto flex justify-center">
             <motion.button
               layout
               className="mt-6 px-3 py-1 text-xl font-medium"
