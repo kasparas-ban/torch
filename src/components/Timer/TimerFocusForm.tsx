@@ -8,9 +8,9 @@ import {
 } from "../../components/Inputs/SelectField"
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
-import { GroupedOptionType, OptionType } from "../../types"
+import { GroupedOptionType, ItemOptionType } from "../../types"
 import { getItemsByType } from "../../API/api"
-import { toPercent } from "../../helpers"
+import { formatPercentages, formatTimeSpent, toPercent } from "../../helpers"
 
 const focusTypeOptions = [
   { label: "All", value: "ALL" as FocusType },
@@ -76,8 +76,19 @@ export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
 
 export const TimerFocusInfo = forwardRef<
   HTMLDivElement,
-  { focusOn: OptionType }
->(({ focusOn }, ref) => {
+  { focusOn: ItemOptionType; focusType: FocusType }
+>(({ focusOn, focusType }, ref) => {
+  const timeLeft =
+    focusType === "TASKS"
+      ? focusOn.duration && focusOn.timeSpent
+        ? focusOn.duration?.subtract({
+            hours: focusOn.timeSpent.hour,
+            minutes: focusOn.timeSpent.minute,
+            seconds: focusOn.timeSpent.second,
+          })
+        : undefined
+      : focusOn.timeLeft
+
   return (
     <motion.div
       layout
@@ -97,26 +108,38 @@ export const TimerFocusInfo = forwardRef<
         {focusOn?.label}
       </motion.div>
       <motion.div layout className="flex justify-center">
-        <div className="text-6xl font-bold">45%</div>
-        <div className="ml-1.5 mt-1.5 flex flex-col gap-1">
-          <div className="flex gap-2">
-            <TimerBoldIcon />
-            <span className="font-semibold">6 h</span>
-            spent
+        {focusOn.progress !== undefined && (
+          <div className="text-6xl font-bold">
+            {formatPercentages(focusOn.progress)}
           </div>
-          <div className="flex gap-2">
-            <TimerIcon />
-            <span className="font-semibold">4.5 h</span>
-            left
+        )}
+        {focusOn.timeSpent && (
+          <div className="ml-1.5 mt-1.5 flex flex-col justify-evenly gap-1">
+            <div className="flex gap-2">
+              <TimerBoldIcon />
+              <span className="font-semibold">
+                {formatTimeSpent(focusOn.timeSpent)}
+              </span>
+              <span className="text-gray-600">spent</span>
+            </div>
+            {timeLeft && (
+              <div className="flex gap-2">
+                <TimerIcon />
+                <span className="font-semibold">
+                  {formatTimeSpent(timeLeft)}
+                </span>
+                <span className="text-gray-600">left</span>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </motion.div>
     </motion.div>
   )
 })
 
 const optionLabel = (
-  option: OptionType,
+  option: ItemOptionType,
   { context }: { context: "menu" | "value" },
 ) => {
   return (

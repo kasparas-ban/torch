@@ -17,8 +17,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { goalsData } from "@/data/data"
 import { taskFormSchema } from "../schemas"
+import { goalsData } from "@/data/itemData"
 import { Input } from "@/components/ui/input"
 import { Time } from "@internationalized/date"
 import { groupItemsByParent } from "@/API/helpers"

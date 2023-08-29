@@ -7,6 +7,8 @@ const dreams = [
     progress: 0.15,
     type: "DREAM",
     goalIds: [3, 4, 5, 6],
+    timeSpent: { hour: 14, minute: 24, second: 44 },
+    timeLeft: { hour: 48, minute: 10, second: 16 },
   },
   {
     id: 2,
@@ -15,6 +17,8 @@ const dreams = [
     type: "DREAM",
     goalIds: [7],
     targetDate: new Date("2024-01-01"),
+    timeSpent: { hour: 18, minute: 24, second: 44 },
+    timeLeft: { hour: 15, minute: 10, second: 16 },
   },
   {
     id: 3,
@@ -22,6 +26,8 @@ const dreams = [
     progress: 0.08,
     type: "DREAM",
     goalIds: [8, 9],
+    timeSpent: { hour: 200, minute: 24, second: 0 },
+    timeLeft: { hour: 800, minute: 10, second: 0 },
   },
 ]
 
@@ -34,6 +40,8 @@ const goals = [
     priority: "HIGH",
     type: "GOAL",
     taskIds: [1, 2, 3, 4, 5, 6, 7, 8],
+    timeSpent: { hour: 14, minute: 24, second: 44 },
+    timeLeft: { hour: 66, minute: 10, second: 16 },
   },
   {
     id: 2,
@@ -42,6 +50,8 @@ const goals = [
     priority: "LOW",
     type: "GOAL",
     taskIds: [31, 32, 33],
+    timeSpent: { hour: 14, minute: 24, second: 44 },
+    timeLeft: { hour: 45, minute: 10, second: 16 },
   },
   {
     id: 3,
@@ -50,6 +60,8 @@ const goals = [
     type: "GOAL",
     taskIds: [9, 10, 11, 12],
     dreamId: 1,
+    timeSpent: { hour: 14, minute: 24, second: 44 },
+    timeLeft: { hour: 33, minute: 10, second: 16 },
   },
   {
     id: 4,
@@ -58,6 +70,8 @@ const goals = [
     type: "GOAL",
     taskIds: [13, 14],
     dreamId: 1,
+    timeSpent: { hour: 14, minute: 24, second: 44 },
+    timeLeft: { hour: 20, minute: 10, second: 16 },
   },
   {
     id: 5,
@@ -66,6 +80,8 @@ const goals = [
     type: "GOAL",
     taskIds: [15, 16, 17],
     dreamId: 1,
+    timeSpent: { hour: 14, minute: 24, second: 44 },
+    timeLeft: { hour: 50, minute: 40, second: 16 },
   },
   {
     id: 6,
@@ -74,6 +90,8 @@ const goals = [
     type: "GOAL",
     taskIds: [18, 19],
     dreamId: 1,
+    timeSpent: { hour: 14, minute: 24, second: 44 },
+    timeLeft: { hour: 80, minute: 10, second: 16 },
   },
   {
     id: 7,
@@ -82,6 +100,7 @@ const goals = [
     type: "GOAL",
     taskIds: [20, 21, 22],
     dreamId: 2,
+    timeSpent: { hour: 14, minute: 24, second: 44 },
   },
   {
     id: 8,
@@ -91,6 +110,8 @@ const goals = [
     type: "GOAL",
     taskIds: [23, 24, 25, 26, 27],
     dreamId: 3,
+    timeSpent: { hour: 14, minute: 24, second: 44 },
+    timeLeft: { hour: 200, minute: 10, second: 16 },
   },
   {
     id: 9,
@@ -99,6 +120,8 @@ const goals = [
     type: "GOAL",
     taskIds: [27, 28, 29],
     dreamId: 3,
+    timeSpent: { hour: 14, minute: 24, second: 44 },
+    timeLeft: { hour: 60, minute: 10, second: 0 },
   },
   {
     id: 10,
@@ -106,6 +129,7 @@ const goals = [
     progress: 0.14,
     type: "GOAL",
     taskIds: [],
+    timeSpent: { hour: 2, minute: 25, second: 0 },
   },
   {
     id: 11,
@@ -113,6 +137,8 @@ const goals = [
     progress: 0,
     type: "GOAL",
     taskIds: [],
+    timeSpent: { hour: 0, minute: 0, second: 0 },
+    timeLeft: { hour: 20, minute: 0, second: 0 },
   },
 ]
 
@@ -126,6 +152,7 @@ const tasks = [
     priority: "MEDIUM",
     type: "TASK",
     goalId: 1,
+    timeSpent: { hour: 18, minute: 10, second: 0 },
   },
   {
     id: 2,
@@ -136,6 +163,7 @@ const tasks = [
     priority: "HIGH",
     type: "TASK",
     goalId: 1,
+    timeSpent: { hour: 17, minute: 0, second: 0 },
   },
   {
     id: 3,
@@ -146,6 +174,7 @@ const tasks = [
     priority: "HIGH",
     type: "TASK",
     goalId: 1,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 4,
@@ -154,6 +183,7 @@ const tasks = [
     duration: { hours: 40, minutes: 0 },
     type: "TASK",
     goalId: 1,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 5,
@@ -162,6 +192,7 @@ const tasks = [
     duration: { hours: 60, minutes: 0 },
     type: "TASK",
     goalId: 1,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 6,
@@ -170,6 +201,7 @@ const tasks = [
     duration: { hours: 50, minutes: 0 },
     type: "TASK",
     goalId: 1,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 7,
@@ -178,6 +210,7 @@ const tasks = [
     duration: { hours: 20, minutes: 0 },
     type: "TASK",
     goalId: 1,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 8,
@@ -186,6 +219,7 @@ const tasks = [
     duration: { hours: 15, minutes: 0 },
     type: "TASK",
     goalId: 1,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 9,
@@ -194,6 +228,7 @@ const tasks = [
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
     goalId: 3,
+    timeSpent: { hour: 8, minute: 40, second: 0 },
   },
   {
     id: 10,
@@ -202,6 +237,7 @@ const tasks = [
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
     goalId: 3,
+    timeSpent: { hour: 8, minute: 40, second: 0 },
   },
   {
     id: 11,
@@ -210,6 +246,7 @@ const tasks = [
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
     goalId: 3,
+    timeSpent: { hour: 8, minute: 40, second: 0 },
   },
   {
     id: 12,
@@ -218,6 +255,7 @@ const tasks = [
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
     goalId: 3,
+    timeSpent: { hour: 3, minute: 40, second: 0 },
   },
   {
     id: 13,
@@ -226,6 +264,7 @@ const tasks = [
     duration: { hours: 18, minutes: 0 },
     type: "TASK",
     goalId: 4,
+    timeSpent: { hour: 1, minute: 40, second: 0 },
   },
   {
     id: 14,
@@ -234,6 +273,7 @@ const tasks = [
     duration: { hours: 22, minutes: 0 },
     type: "TASK",
     goalId: 4,
+    timeSpent: { hour: 1, minute: 40, second: 0 },
   },
   {
     id: 15,
@@ -242,6 +282,7 @@ const tasks = [
     duration: { hours: 40, minutes: 0 },
     type: "TASK",
     goalId: 5,
+    timeSpent: { hour: 4, minute: 40, second: 0 },
   },
   {
     id: 16,
@@ -250,6 +291,7 @@ const tasks = [
     duration: { hours: 38, minutes: 0 },
     type: "TASK",
     goalId: 5,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 17,
@@ -258,6 +300,7 @@ const tasks = [
     duration: { hours: 42, minutes: 0 },
     type: "TASK",
     goalId: 5,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 18,
@@ -266,6 +309,7 @@ const tasks = [
     duration: { hours: 12, minutes: 0 },
     type: "TASK",
     goalId: 6,
+    timeSpent: { hour: 5, minute: 40, second: 0 },
   },
   {
     id: 19,
@@ -274,6 +318,7 @@ const tasks = [
     duration: { hours: 44, minutes: 0 },
     type: "TASK",
     goalId: 6,
+    timeSpent: { hour: 8, minute: 40, second: 0 },
   },
   {
     id: 20,
@@ -315,6 +360,7 @@ const tasks = [
     duration: { hours: 60, minutes: 0 },
     type: "TASK",
     goalId: 8,
+    timeSpent: { hour: 8, minute: 40, second: 0 },
   },
   {
     id: 24,
@@ -323,6 +369,7 @@ const tasks = [
     duration: { hours: 40, minutes: 0 },
     type: "TASK",
     goalId: 8,
+    timeSpent: { hour: 8, minute: 40, second: 0 },
   },
   {
     id: 25,
@@ -331,6 +378,7 @@ const tasks = [
     duration: { hours: 3, minutes: 0 },
     type: "TASK",
     goalId: 8,
+    timeSpent: { hour: 3, minute: 0, second: 0 },
   },
   {
     id: 26,
@@ -339,6 +387,7 @@ const tasks = [
     duration: { hours: 55, minutes: 0 },
     type: "TASK",
     goalId: 8,
+    timeSpent: { hour: 0, minute: 40, second: 0 },
   },
   {
     id: 27,
@@ -347,6 +396,7 @@ const tasks = [
     duration: { hours: 60, minutes: 0 },
     type: "TASK",
     goalId: 8,
+    timeSpent: { hour: 8, minute: 40, second: 0 },
   },
   {
     id: 28,
@@ -355,6 +405,7 @@ const tasks = [
     duration: { hours: 38, minutes: 0 },
     type: "TASK",
     goalId: 9,
+    timeSpent: { hour: 10, minute: 0, second: 0 },
   },
   {
     id: 29,
@@ -363,6 +414,7 @@ const tasks = [
     duration: { hours: 26, minutes: 0 },
     type: "TASK",
     goalId: 9,
+    timeSpent: { hour: 10, minute: 0, second: 0 },
   },
   {
     id: 30,
@@ -371,6 +423,7 @@ const tasks = [
     duration: { hours: 8, minutes: 0 },
     type: "TASK",
     goalId: 9,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 31,
@@ -379,6 +432,7 @@ const tasks = [
     duration: { hours: 8, minutes: 0 },
     type: "TASK",
     goalId: 2,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 32,
@@ -387,6 +441,7 @@ const tasks = [
     duration: { hours: 10, minutes: 0 },
     type: "TASK",
     goalId: 2,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
   {
     id: 33,
@@ -395,6 +450,7 @@ const tasks = [
     duration: { hours: 50, minutes: 0 },
     type: "TASK",
     goalId: 2,
+    timeSpent: { hour: 0, minute: 0, second: 0 },
   },
 ]
 

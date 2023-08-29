@@ -1,3 +1,5 @@
+import { Time } from "@internationalized/date"
+
 export type GeneralItem = Task | Goal | Dream
 
 export type GroupedItems<T> = {
@@ -17,6 +19,7 @@ export type Task = {
   targetDate?: Date | null
   recurring?: RecurringType
   goal?: Goal | null
+  timeSpent?: Time
 }
 
 export type Goal = {
@@ -28,6 +31,8 @@ export type Goal = {
   dream?: Dream
   targetDate?: Date | null
   priority?: "LOW" | "MEDIUM" | "HIGH"
+  timeSpent?: Time
+  timeLeft?: Time
 }
 
 export type Dream = {
@@ -38,18 +43,27 @@ export type Dream = {
   goals?: Goal[]
   targetDate?: Date | null
   priority?: "LOW" | "MEDIUM" | "HIGH"
+  timeSpent?: Time
+  timeLeft?: Time
 }
 
 export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
 
 export type ItemType = "TASK" | "GOAL" | "DREAM"
 
-export type OptionType = { value: number; label: string; progress?: number }
+export type ItemOptionType = {
+  value: number
+  label: string
+  progress?: number
+  timeSpent?: Time
+  timeLeft?: Time
+  duration?: Time
+}
 
 export type GroupedOptionType = {
   value: number
   label: string
-  options: Array<OptionType & { parent?: number }>
+  options: Array<ItemOptionType & { parent?: number }>
 }
 
 export type TimerState = "idle" | "paused" | "running"
@@ -63,7 +77,7 @@ export type RecurringType = {
 export type ReccuringPeriod = "DAY" | "WEEK" | "MONTH"
 
 export type TimerHistoryRecord = {
-  timeSpent: { hours: number; minutes: number; seconds: number }
+  timeSpent: Time
   focusOn?: { label: string; value: number; type: ItemType }
   progress: number
   difference?: number

@@ -1,8 +1,9 @@
 import { TimerHistoryRecord } from "@/types"
+import { Time } from "@internationalized/date"
 
 export const timerHistoryData: TimerHistoryRecord[] = [
   {
-    timeSpent: { hours: 0, minutes: 25, seconds: 0 },
+    timeSpent: { hour: 0, minute: 25, second: 0 } as Time,
     focusOn: {
       label: 'Finish reading "The Shape of Space"',
       value: 11,
@@ -14,7 +15,7 @@ export const timerHistoryData: TimerHistoryRecord[] = [
     finishTime: new Date(),
   },
   {
-    timeSpent: { hours: 0, minutes: 25, seconds: 0 },
+    timeSpent: { hour: 0, minute: 25, second: 0 } as Time,
     focusOn: {
       label: 'Finish reading "The Shape of Space"',
       value: 11,
@@ -26,7 +27,7 @@ export const timerHistoryData: TimerHistoryRecord[] = [
     finishTime: new Date(),
   },
   {
-    timeSpent: { hours: 0, minutes: 25, seconds: 0 },
+    timeSpent: { hour: 0, minute: 25, second: 0 } as Time,
     focusOn: {
       label: 'Finish reading "The Shape of Space"',
       value: 11,
@@ -38,7 +39,7 @@ export const timerHistoryData: TimerHistoryRecord[] = [
     finishTime: new Date(),
   },
   {
-    timeSpent: { hours: 0, minutes: 25, seconds: 0 },
+    timeSpent: { hour: 0, minute: 25, second: 0 } as Time,
     focusOn: {
       label: 'Finish reading "The Shape of Space"',
       value: 11,
@@ -50,7 +51,7 @@ export const timerHistoryData: TimerHistoryRecord[] = [
     finishTime: new Date(),
   },
   {
-    timeSpent: { hours: 0, minutes: 25, seconds: 0 },
+    timeSpent: { hour: 0, minute: 25, second: 0 } as Time,
     focusOn: {
       label: 'Finish reading "The Shape of Space"',
       value: 11,

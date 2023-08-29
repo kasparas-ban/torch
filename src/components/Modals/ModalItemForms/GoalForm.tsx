@@ -9,7 +9,7 @@ import { Subtasks } from "./Subtasks"
 import { Goal } from "../../../types"
 import PriorityInput from "../../Inputs/PriorityInput"
 import { goalFormSchema } from "../schemas"
-import { dreamsData } from "@/data/data"
+import { dreamsData } from "@/data/itemData"
 import {
   Form,
   FormControl,

@@ -1,19 +1,19 @@
 import { create } from "zustand"
-import { OptionType } from "../../types"
+import { ItemOptionType } from "../../types"
 
 export type FocusType = "ALL" | "TASKS" | "GOALS" | "DREAMS"
 
 type TimerFormStoreState = {
-  focusOn: OptionType | null
+  focusOn: ItemOptionType | null
   focusType: FocusType
-  setFocusOn: (focus: OptionType | null) => void
+  setFocusOn: (focus: ItemOptionType | null) => void
   setFocusType: (focus: FocusType) => void
 }
 
 const useTimerFormStoreBase = create<TimerFormStoreState>(set => ({
   focusOn: null,
   focusType: "GOALS",
-  setFocusOn: (focusOn: OptionType | null) => set(() => ({ focusOn })),
+  setFocusOn: (focusOn: ItemOptionType | null) => set(() => ({ focusOn })),
   setFocusType: (focusType: FocusType) => set(() => ({ focusType })),
 }))
 

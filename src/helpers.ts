@@ -40,25 +40,23 @@ export const toPercent = (input?: number) => {
 }
 
 export const formatTimeSpent = ({
-  hours,
-  minutes,
-  seconds,
+  hour,
+  minute,
+  second,
 }: {
-  hours: number
-  minutes: number
-  seconds: number
+  hour: number
+  minute: number
+  second: number
 }) => {
-  if (hours) {
-    return `${hours} h ${minutes} min`
-  }
-  if (minutes) {
-    return `${minutes} min`
-  }
-  return `${seconds} sec`
+  if (hour && minute) return `${hour} h ${minute} min`
+  if (hour) return `${hour} h`
+  if (minute) return `${minute} min`
+  if (second) return `${second} sec`
+  return "0 h"
 }
 
 export const formatPercentages = (fraction?: number) => {
-  if (!fraction) return "-"
+  if (fraction === undefined) return "-"
   const rounded = Math.round(fraction * 100 * 10) / 10
 
   if (rounded === 0 && fraction !== 0) return "<0.1%"

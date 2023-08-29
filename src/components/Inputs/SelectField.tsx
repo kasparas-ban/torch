@@ -87,12 +87,19 @@ export const SelectTypeFirstField = <
           indicatorSeparator: () => classNames("hidden"),
           clearIndicator: () => classNames("cursor-pointer"),
           option: state =>
-            classNames(
-              "cursor-pointer",
-              state.isSelected && "bg-blue-200 text-black",
-            ),
+            classNames("cursor-pointer", state.isSelected && "text-black"),
           singleValue: () => classNames("[&>div>div]:truncate"),
         }}
+        theme={theme => ({
+          ...theme,
+          borderRadius: 0,
+          colors: {
+            ...theme.colors,
+            primary50: "rgb(217, 221, 226)",
+            primary25: "rgb(230, 230, 230)",
+            primary: "rgb(200, 200, 200)",
+          },
+        })}
       />
     </CacheProvider>
   )

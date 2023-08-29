@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query"
 import { groupItemsByParent } from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
 import { FocusType } from "../components/Timer/useTimerForm"
-import { dreamsData, goalsData, tasksData } from "../data/data"
+import { dreamsData, goalsData, tasksData } from "../data/itemData"
 import { GeneralItem, Goal, ItemType, Task, TimerHistoryRecord } from "../types"
+import { Time } from "@internationalized/date"
 
 export const useTimerHistory = () => {
   const { isLoading, error, data } = useQuery({
@@ -96,5 +97,11 @@ const filterItems = (items: GeneralItem[], input: string) =>
       label: item.title,
       value: item.id,
       progress: item.progress,
+      timeSpent: item.timeSpent,
+      timeLeft: (item as Goal).timeLeft,
+      duration: new Time(
+        (item as Task).duration?.hours || 0,
+        (item as Task).duration?.minutes || 0,
+      ),
       parent: (item as Task).goal?.id || (item as Goal).dream?.id,
     }))
