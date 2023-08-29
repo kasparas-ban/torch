@@ -7,6 +7,7 @@ import useTimerForm from "@/components/Timer/useTimerForm"
 import { ROUTES } from "@/routes"
 import ItemProgress from "./ProgressBar"
 import useEditItem from "../useEditItem"
+import { Time } from "@internationalized/date"
 import { ReactComponent as DotsIcon } from "../../../assets/dots.svg"
 import { ReactComponent as TimerStartIcon } from "../../../assets/timer_start.svg"
 
@@ -33,7 +34,20 @@ function ItemStrip<T extends GeneralItem>({
 
   const handleTimerClick = () => {
     navigate(ROUTES.index.path)
-    setFocusOn({ value: item.id, label: item.title, progress: item.progress })
+    setFocusOn({
+      value: item.id,
+      label: item.title,
+      type: item.type,
+      progress: item.progress,
+      timeSpent: item.timeSpent,
+      timeLeft: (item as Goal).timeLeft,
+      duration: (item as Task).duration
+        ? new Time(
+            (item as Task).duration?.hours || 0,
+            (item as Task).duration?.minutes || 0,
+          )
+        : undefined,
+    })
     setFocusType(
       itemType === "TASK"
         ? "TASKS"
@@ -69,7 +83,7 @@ function ItemStrip<T extends GeneralItem>({
       <motion.div
         layout
         className={clsx(
-          "relative border border-gray-700 flex w-full cursor-pointer items-center overflow-hidden rounded-2xl pl-6 pr-1 md:rounded-3xl",
+          "relative flex w-full cursor-pointer items-center overflow-hidden rounded-2xl border border-gray-700 pl-6 pr-1 md:rounded-3xl",
           editItem
             ? showEditPanel
               ? "bg-red-300"
@@ -81,12 +95,12 @@ function ItemStrip<T extends GeneralItem>({
           progress={item.progress || 0}
           showEditPanel={showEditPanel}
         />
-        <motion.div className="z-10 select-none py-3 truncate text-gray-800">
+        <motion.div className="z-10 select-none truncate py-3 text-gray-800">
           {item.title}
         </motion.div>
         <div
           className={clsx(
-            "rounded-full z-0 ml-auto h-10 w-10 flex shrink-0 items-center justify-center group",
+            "group z-0 ml-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
             !editItem
               ? "hover:bg-red-200"
               : showEditPanel
@@ -106,7 +120,7 @@ function ItemStrip<T extends GeneralItem>({
       <AnimatePresence>
         {showEditPanel && (
           <motion.div
-            className="my-auto aspect-square w-12 ml-3 cursor-pointer rounded-full bg-red-400"
+            className="my-auto ml-3 aspect-square w-12 cursor-pointer rounded-full bg-red-400"
             whileHover={{ scale: 1.1 }}
             onClick={handleTimerClick}
             initial={{ width: 0, opacity: 0, marginLeft: 0 }}
@@ -145,7 +159,7 @@ function RecurringItemStrip({
       <motion.div
         layout
         className={clsx(
-          "relative border border-gray-700 flex w-full cursor-pointer items-center overflow-hidden rounded-2xl pl-6 pr-1 md:rounded-3xl",
+          "relative flex w-full cursor-pointer items-center overflow-hidden rounded-2xl border border-gray-700 pl-6 pr-1 md:rounded-3xl",
           editItem
             ? showEditPanel
               ? "bg-amber-300"
@@ -158,9 +172,9 @@ function RecurringItemStrip({
           showEditPanel={showEditPanel}
           isRecurring
         />
-        <motion.div className="py-1 z-10 flex flex-col min-w-0">
+        <motion.div className="z-10 flex min-w-0 flex-col py-1">
           <div className="select-none truncate">{item.title}</div>
-          <div className="text-xs text-gray-700 truncate">Resets tomorrow</div>
+          <div className="truncate text-xs text-gray-700">Resets tomorrow</div>
         </motion.div>
         <div
           className={clsx(
@@ -171,7 +185,7 @@ function RecurringItemStrip({
           <motion.div
             layout
             className={clsx(
-              "relative top-[-2px] font-bold text-2xl shrink-0 tracking-wider sm:tracking-widest text-gray-600",
+              "relative top-[-2px] shrink-0 text-2xl font-bold tracking-wider text-gray-600 sm:tracking-widest",
             )}
           >
             {item.recurring?.progress || 0}/{item.recurring?.times}
@@ -179,7 +193,7 @@ function RecurringItemStrip({
         </div>
         <div
           className={clsx(
-            "rounded-full z-0 h-10 w-10 flex shrink-0 items-center justify-center group",
+            "group z-0 flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
             !editItem
               ? "hover:bg-amber-200"
               : showEditPanel
@@ -200,7 +214,7 @@ function RecurringItemStrip({
         {showEditPanel && (
           <motion.div
             key="add_recurring"
-            className="flex font-bold justify-center items-center text-xl text-gray-700 my-auto aspect-square cursor-pointer rounded-full bg-amber-400"
+            className="my-auto flex aspect-square cursor-pointer items-center justify-center rounded-full bg-amber-400 text-xl font-bold text-gray-700"
             whileHover={{ scale: 1.1 }}
             // onClick={handleTimerClick}
             initial={{ width: 0, opacity: 0, marginLeft: 0 }}
@@ -217,7 +231,7 @@ function RecurringItemStrip({
         {showEditPanel && (
           <motion.div
             key="subtract_recurring"
-            className="flex font-bold justify-center items-center text-xl text-gray-700 my-auto aspect-square cursor-pointer rounded-full bg-amber-400"
+            className="my-auto flex aspect-square cursor-pointer items-center justify-center rounded-full bg-amber-400 text-xl font-bold text-gray-700"
             whileHover={{ scale: 1.1 }}
             // onClick={handleTimerClick}
             initial={{ width: 0, opacity: 0, marginLeft: 0 }}
