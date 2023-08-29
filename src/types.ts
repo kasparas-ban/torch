@@ -54,6 +54,7 @@ export type ItemType = "TASK" | "GOAL" | "DREAM"
 export type ItemOptionType = {
   value: number
   label: string
+  type: ItemType
   progress?: number
   timeSpent?: Time
   timeLeft?: Time

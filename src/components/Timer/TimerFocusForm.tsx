@@ -76,10 +76,10 @@ export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
 
 export const TimerFocusInfo = forwardRef<
   HTMLDivElement,
-  { focusOn: ItemOptionType; focusType: FocusType }
->(({ focusOn, focusType }, ref) => {
+  { focusOn: ItemOptionType }
+>(({ focusOn }, ref) => {
   const timeLeft =
-    focusType === "TASKS"
+    focusOn.type === "TASK"
       ? focusOn.duration && focusOn.timeSpent
         ? focusOn.duration?.subtract({
             hours: focusOn.timeSpent.hour,

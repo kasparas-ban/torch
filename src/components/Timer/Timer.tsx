@@ -26,7 +26,7 @@ function Timer() {
   const resetTimer = useTimerStore.use.resetTimer()
 
   const { openTimerSettingsModal } = useModal()
-  const { focusOn, focusType } = useTimerForm()
+  const { focusOn } = useTimerForm()
 
   return (
     <motion.div
@@ -40,16 +40,12 @@ function Timer() {
 
         {focusOn && (
           <motion.div
-            key={`${focusType}_${focusOn.value}_info`}
+            key={`${focusOn.type}_${focusOn.value}_info`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
           >
-            <TimerFocusInfo
-              key="timer_focus_info"
-              focusOn={focusOn}
-              focusType={focusType}
-            />
+            <TimerFocusInfo key="timer_focus_info" focusOn={focusOn} />
           </motion.div>
         )}
 

@@ -96,6 +96,7 @@ const filterItems = (items: GeneralItem[], input: string) =>
     .map(item => ({
       label: item.title,
       value: item.id,
+      type: item.type,
       progress: item.progress,
       timeSpent: item.timeSpent,
       timeLeft: (item as Goal).timeLeft,
