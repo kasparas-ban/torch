@@ -64,7 +64,7 @@ function AccountPage() {
                 <span className="mr-1">🤝</span>Support
               </div>
             </div>
-            <div className="relative rounded-md text-2xl font-bold text-gray-200 transition-all duration-75 ease-in">
+            <div className="relative rounded-md text-2xl font-bold text-white transition-all duration-75 ease-in">
               Become a member
             </div>
           </motion.button>
