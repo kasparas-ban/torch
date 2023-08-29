@@ -18,7 +18,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={inputType}
           className={cn(
-            "flex h-10 w-full rounded-2xl transition-colors border border-input bg-background px-4 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+            "border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-2xl border px-4 py-2 transition-colors selection:bg-gray-400 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50",
             className,
           )}
           ref={ref}
@@ -28,12 +28,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <div className="relative">
             {visible ? (
               <HiddenIcon
-                className="absolute top-[-32px] right-4 cursor-pointer text-gray-400 hover:text-gray-600"
+                className="absolute right-4 top-[-32px] cursor-pointer text-gray-400 hover:text-gray-600"
                 onClick={() => setVisible(false)}
               />
             ) : (
               <VisibleIcon
-                className="absolute top-[-32px] right-4 cursor-pointer text-gray-400 hover:text-gray-600"
+                className="absolute right-4 top-[-32px] cursor-pointer text-gray-400 hover:text-gray-600"
                 onClick={() => setVisible(true)}
               />
             )}
@@ -59,7 +59,7 @@ const VisibleIcon = ({
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className="w-6 h-6"
+      className="h-6 w-6"
     >
       <path
         strokeLinecap="round"
@@ -89,7 +89,7 @@ const HiddenIcon = ({
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className="w-6 h-6"
+      className="h-6 w-6"
     >
       <path
         strokeLinecap="round"

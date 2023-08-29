@@ -19,13 +19,14 @@ Necessary
 - [x] Make an Account page
 - [ ] Make an initial page
 - [x] Add a loading skeleton for lists
+- [ ] Add loading buttons where appropriate (from shadcn)
 - [ ] Make a Not Found page
 - [ ] Make an error page
 - [ ] Change timer design for breaks
 
 Nice to have
 
-- [ ] Redo duration input to match what's in the Android timer (React Aria TimeField)
+- [x] Redo duration input to match what's in the Android timer (React Aria TimeField)
 - [ ] Adjust all sizes to make sure they look good on mobile
 - [ ] Have the ability to reorder list items by dragging them
 - [ ] Make timer toast text to slide infinitely (like Spotify)

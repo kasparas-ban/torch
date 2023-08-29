@@ -7,6 +7,8 @@ import { ReactComponent as EmailIcon } from "../assets/email.svg"
 import { ReactComponent as LockIcon } from "../assets/lock.svg"
 import { ReactComponent as PaymentIcon } from "../assets/payment.svg"
 import { ReactComponent as DeleteIcon } from "../assets/trash.svg"
+import { ReactComponent as SignOutIcon } from "../assets/sign_out.svg"
+import { Button } from "@/components/ui/button"
 
 function AccountPage() {
   const {
@@ -69,12 +71,12 @@ function AccountPage() {
         </section>
 
         <section className="flex sm:hidden">
-          <motion.button
-            className="mx-auto w-fit rounded-lg bg-gray-200 px-12 py-1 font-bold text-gray-600 shadow-md"
-            whileTap={{ scale: 0.96 }}
-          >
-            Sign Out
-          </motion.button>
+          <motion.div className="mx-auto w-fit" whileTap={{ scale: 0.95 }}>
+            <Button className="text-md bg-gray-600 pl-8 pr-10  hover:bg-gray-600">
+              <SignOutIcon className="t-2 relative top-px mr-3 h-5 w-5" />
+              Sign Out
+            </Button>
+          </motion.div>
         </section>
 
         <section>
