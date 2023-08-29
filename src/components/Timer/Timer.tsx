@@ -121,7 +121,7 @@ function Timer() {
               animate="default"
               exit="close"
             >
-              <div className="absolute top-1 right-[13px] font-medium tracking-wide text-white">
+              <div className="absolute right-[13px] top-1 font-medium tracking-wide text-white">
                 Continue
               </div>
             </motion.button>

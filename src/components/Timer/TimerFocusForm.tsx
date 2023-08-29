@@ -29,7 +29,7 @@ export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
         <motion.div
           layout
           ref={ref}
-          className="mx-auto mt-8 max-w-sm max-[400px]:mx-4 max-[320px]:mx-0"
+          className="mx-auto max-w-sm max-[400px]:mx-4 max-[320px]:mx-0"
           initial={{ opacity: 0, y: 0 }}
           animate={{
             opacity: 1,
@@ -98,7 +98,7 @@ export const TimerFocusInfo = forwardRef<
       </motion.div>
       <motion.div layout className="flex justify-center">
         <div className="text-6xl font-bold">45%</div>
-        <div className="mt-1.5 ml-1.5 flex flex-col gap-1">
+        <div className="ml-1.5 mt-1.5 flex flex-col gap-1">
           <div className="flex gap-2">
             <TimerBoldIcon />
             <span className="font-semibold">6 h</span>
