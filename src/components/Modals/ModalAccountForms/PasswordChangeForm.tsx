@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import useModal from "../useModal"
-import { passwordFormSchema } from "./schemas"
+import { passwordFormSchema } from "../ModalItemForms/schemas"
 import { Input } from "@/components/ui/input"
 
 function PasswordChangeForm() {
@@ -44,7 +44,7 @@ function PasswordChangeForm() {
                     <Input
                       type="password"
                       placeholder="Aa..."
-                      className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                      className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -63,7 +63,7 @@ function PasswordChangeForm() {
                     <Input
                       type="password"
                       placeholder="Aa..."
-                      className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                      className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -82,7 +82,7 @@ function PasswordChangeForm() {
                     <Input
                       type="password"
                       placeholder="Aa..."
-                      className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                      className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -95,7 +95,7 @@ function PasswordChangeForm() {
           <div className="relative flex justify-center">
             <motion.button
               layout
-              className="px-3 py-1 mt-6 text-xl font-medium"
+              className="mt-6 px-3 py-1 text-xl font-medium"
               whileTap={{ scale: 0.95 }}
             >
               Save

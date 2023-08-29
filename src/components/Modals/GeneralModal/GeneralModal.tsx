@@ -9,7 +9,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import useModal from "../useModal"
-import "../inputStyles.css"
 
 function GeneralModal({ children }: { children: ReactNode }) {
   const { isOpen, modalContent, modalTitle, closeModal, modalKey } = useModal()

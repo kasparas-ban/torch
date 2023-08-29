@@ -12,11 +12,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { accountFormSchema } from "./schemas"
+import { accountFormSchema } from "../ModalItemForms/schemas"
 import { Input } from "@/components/ui/input"
 import SelectField from "@/components/Inputs/SelectField"
 import { getAllCountries } from "@/helpers"
-import "../inputStyles.css"
 
 const genderOptions: GenderOption[] = [
   { label: "Male", value: "MALE" },
@@ -58,7 +57,7 @@ function AccountDetailsForm() {
                   <FormControl>
                     <Input
                       placeholder="Aa..."
-                      className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                      className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -77,7 +76,7 @@ function AccountDetailsForm() {
                     <Input
                       {...field}
                       className={clsx(
-                        "bg-gray-200 focus:bg-white placeholder:text-red-200",
+                        "bg-gray-200 placeholder:text-red-200 focus:bg-white",
                         field.value ? "text-gray-800" : "text-gray-400",
                       )}
                       type="date"
@@ -146,7 +145,7 @@ function AccountDetailsForm() {
           <div className="relative flex justify-center">
             <motion.button
               layout
-              className="px-3 py-1 mt-8 text-xl font-medium"
+              className="mt-8 px-3 py-1 text-xl font-medium"
               whileTap={{ scale: 0.95 }}
             >
               Save

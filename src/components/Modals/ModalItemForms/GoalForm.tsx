@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input"
 import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
-import "../inputStyles.css"
 
 type GoalForm = Omit<Goal, "id" | "type" | "progress" | "dream"> & {
   dream?: { label: string; value: number }
@@ -113,7 +112,7 @@ function GoalForm() {
   }
 
   return (
-    <div className="px-0 pt-4 pb-2 sm:px-10">
+    <div className="px-0 pb-2 pt-4 sm:px-10">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-1">
@@ -130,7 +129,7 @@ function GoalForm() {
                       <FormControl>
                         <Input
                           placeholder="Aa..."
-                          className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                          className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
                           {...field}
                         />
                       </FormControl>
@@ -240,7 +239,7 @@ function GoalForm() {
                                 <Input
                                   {...field}
                                   className={clsx(
-                                    "bg-gray-200 focus:bg-white placeholder:text-red-200",
+                                    "bg-gray-200 placeholder:text-red-200 focus:bg-white",
                                     field.value
                                       ? "text-gray-800"
                                       : "text-gray-400",
@@ -284,7 +283,7 @@ function GoalForm() {
             removeSubtask={removeSubtask}
           />
 
-          <div className="relative mt-2 mb-5 flex justify-center">
+          <div className="relative mb-5 mt-2 flex justify-center">
             <motion.button
               layout
               className="flex px-3 py-1 text-[15px] text-gray-500"

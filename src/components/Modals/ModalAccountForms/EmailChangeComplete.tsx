@@ -1,16 +1,15 @@
 import { motion } from "framer-motion"
 import useModal from "../useModal"
-import "../inputStyles.css"
 
-function PasswordChangeComplete() {
+function EmailChangeComplete() {
   const { closeModal } = useModal()
 
   return (
-    <div className="px-0 pb-2 sm:px-10">
-      <p className="text-gray-700 text-center">
-        A confirmation link was sent to your email.
+    <motion.div layout className="px-0 pb-2 sm:px-10">
+      <p className="text-center text-gray-700">
+        A confirmation link was sent to your new email address.
       </p>
-      <p className="mb-4 text-gray-700 text-center">
+      <p className="mb-4 text-center text-gray-700">
         Click it to complete the change.
       </p>
 
@@ -24,8 +23,8 @@ function PasswordChangeComplete() {
           Ok
         </motion.button>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
-export default PasswordChangeComplete
+export default EmailChangeComplete

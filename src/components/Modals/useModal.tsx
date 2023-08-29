@@ -1,16 +1,17 @@
 import React from "react"
 import { create } from "zustand"
 import { Dream, GeneralItem, Goal, Task } from "../../types"
-import GeneralForm from "./ModalForms/GeneralForm"
-import TaskForm from "./ModalForms/TaskForm"
-import GoalForm from "./ModalForms/GoalForm"
-import DreamForm from "./ModalForms/DreamForm"
+import GeneralForm from "./ModalItemForms/GeneralForm"
+import TaskForm from "./ModalItemForms/TaskForm"
+import GoalForm from "./ModalItemForms/GoalForm"
+import DreamForm from "./ModalItemForms/DreamForm"
 import TimerSettings from "../Timer/TimerSettings"
-import EmailChangeForm from "./ModalForms/EmailChangeForm"
-import AccountDetailsForm from "./ModalForms/AccountDetailsForm"
-import PasswordChangeForm from "./ModalForms/PasswordChangeForm"
-import EmailChangeComplete from "./ModalForms/EmailChangeComplete"
-import PasswordChangeComplete from "./ModalForms/PasswordChangeComplete"
+import EmailChangeForm from "./ModalAccountForms/EmailChangeForm"
+import AccountDetailsForm from "./ModalAccountForms/AccountDetailsForm"
+import PasswordChangeForm from "./ModalAccountForms/PasswordChangeForm"
+import EmailChangeComplete from "./ModalAccountForms/EmailChangeComplete"
+import PasswordChangeComplete from "./ModalAccountForms/PasswordChangeComplete"
+import DeleteAccountForm from "./ModalAccountForms/DeleteAccountForm"
 
 type ModalState = {
   title: string
@@ -36,6 +37,7 @@ type ModalState = {
   openEmailChangeCompleteModal: () => void
   openPasswordChangeModal: () => void
   openPasswordChangeCompleteModal: () => void
+  openAccountDeleteModal: () => void
 
   closeModal: () => void
   goBack: () => void
@@ -129,6 +131,13 @@ const useModalStore = create<ModalState>(set => ({
       modalKey: "confirm_password_change_modal",
       modalContent: <PasswordChangeComplete />,
     })),
+  openAccountDeleteModal: () =>
+    set(() => ({
+      isOpen: true,
+      title: "Delete account",
+      modalKey: "delete_account_modal",
+      modalContent: <DeleteAccountForm />,
+    })),
 
   goBack: () =>
     set(state =>
@@ -181,6 +190,7 @@ const useModal = () => ({
   openPasswordChangeCompleteModal: useModalStore(
     state => state.openPasswordChangeCompleteModal,
   ),
+  openAccountDeleteModal: useModalStore(state => state.openAccountDeleteModal),
 
   closeModal: useModalStore(state => state.closeModal),
   goBack: useModalStore(state => state.goBack),

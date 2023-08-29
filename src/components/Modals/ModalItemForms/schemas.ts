@@ -92,3 +92,12 @@ export const passwordFormSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   })
+
+export const deleteAccountFormSchema = z.object({
+  password: z
+    .string()
+    .min(1, { message: "Enter your password" })
+    .refine(value => value, {
+      message: "Enter your password",
+    }),
+})

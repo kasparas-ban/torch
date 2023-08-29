@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import PriorityInput from "../../Inputs/PriorityInput"
-import { TimeField } from "../../Inputs/DurationInput"
+import DurationInput from "../../Inputs/DurationInput"
 import RecurringInput from "../../Inputs/RecurringInput"
 import { SubitemKeyType, SubitemType, goalFormSchema } from "./schemas"
 import { ReactComponent as CloseIcon } from "../../../assets/close.svg"
@@ -113,7 +113,7 @@ function SubtaskItem({
     >
       <motion.button
         layout
-        className="absolute top-[-10px] right-[-5px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500"
+        className="absolute right-[-5px] top-[-10px] z-10 h-8 w-8 rounded-full bg-gray-400 drop-shadow-md hover:bg-gray-500"
         onClick={e => removeSubtask(e, index)}
         whileTap={{ scale: 0.95 }}
       >
@@ -131,7 +131,7 @@ function SubtaskItem({
               <FormControl>
                 <Input
                   placeholder="Aa..."
-                  className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                  className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
                   {...form.register(`tasks.${index}.title`)}
                 />
               </FormControl>
@@ -147,7 +147,7 @@ function SubtaskItem({
             <FormItem>
               <FormLabel className="pl-3 tracking-wide">Duration</FormLabel>
               <FormControl>
-                <TimeField
+                <DurationInput
                   hourCycle={24}
                   aria-label="Duration"
                   value={(() => {
@@ -219,7 +219,7 @@ function SubtaskItem({
                     <FormControl>
                       <Input
                         className={clsx(
-                          "bg-gray-200 focus:bg-white placeholder:text-red-200",
+                          "bg-gray-200 placeholder:text-red-200 focus:bg-white",
                           targetDate ? "text-gray-800" : "text-gray-400",
                         )}
                         type="date"

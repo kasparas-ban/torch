@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import useModal from "../useModal"
-import { emailFormSchema } from "./schemas"
+import { emailFormSchema } from "../ModalItemForms/schemas"
 import { Input } from "@/components/ui/input"
 
 const defaultEmail = "kasparas@gmail.com"
@@ -42,7 +42,7 @@ function EmailChangeForm() {
                 <FormControl>
                   <Input
                     placeholder="name@host.com"
-                    className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                    className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
                     {...field}
                   />
                 </FormControl>
@@ -54,7 +54,7 @@ function EmailChangeForm() {
           <div className="relative flex justify-center">
             <motion.button
               layout
-              className="px-3 py-1 mt-6 text-xl font-medium"
+              className="mt-6 px-3 py-1 text-xl font-medium"
               whileTap={{ scale: 0.95 }}
             >
               Save

@@ -1,5 +1,6 @@
 module.exports = {
   tailwindConfig: './tailwind.config.cjs',
   semi: false,
-  arrowParens: 'avoid'
+  arrowParens: 'avoid',
+  plugins: ['prettier-plugin-tailwindcss'],
 }

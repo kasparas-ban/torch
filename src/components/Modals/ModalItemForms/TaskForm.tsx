@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
 import PriorityInput from "../../Inputs/PriorityInput"
-import { TimeField } from "../../Inputs/DurationInput"
+import DurationInput from "../../Inputs/DurationInput"
 import RecurringInput from "../../Inputs/RecurringInput"
 import { Task } from "../../../types"
 import useModal from "../useModal"
@@ -25,7 +25,6 @@ import { groupItemsByParent } from "@/API/helpers"
 import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
-import "../inputStyles.css"
 
 type TaskForm = Omit<Task, "id" | "type" | "progress" | "goal"> & {
   goal?: { label: string; value: number }
@@ -91,7 +90,7 @@ function TaskForm() {
                       <FormControl>
                         <Input
                           placeholder="Aa..."
-                          className="bg-gray-200 focus:bg-white placeholder:text-gray-400"
+                          className="bg-gray-200 placeholder:text-gray-400 focus:bg-white"
                           {...field}
                         />
                       </FormControl>
@@ -112,7 +111,7 @@ function TaskForm() {
                         Duration
                       </FormLabel>
                       <FormControl>
-                        <TimeField
+                        <DurationInput
                           hourCycle={24}
                           aria-label="Duration"
                           value={
@@ -275,7 +274,7 @@ function TaskForm() {
                                 <Input
                                   {...field}
                                   className={clsx(
-                                    "bg-gray-200 focus:bg-white placeholder:text-red-200",
+                                    "bg-gray-200 placeholder:text-red-200 focus:bg-white",
                                     field.value
                                       ? "text-gray-800"
                                       : "text-gray-400",
