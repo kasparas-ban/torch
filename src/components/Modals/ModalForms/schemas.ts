@@ -51,3 +51,44 @@ export const goalFormSchema = z.object({
 const subtaskFormSchema = taskFormSchema.extend({ id: z.number() })
 export type SubitemType = z.infer<typeof subtaskFormSchema>
 export type SubitemKeyType = keyof SubitemType
+
+export const accountFormSchema = z.object({
+  username: z
+    .string()
+    .min(5, { message: "Username must contain at least 5 characters" })
+    .max(20, { message: "Username cannot exceed 20 characters" }),
+  birthday: z.date().optional(),
+  gender: z
+    .union([
+      z.object({ label: z.literal("Male"), value: z.literal("MALE") }),
+      z.object({ label: z.literal("Female"), value: z.literal("FEMALE") }),
+    ])
+    .optional(),
+  country: z.object({ label: z.string(), value: z.string() }).optional(),
+})
+
+export const emailFormSchema = z.object({ email: z.string().email() })
+
+export const passwordFormSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(8, { message: "Password must contain at least 8 characters" })
+      .max(30, { message: "Password must be less than 30 characters" }),
+    newPassword: z
+      .string()
+      .min(8, { message: "Password must contain at least 8 characters" })
+      .max(30, { message: "Password must be less than 30 characters" })
+      .regex(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).*$/, {
+        message:
+          "Password must contain at least one number and both lowercase and uppercase characters",
+      }),
+    confirmPassword: z
+      .string()
+      .min(8, { message: "Password must contain at least 8 characters" })
+      .max(30, { message: "Password must be less than 30 characters" }),
+  })
+  .refine(data => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  })

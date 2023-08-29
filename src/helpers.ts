@@ -66,3 +66,24 @@ export const formatPercentages = (fraction?: number) => {
 
   return `${rounded}%`
 }
+
+export const getAllCountries = (lang = "en") => {
+  const A = 65
+  const Z = 90
+  const countryName = new Intl.DisplayNames([lang], { type: "region" })
+  const countries: { [key: string]: string | undefined } = {}
+  for (let i = A; i <= Z; ++i) {
+    for (let j = A; j <= Z; ++j) {
+      let code = String.fromCharCode(i) + String.fromCharCode(j)
+      let name = countryName.of(code)
+      if (code !== name) {
+        countries[code] = name
+      }
+    }
+  }
+
+  const countryOptions = Object.entries(countries)
+    .filter(([_, value]) => !!value)
+    .map(([key, value]) => ({ label: value as string, value: key }))
+  return countryOptions
+}

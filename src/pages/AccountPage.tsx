@@ -5,10 +5,20 @@ import { ReactComponent as EmailIcon } from "../assets/email.svg"
 import { ReactComponent as LockIcon } from "../assets/lock.svg"
 import { ReactComponent as PaymentIcon } from "../assets/payment.svg"
 import { ReactComponent as DeleteIcon } from "../assets/trash.svg"
+import { GeneralModal } from "@/components/Modals/GeneralModal/GeneralModal"
+import useModal from "@/components/Modals/useModal"
+import { useState } from "react"
 
 function AccountPage() {
+  const {
+    openAccountInfoModal,
+    openEmailChangeModal,
+    openPasswordChangeModal,
+  } = useModal()
+
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">
+      <GeneralModal children={null} />
       <div className="w-full max-w-[650px] space-y-6">
         <h1 className="text-5xl flex items-center font-bold text-gray-400">
           Account
@@ -34,6 +44,7 @@ function AccountPage() {
           <motion.button
             className="group bg-multi-color h-32 justify-around m-auto flex flex-col rounded-xl py-3 px-5 w-full items-center text-sm text-gray-700 shadow-lg"
             whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             <div className="font-semibold text-lg text-gray-800">
               Unlock more features
@@ -88,6 +99,7 @@ function AccountPage() {
             <motion.button
               className="flex items-center w-full py-3"
               whileTap={{ scale: 0.99 }}
+              onClick={openAccountInfoModal}
             >
               <AccountIcon className="w-7 h-7 mr-3" />
               <div className="font-medium">Edit account info</div>
@@ -97,6 +109,7 @@ function AccountPage() {
             <motion.button
               className="flex items-center w-full py-3"
               whileTap={{ scale: 0.99 }}
+              onClick={openEmailChangeModal}
             >
               <EmailIcon className="w-7 h-7 mr-3" />
               <div className="font-medium">Change email</div>
@@ -106,6 +119,7 @@ function AccountPage() {
             <motion.button
               className="flex items-center w-full py-3"
               whileTap={{ scale: 0.99 }}
+              onClick={openPasswordChangeModal}
             >
               <LockIcon className="w-7 h-7 mr-3" />
               <div className="font-medium">Change password</div>
@@ -117,7 +131,7 @@ function AccountPage() {
               whileTap={{ scale: 0.99 }}
             >
               <PaymentIcon className="w-7 h-7 mr-3" />
-              <div className="font-medium">Payment history</div>
+              <div className="font-medium">Manage subscription</div>
               <ArrowIcon className="w-4 h-4 rotate-[270deg] ml-auto" />
             </motion.button>
             <div className="h-px bg-gray-200" />

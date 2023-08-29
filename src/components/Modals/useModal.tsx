@@ -6,6 +6,11 @@ import TaskForm from "./ModalForms/TaskForm"
 import GoalForm from "./ModalForms/GoalForm"
 import DreamForm from "./ModalForms/DreamForm"
 import TimerSettings from "../Timer/TimerSettings"
+import EmailChangeForm from "./ModalForms/EmailChangeForm"
+import AccountDetailsForm from "./ModalForms/AccountDetailsForm"
+import PasswordChangeForm from "./ModalForms/PasswordChangeForm"
+import EmailChangeComplete from "./ModalForms/EmailChangeComplete"
+import PasswordChangeComplete from "./ModalForms/PasswordChangeComplete"
 
 type ModalState = {
   title: string
@@ -25,6 +30,12 @@ type ModalState = {
   openDreamModal: (item?: Dream, openGeneralOnClose?: boolean) => void
   openGeneralModal: () => void
   openTimerSettingsModal: () => void
+
+  openAccountInfoModal: () => void
+  openEmailChangeModal: () => void
+  openEmailChangeCompleteModal: () => void
+  openPasswordChangeModal: () => void
+  openPasswordChangeCompleteModal: () => void
 
   closeModal: () => void
   goBack: () => void
@@ -83,6 +94,42 @@ const useModalStore = create<ModalState>(set => ({
       modalContent: <TimerSettings />,
     })),
 
+  openAccountInfoModal: () =>
+    set(() => ({
+      isOpen: true,
+      title: "Edit Account",
+      modalKey: "edit_account_modal",
+      modalContent: <AccountDetailsForm />,
+    })),
+  openEmailChangeModal: () =>
+    set(() => ({
+      isOpen: true,
+      title: "Change email",
+      modalKey: "change_email_modal",
+      modalContent: <EmailChangeForm />,
+    })),
+  openEmailChangeCompleteModal: () =>
+    set(() => ({
+      isOpen: true,
+      title: "Confirm change",
+      modalKey: "confirm_email_change_modal",
+      modalContent: <EmailChangeComplete />,
+    })),
+  openPasswordChangeModal: () =>
+    set(() => ({
+      isOpen: true,
+      title: "Change password",
+      modalKey: "change_password_modal",
+      modalContent: <PasswordChangeForm />,
+    })),
+  openPasswordChangeCompleteModal: () =>
+    set(() => ({
+      isOpen: true,
+      title: "Confirm change",
+      modalKey: "confirm_password_change_modal",
+      modalContent: <PasswordChangeComplete />,
+    })),
+
   goBack: () =>
     set(state =>
       state.openGeneralOnClose
@@ -122,6 +169,18 @@ const useModal = () => ({
   openDreamModal: useModalStore(state => state.openDreamModal),
   openGeneralModal: useModalStore(state => state.openGeneralModal),
   openTimerSettingsModal: useModalStore(state => state.openTimerSettingsModal),
+
+  openAccountInfoModal: useModalStore(state => state.openAccountInfoModal),
+  openEmailChangeModal: useModalStore(state => state.openEmailChangeModal),
+  openEmailChangeCompleteModal: useModalStore(
+    state => state.openEmailChangeCompleteModal,
+  ),
+  openPasswordChangeModal: useModalStore(
+    state => state.openPasswordChangeModal,
+  ),
+  openPasswordChangeCompleteModal: useModalStore(
+    state => state.openPasswordChangeCompleteModal,
+  ),
 
   closeModal: useModalStore(state => state.closeModal),
   goBack: useModalStore(state => state.goBack),

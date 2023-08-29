@@ -70,3 +70,16 @@ export type TimerHistoryRecord = {
   startTime: Date
   finishTime: Date
 }
+
+export type Profile = {
+  username: string
+  email: string
+  birthday?: Date
+  gender?: GenderOption
+  joinedSince: Date
+  country?: { label: string; value: string }
+}
+
+export type GenderOption =
+  | { label: "Male"; value: "MALE" }
+  | { label: "Female"; value: "FEMALE" }
