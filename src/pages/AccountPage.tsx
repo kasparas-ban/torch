@@ -1,4 +1,7 @@
 import { motion } from "framer-motion"
+import { useUser } from "@clerk/clerk-react"
+import SignInPage from "./SignInPage"
+import { Button } from "@/components/ui/button"
 import useModal from "@/components/Modals/useModal"
 import { GeneralModal } from "@/components/Modals/GeneralModal/GeneralModal"
 import { ReactComponent as AccountIcon } from "../assets/account.svg"
@@ -8,7 +11,6 @@ import { ReactComponent as LockIcon } from "../assets/lock.svg"
 import { ReactComponent as PaymentIcon } from "../assets/payment.svg"
 import { ReactComponent as DeleteIcon } from "../assets/trash.svg"
 import { ReactComponent as SignOutIcon } from "../assets/sign_out.svg"
-import { Button } from "@/components/ui/button"
 
 function AccountPage() {
   const {
@@ -17,6 +19,10 @@ function AccountPage() {
     openPasswordChangeModal,
     openAccountDeleteModal,
   } = useModal()
+
+  const { isSignedIn } = useUser()
+
+  if (!isSignedIn) return <SignInPage />
 
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">

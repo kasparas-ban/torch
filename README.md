@@ -21,8 +21,12 @@ Necessary
 - [x] Add a loading skeleton for lists
 - [ ] Add loading buttons where appropriate (from shadcn)
 - [ ] Make a Not Found page
-- [ ] Make an error page
+- [ ] Make an error toast
 - [x] Change timer design for breaks
+- [ ] Deal with authentication
+- [ ] Add validation for username edit
+- [ ] Add registration form
+- [ ] Add some background
 
 Nice to have
 
@@ -38,6 +42,7 @@ If there's time
 
 - [ ] Implement `prefers-reduced-motion` media query
 - [ ] Try adding Million.js for smoother animations
+- [ ] Add progress item bubble animation
 
 Done
 

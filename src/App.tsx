@@ -6,7 +6,9 @@ import {
   ScrollRestoration,
 } from "react-router-dom"
 import { motion } from "framer-motion"
+import { neobrutalism } from "@clerk/themes"
 import { useMediaQuery } from "react-responsive"
+import { ClerkProvider } from "@clerk/clerk-react"
 import { HelmetProvider } from "react-helmet-async"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import useConfirmModal from "./components/Modals/ConfirmModal/useConfirmModal"
@@ -21,8 +23,15 @@ import StatisticsPage from "./pages/StatisticsPage"
 import WorldPage from "./pages/WorldPage"
 import AccountPage from "./pages/AccountPage"
 import { ROUTES } from "./routes"
+import SignInPage from "./pages/SignInPage"
+import SignUpPage from "./pages/SignUpPage"
 
 const queryClient = new QueryClient()
+
+if (!import.meta.env.VITE_REACT_APP_CLERK_PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key")
+}
+const clerkPubKey = import.meta.env.VITE_REACT_APP_CLERK_PUBLISHABLE_KEY
 
 const Wrapper = () => {
   const { isOpen: isModalOpen } = useModal()
@@ -42,15 +51,20 @@ const Wrapper = () => {
       className="origin-top pb-24"
     >
       <ScrollRestoration />
-      <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <TitleWrapper>
-            <NavigationBar />
-            {!isDesktop && <TimerToast showBackdrop />}
-            <Outlet />
-          </TitleWrapper>
-        </HelmetProvider>
-      </QueryClientProvider>
+      <ClerkProvider
+        publishableKey={clerkPubKey}
+        appearance={{ baseTheme: neobrutalism }}
+      >
+        <QueryClientProvider client={queryClient}>
+          <HelmetProvider>
+            <TitleWrapper>
+              <NavigationBar />
+              {!isDesktop && <TimerToast showBackdrop />}
+              <Outlet />
+            </TitleWrapper>
+          </HelmetProvider>
+        </QueryClientProvider>
+      </ClerkProvider>
     </motion.div>
   )
 }
@@ -83,6 +97,14 @@ const routes: RouteObject[] = [
       {
         path: ROUTES.account.path,
         element: <AccountPage />,
+      },
+      {
+        path: ROUTES.signIn.path,
+        element: <SignInPage />,
+      },
+      {
+        path: ROUTES.signUp.path,
+        element: <SignUpPage />,
       },
     ],
   },
