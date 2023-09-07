@@ -39,19 +39,17 @@ export const toPercent = (input?: number) => {
   return `${rounded.toString()}%`
 }
 
-export const formatTimeSpent = ({
-  hour,
-  minute,
-  second,
-}: {
-  hour: number
-  minute: number
-  second: number
-}) => {
-  if (hour && minute) return `${hour} h ${minute} min`
-  if (hour) return `${hour} h`
-  if (minute) return `${minute} min`
-  if (second) return `${second} sec`
+export const formatTimeSpent = (totalSeconds: number) => {
+  if (totalSeconds === 0) return "0 h"
+
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  if (hours && minutes) return `${hours} h ${minutes} min`
+  if (hours) return `${hours} h`
+  if (minutes) return `${minutes} min`
+  if (seconds) return `${seconds} sec`
   return "0 h"
 }
 

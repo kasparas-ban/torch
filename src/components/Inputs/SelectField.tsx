@@ -67,11 +67,11 @@ export const SelectTypeFirstField = <
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>,
 >(
-  props: AsyncSelectProps<Option, IsMulti, Group>,
+  props: SelectProps<Option, IsMulti, Group>,
 ) => {
   return (
     <CacheProvider value={cache}>
-      <AsyncSelect
+      <Select
         {...props}
         classNames={{
           control: ({ isFocused }) =>
@@ -128,6 +128,16 @@ export const SelectTypeSecondField = <
           clearIndicator: () => classNames("cursor-pointer"),
           option: () => classNames("cursor-pointer"),
         }}
+        theme={theme => ({
+          ...theme,
+          borderRadius: 0,
+          colors: {
+            ...theme.colors,
+            primary50: "rgb(217, 221, 226)",
+            primary25: "rgb(230, 230, 230)",
+            primary: "rgb(200, 200, 200)",
+          },
+        })}
       />
     </CacheProvider>
   )

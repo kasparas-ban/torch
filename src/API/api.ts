@@ -1,10 +1,40 @@
 import { useQuery } from "@tanstack/react-query"
-import { groupItemsByParent } from "./helpers"
+import { ItemResponse, formatItemResponse } from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
 import { FocusType } from "../components/Timer/useTimerForm"
 import { dreamsData, goalsData, tasksData } from "../data/itemData"
-import { GeneralItem, Goal, ItemType, Task, TimerHistoryRecord } from "../types"
-import { Time } from "@internationalized/date"
+import { Dream, Goal, Task, TimerHistoryRecord } from "../types"
+import { useAuth } from "@clerk/clerk-react"
+
+if (!import.meta.env.VITE_HOST_ADDRESS) {
+  throw new Error("Missing host address")
+}
+const HOST = import.meta.env.VITE_HOST_ADDRESS
+
+export const useItemsList = () => {
+  const { getToken } = useAuth()
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["items"],
+    queryFn: async () => {
+      const token = await getToken()
+      const response = await fetch(`${HOST}/api/items`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(res => res.json() as Promise<ItemResponse[]>)
+        .catch(err => {
+          console.error(err)
+          return [] as ItemResponse[]
+        })
+
+      const formattedItems = formatItemResponse(response)
+      return formattedItems
+    },
+    refetchOnWindowFocus: false,
+  })
+
+  return { isLoading, error, data }
+}
 
 export const useTimerHistory = () => {
   const { isLoading, error, data } = useQuery({
@@ -20,51 +50,34 @@ export const useTimerHistory = () => {
   return { isLoading, error, data }
 }
 
-export const useItemsList = (itemType: ItemType) => {
-  const { isLoading, error, data } = useQuery({
-    queryKey: [
-      itemType === "TASK" ? "tasks" : itemType === "GOAL" ? "goals" : "dreams",
-    ],
-    queryFn: async () => {
-      const items = await new Promise<GeneralItem[]>(resolve => {
-        setTimeout(
-          () =>
-            resolve(
-              itemType === "TASK"
-                ? tasksData
-                : itemType === "GOAL"
-                ? goalsData
-                : dreamsData,
-            ),
-          2000,
-        )
-      })
-      const groupedItems = groupItemsByParent(items, itemType)
-      return groupedItems
-    },
-  })
+export const getItemsByType = ({
+  itemData,
+  focusType,
+  grouped,
+}: {
+  itemData?: { tasks: Task[]; goals: Goal[]; dreams: Dream[] }
+  focusType: FocusType
+  grouped?: boolean
+}) => {
+  const selectedItems =
+    focusType === "TASKS"
+      ? itemData?.tasks
+      : focusType === "GOALS"
+      ? itemData?.goals
+      : focusType === "DREAMS"
+      ? itemData?.dreams
+      : [...tasksData, ...goalsData, ...dreamsData]
 
-  return { isLoading, error, data }
-}
-
-export const getItemsByType = async (
-  input: string,
-  focusType: FocusType,
-  grouped?: boolean,
-) => {
-  const items = await new Promise<GeneralItem[]>(resolve =>
-    resolve(
-      focusType === "TASKS"
-        ? tasksData
-        : focusType === "GOALS"
-        ? goalsData
-        : focusType === "DREAMS"
-        ? dreamsData
-        : [...tasksData, ...goalsData, ...dreamsData],
-    ),
-  )
-
-  const filteredItems = filterItems(items, input)
+  const filteredItems =
+    selectedItems?.map(item => ({
+      label: item.title,
+      value: item.id,
+      type: item.type,
+      progress: item.progress,
+      timeSpent: item.timeSpent,
+      duration: (item as Task)?.duration,
+      parent: (item as Task).goal?.id || (item as Goal).dream?.id,
+    })) || []
 
   if (grouped) {
     if (focusType === "ALL" || focusType === "DREAMS") return filteredItems
@@ -89,20 +102,3 @@ export const getItemsByType = async (
 
   return filteredItems
 }
-
-const filterItems = (items: GeneralItem[], input: string) =>
-  items
-    .filter(item => item.title.toLowerCase().includes(input.toLowerCase()))
-    .map(item => ({
-      label: item.title,
-      value: item.id,
-      type: item.type,
-      progress: item.progress,
-      timeSpent: item.timeSpent,
-      timeLeft: (item as Goal).timeLeft,
-      duration: new Time(
-        (item as Task).duration?.hours || 0,
-        (item as Task).duration?.minutes || 0,
-      ),
-      parent: (item as Task).goal?.id || (item as Goal).dream?.id,
-    }))

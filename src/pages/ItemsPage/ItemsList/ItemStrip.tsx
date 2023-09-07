@@ -7,7 +7,6 @@ import useTimerForm from "@/components/Timer/useTimerForm"
 import { ROUTES } from "@/routes"
 import ItemProgress from "./ProgressBar"
 import useEditItem from "../useEditItem"
-import { Time } from "@internationalized/date"
 import { ReactComponent as DotsIcon } from "../../../assets/dots.svg"
 import { ReactComponent as TimerStartIcon } from "../../../assets/timer_start.svg"
 
@@ -40,13 +39,7 @@ function ItemStrip<T extends GeneralItem>({
       type: item.type,
       progress: item.progress,
       timeSpent: item.timeSpent,
-      timeLeft: (item as Goal).timeLeft,
-      duration: (item as Task).duration
-        ? new Time(
-            (item as Task).duration?.hours || 0,
-            (item as Task).duration?.minutes || 0,
-          )
-        : undefined,
+      duration: (item as Task).duration,
     })
     setFocusType(
       itemType === "TASK"

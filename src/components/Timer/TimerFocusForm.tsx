@@ -9,7 +9,7 @@ import {
 import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
 import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
 import { GroupedOptionType, ItemOptionType } from "../../types"
-import { getItemsByType } from "../../API/api"
+import { getItemsByType, useItemsList } from "../../API/api"
 import { formatPercentages, formatTimeSpent, toPercent } from "../../helpers"
 
 const focusTypeOptions = [
@@ -22,6 +22,7 @@ const focusTypeOptions = [
 export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
   const timerState = useTimerStore.use.timerState()
   const { focusOn, setFocusOn, focusType, setFocusType } = useTimerForm()
+  const { data } = useItemsList()
 
   return (
     <AnimatePresence mode="popLayout">
@@ -45,16 +46,13 @@ export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
                 key={`${focusType}_focus_item`}
                 value={focusOn}
                 onChange={option => setFocusOn(option)}
-                loadOptions={input =>
-                  getItemsByType(
-                    input,
-                    focusType,
-                    focusType === "TASKS" || focusType === "GOALS",
-                  )
-                }
+                options={getItemsByType({
+                  itemData: data,
+                  focusType,
+                  grouped: focusType === "TASKS" || focusType === "GOALS",
+                })}
                 formatOptionLabel={optionLabel}
                 formatGroupLabel={groupLabel}
-                defaultOptions
                 isClearable
               />
               <SelectTypeSecondField
@@ -78,16 +76,14 @@ export const TimerFocusInfo = forwardRef<
   HTMLDivElement,
   { focusOn: ItemOptionType }
 >(({ focusOn }, ref) => {
+  if (!focusOn.duration) return null
+
   const timeLeft =
-    focusOn.type === "TASK"
-      ? focusOn.duration && focusOn.timeSpent
-        ? focusOn.duration?.subtract({
-            hours: focusOn.timeSpent.hour,
-            minutes: focusOn.timeSpent.minute,
-            seconds: focusOn.timeSpent.second,
-          })
-        : undefined
-      : focusOn.timeLeft
+    focusOn.duration && focusOn.timeSpent
+      ? focusOn.duration - focusOn.timeSpent
+      : undefined
+
+  const timeSpent = focusOn.totalTimeSpent ?? focusOn.timeSpent
 
   return (
     <motion.div
@@ -113,12 +109,12 @@ export const TimerFocusInfo = forwardRef<
             {formatPercentages(focusOn.progress)}
           </div>
         )}
-        {focusOn.timeSpent && (
+        {timeSpent !== undefined && (
           <div className="ml-1.5 mt-1.5 flex flex-col justify-evenly gap-1">
             <div className="flex gap-2">
               <TimerBoldIcon />
               <span className="font-semibold">
-                {formatTimeSpent(focusOn.timeSpent)}
+                {formatTimeSpent(timeSpent)}
               </span>
               <span className="text-gray-600">spent</span>
             </div>
@@ -147,7 +143,7 @@ const optionLabel = (
       {context === "menu" ? (
         <>
           <div className="shrink-0 basis-10 text-center font-bold text-rose-500">
-            {toPercent(option.progress)}
+            {option.duration ? toPercent(option.progress) : "-%"}
           </div>
           <div>{option.label}</div>
         </>

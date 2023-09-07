@@ -12,14 +12,14 @@ export type GroupedItems<T> = {
 export type Task = {
   id: number
   title: string
-  progress?: number
   type: "TASK"
-  duration?: { hours: number | null; minutes: number | null }
   priority?: "LOW" | "MEDIUM" | "HIGH"
-  targetDate?: Date | null
+  progress?: number
+  duration?: number
+  targetDate?: string | null
   recurring?: RecurringType
+  timeSpent: number
   goal?: Goal | null
-  timeSpent?: Time
 }
 
 export type Goal = {
@@ -29,10 +29,10 @@ export type Goal = {
   type: "GOAL"
   tasks?: Task[]
   dream?: Dream
-  targetDate?: Date | null
+  targetDate?: string | null
   priority?: "LOW" | "MEDIUM" | "HIGH"
-  timeSpent?: Time
-  timeLeft?: Time
+  timeSpent: number
+  totalTimeSpent: number
 }
 
 export type Dream = {
@@ -43,8 +43,8 @@ export type Dream = {
   goals?: Goal[]
   targetDate?: Date | null
   priority?: "LOW" | "MEDIUM" | "HIGH"
-  timeSpent?: Time
-  timeLeft?: Time
+  timeSpent: number
+  totalTimeSpent: number
 }
 
 export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
@@ -56,9 +56,9 @@ export type ItemOptionType = {
   label: string
   type: ItemType
   progress?: number
-  timeSpent?: Time
-  timeLeft?: Time
-  duration?: Time
+  timeSpent?: number
+  totalTimeSpent?: number
+  duration?: number
 }
 
 export type GroupedOptionType = {

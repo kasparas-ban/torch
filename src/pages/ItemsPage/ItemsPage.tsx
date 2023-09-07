@@ -5,10 +5,19 @@ import ItemsList from "./ItemsList/ItemsList"
 import { GeneralItem, ItemType } from "../../types"
 import ItemListSkeleton from "./ItemsList/ItemListSkeleton"
 import { AnimatePresence } from "framer-motion"
+import { groupItemsByParent } from "@/API/helpers"
 
 function ItemsPage() {
   const [itemType, setItemType] = useState<ItemType>("GOAL")
-  const { data, isLoading } = useItemsList(itemType)
+  const { data, isLoading } = useItemsList()
+  const items =
+    itemType === "TASK"
+      ? data?.tasks
+      : itemType === "GOAL"
+      ? data?.goals
+      : data?.dreams
+
+  const groupedItems = items ? groupItemsByParent(items, itemType) : {}
 
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">
@@ -18,7 +27,10 @@ function ItemsPage() {
           {isLoading ? (
             <ItemListSkeleton />
           ) : (
-            <ItemsList<GeneralItem> groupedItems={data} itemType={itemType} />
+            <ItemsList<GeneralItem>
+              groupedItems={groupedItems}
+              itemType={itemType}
+            />
           )}
         </AnimatePresence>
       </div>
