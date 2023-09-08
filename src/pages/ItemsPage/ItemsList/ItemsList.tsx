@@ -22,9 +22,14 @@ export default function ItemsList<T extends GeneralItem>({
 
   let totalIndex = 0
 
+  const isListEmpty = Object.values(groupedItems || {}).reduce(
+    (prev, curr) => prev || !curr.items.length,
+    true,
+  )
+
   return (
     <>
-      {groupedItems && Object.keys(groupedItems) ? (
+      {groupedItems && !isListEmpty ? (
         <motion.ul key={`list_${itemType}`} className="space-y-3">
           {Object.keys(groupedItems).map((groupKey, groupIdx) => {
             const parentLabel = groupedItems[groupKey].parentLabel
@@ -40,7 +45,7 @@ export default function ItemsList<T extends GeneralItem>({
                 {parentLabel && (
                   <motion.div
                     layout
-                    className="mb-2 text-gray-500 font-medium"
+                    className="mb-2 font-medium text-gray-500"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1 }}

@@ -6,6 +6,7 @@ import { useMediaQuery } from "react-responsive"
 import { AnimatePresence, motion } from "framer-motion"
 import { NavigationBarWrapper, useScrollPosition } from "./helpers"
 import { ROUTES } from "@/routes"
+import { useToast } from "../ui/use-toast"
 import TimerToast from "../TimerToast/TimerToast"
 import { ReactComponent as CalendarIcon } from "../../assets/navigation_icons/calendar.svg"
 import { ReactComponent as TasksIcon } from "../../assets/navigation_icons/goals.svg"
@@ -250,6 +251,7 @@ function AccountDropdown({
 }) {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { isSignedIn, user } = useUser()
+  const { toast } = useToast()
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -261,6 +263,10 @@ function AccountDropdown({
     document.addEventListener("mousedown", handler)
     return () => document.removeEventListener("mousedown", handler)
   }, [])
+
+  const showSignOutToast = async () => {
+    toast({ description: "You signed-out successfully." })
+  }
 
   return (
     <motion.div
@@ -300,7 +306,7 @@ function AccountDropdown({
                 aria-labelledby="accountDropdownButton"
               >
                 <li>
-                  <SignOutButton>
+                  <SignOutButton signOutCallback={showSignOutToast}>
                     <button className="block w-full px-4 py-4 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
                       Sign out
                     </button>

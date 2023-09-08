@@ -12,7 +12,7 @@ if (!import.meta.env.VITE_HOST_ADDRESS) {
 const HOST = import.meta.env.VITE_HOST_ADDRESS
 
 export const useItemsList = () => {
-  const { getToken } = useAuth()
+  const { getToken, isSignedIn } = useAuth()
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["items"],
@@ -21,7 +21,13 @@ export const useItemsList = () => {
       const response = await fetch(`${HOST}/api/items`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-        .then(res => res.json() as Promise<ItemResponse[]>)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error("Failed to get user tasks")
+          }
+
+          return res.json() as Promise<ItemResponse[]>
+        })
         .catch(err => {
           console.error(err)
           return [] as ItemResponse[]

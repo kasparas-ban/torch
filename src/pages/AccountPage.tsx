@@ -1,8 +1,9 @@
 import { motion } from "framer-motion"
-import { useUser } from "@clerk/clerk-react"
+import { SignOutButton, useUser } from "@clerk/clerk-react"
 import SignInPage from "./SignInPage"
 import { Button } from "@/components/ui/button"
 import useModal from "@/components/Modals/useModal"
+import { useToast } from "@/components/ui/use-toast"
 import { GeneralModal } from "@/components/Modals/GeneralModal/GeneralModal"
 import { ReactComponent as AccountIcon } from "../assets/account.svg"
 import { ReactComponent as ArrowIcon } from "../assets/arrow.svg"
@@ -21,8 +22,13 @@ function AccountPage() {
   } = useModal()
 
   const { isSignedIn } = useUser()
+  const { toast } = useToast()
 
   if (!isSignedIn) return <SignInPage />
+
+  const showSignOutToast = async () => {
+    toast({ description: "You signed-out successfully." })
+  }
 
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">
@@ -77,8 +83,8 @@ function AccountPage() {
         </section>
 
         <section className="flex sm:hidden">
-          <motion.div className="mx-auto w-fit" whileTap={{ scale: 0.95 }}>
-            <Button className="text-md bg-gray-600 pl-8 pr-10  hover:bg-gray-600">
+          <motion.div className="mx-auto w-full" whileTap={{ scale: 0.95 }}>
+            <Button className="text-md w-full bg-gray-600 pl-8 pr-10 hover:bg-gray-600">
               <SignOutIcon className="t-2 relative top-px mr-3 h-5 w-5" />
               Sign Out
             </Button>
@@ -113,6 +119,19 @@ function AccountPage() {
           <h2 className="mb-4 text-xl font-bold text-gray-800">Settings</h2>
           <div className="flex flex-col">
             <GeneralModal children={null} />
+            <div className="hidden sm:block">
+              <SignOutButton signOutCallback={showSignOutToast}>
+                <motion.div
+                  className="flex w-full items-center py-3 hover:cursor-pointer"
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <SignOutIcon className="mr-3 h-7 w-7" />
+                  <div className="font-medium">Sign Out</div>
+                  <ArrowIcon className="ml-auto h-4 w-4 rotate-[270deg]" />
+                </motion.div>
+              </SignOutButton>
+            </div>
+            <div className="hidden h-px bg-gray-200 sm:block" />
             <motion.button
               className="flex w-full items-center py-3"
               whileTap={{ scale: 0.99 }}

@@ -15,6 +15,7 @@ import useConfirmModal from "./components/Modals/ConfirmModal/useConfirmModal"
 import NavigationBar from "./components/NavigationBar/NavigationBar"
 import TimerToast from "./components/TimerToast/TimerToast"
 import useModal from "./components/Modals/useModal"
+import { Toaster } from "@/components/ui/toaster"
 import TimerPage from "./pages/TimerPage"
 import ItemsPage from "./pages/ItemsPage/ItemsPage"
 import TitleWrapper from "./pages/TitleWrapper"
@@ -42,30 +43,33 @@ const Wrapper = () => {
   })
 
   return (
-    <motion.div
-      initial={false}
-      animate={{
-        transform: isModalOpen || isConfirmOpen ? "scale(0.97)" : "scale(1)",
-        transition: { duration: 0.2, ease: "easeOut" },
-      }}
-      className="origin-top pb-24"
-    >
-      <ScrollRestoration />
-      <ClerkProvider
-        publishableKey={clerkPubKey}
-        appearance={{ baseTheme: neobrutalism }}
+    <>
+      <motion.div
+        initial={false}
+        animate={{
+          transform: isModalOpen || isConfirmOpen ? "scale(0.97)" : "scale(1)",
+          transition: { duration: 0.2, ease: "easeOut" },
+        }}
+        className="origin-top pb-24"
       >
-        <QueryClientProvider client={queryClient}>
-          <HelmetProvider>
-            <TitleWrapper>
-              <NavigationBar />
-              {!isDesktop && <TimerToast showBackdrop />}
-              <Outlet />
-            </TitleWrapper>
-          </HelmetProvider>
-        </QueryClientProvider>
-      </ClerkProvider>
-    </motion.div>
+        <ScrollRestoration />
+        <ClerkProvider
+          publishableKey={clerkPubKey}
+          appearance={{ baseTheme: neobrutalism }}
+        >
+          <QueryClientProvider client={queryClient}>
+            <HelmetProvider>
+              <TitleWrapper>
+                <NavigationBar />
+                {!isDesktop && <TimerToast showBackdrop />}
+                <Outlet />
+              </TitleWrapper>
+            </HelmetProvider>
+          </QueryClientProvider>
+        </ClerkProvider>
+      </motion.div>
+      <Toaster />
+    </>
   )
 }
 
