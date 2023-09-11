@@ -1,5 +1,5 @@
-import { SignIn } from "@clerk/clerk-react"
 import { motion } from "framer-motion"
+import { SignIn } from "@clerk/clerk-react"
 
 function SignInPage() {
   return (
@@ -9,7 +9,7 @@ function SignInPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "tween" }}
     >
-      <SignIn signUpUrl="/sign-up" />
+      <SignIn signUpUrl="/sign-up" afterSignInUrl="/?signInSuccess=true" />
     </motion.div>
   )
 }
