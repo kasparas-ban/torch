@@ -23,7 +23,7 @@ export default function ItemsList<T extends GeneralItem>({
   let totalIndex = 0
 
   const isListEmpty = Object.values(groupedItems || {}).reduce(
-    (prev, curr) => prev || !curr.items.length,
+    (prev, curr) => prev && !curr.items.length,
     true,
   )
 

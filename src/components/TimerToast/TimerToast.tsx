@@ -141,12 +141,10 @@ const TimerToast = ({ showBackdrop }: { showBackdrop?: boolean }) => {
                     layout
                     key="reset_btn"
                     onClick={resetTimer}
-                    className={
-                      (clsx(
-                        "group flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-700",
-                      ),
-                      isBreakActive ? "hover:bg-blue-200" : "hover:bg-rose-200")
-                    }
+                    className={clsx(
+                      "group flex h-10 w-10 items-center justify-center rounded-full text-gray-100 hover:bg-rose-200 hover:text-gray-700",
+                      isBreakActive ? "hover:bg-blue-200" : "hover:bg-rose-200",
+                    )}
                     whileHover={{ scale: 1.06 }}
                     variants={buttonVariants}
                     initial="initial"

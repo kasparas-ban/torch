@@ -1,14 +1,14 @@
-import { useState } from "react"
+import useListStore from "./useListStore"
 import { ItemsHeader } from "./ItemsHeader"
 import { useItemsList } from "../../API/api"
 import ItemsList from "./ItemsList/ItemsList"
-import { GeneralItem, ItemType } from "../../types"
+import { GeneralItem } from "../../types"
 import ItemListSkeleton from "./ItemsList/ItemListSkeleton"
 import { AnimatePresence } from "framer-motion"
 import { groupItemsByParent } from "@/API/helpers"
 
 function ItemsPage() {
-  const [itemType, setItemType] = useState<ItemType>("GOAL")
+  const { itemType } = useListStore()
   const { data, isLoading } = useItemsList()
   const items =
     itemType === "TASK"
@@ -22,7 +22,7 @@ function ItemsPage() {
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">
       <div className="w-full max-w-[650px]">
-        <ItemsHeader itemType={itemType} setItemType={setItemType} />
+        <ItemsHeader itemType={itemType} />
         <AnimatePresence mode="sync">
           {isLoading ? (
             <ItemListSkeleton />

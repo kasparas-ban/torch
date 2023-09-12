@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
+import { useAuth } from "@clerk/clerk-react"
 import { ItemResponse, formatItemResponse } from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
 import { FocusType } from "../components/Timer/useTimerForm"
+import useStorage from "@/pages/ItemsPage/useStorageStore"
 import { dreamsData, goalsData, tasksData } from "../data/itemData"
 import { Dream, Goal, Task, TimerHistoryRecord } from "../types"
-import { useAuth } from "@clerk/clerk-react"
 
 if (!import.meta.env.VITE_HOST_ADDRESS) {
   throw new Error("Missing host address")
@@ -12,28 +13,37 @@ if (!import.meta.env.VITE_HOST_ADDRESS) {
 const HOST = import.meta.env.VITE_HOST_ADDRESS
 
 export const useItemsList = () => {
-  const { getToken, isSignedIn } = useAuth()
+  const { getToken } = useAuth()
+  const { setIsStorageUsed } = useStorage()
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["items"],
     queryFn: async () => {
+      let items = [] as ItemResponse[]
       const token = await getToken()
-      const response = await fetch(`${HOST}/api/items`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then(res => {
-          if (!res.ok) {
-            throw new Error("Failed to get user tasks")
-          }
 
-          return res.json() as Promise<ItemResponse[]>
+      if (token) {
+        const response = await fetch(`${HOST}/api/items`, {
+          headers: { Authorization: `Bearer ${token}` },
         })
-        .catch(err => {
-          console.error(err)
-          return [] as ItemResponse[]
-        })
+          .then(res => {
+            if (!res.ok) {
+              throw new Error("Failed to get user tasks")
+            }
+            setIsStorageUsed(false)
+            return res.json() as Promise<ItemResponse[]>
+          })
+          .catch(err => {
+            console.error(err)
+            return [] as ItemResponse[]
+          })
+        items = response
+      } else {
+        console.error("User not logged in!")
+        setIsStorageUsed(true)
+      }
 
-      const formattedItems = formatItemResponse(response)
+      const formattedItems = formatItemResponse(items)
       return formattedItems
     },
     refetchOnWindowFocus: false,
