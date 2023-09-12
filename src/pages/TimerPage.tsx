@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom"
 import { useAuth } from "@clerk/clerk-react"
 import Timer from "../components/Timer/Timer"
 import { useToast } from "@/components/ui/use-toast"
+import StorageInfo from "@/components/StorageInfo/StorageInfo"
 
 function TimerPage() {
   const location = useLocation()
@@ -22,6 +23,9 @@ function TimerPage() {
         <h1 className="flex items-center text-5xl font-bold text-gray-400">
           Timer
         </h1>
+      </div>
+      <div className="mx-auto mb-2 mt-3 flex max-w-[650px] max-[768px]:px-4">
+        <StorageInfo />
       </div>
       <Timer />
     </>
