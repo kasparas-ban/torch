@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { AnimatePresence } from "framer-motion"
+import { useUser } from "@clerk/clerk-react"
 import { useToast } from "@/components/ui/use-toast"
 import useListStore from "./useListStore"
 import { ItemsHeader } from "./ItemsHeader"
@@ -10,6 +11,7 @@ import { groupItemsByParent } from "@/API/helpers"
 import ItemListSkeleton from "./ItemsList/ItemListSkeleton"
 
 function ItemsPage() {
+  const { isSignedIn } = useUser()
   const { itemType } = useListStore()
   const { data, isLoading, error } = useItemsList()
   const { toast } = useToast()
@@ -23,7 +25,7 @@ function ItemsPage() {
   const groupedItems = items ? groupItemsByParent(items, itemType) : {}
 
   useEffect(() => {
-    if (!isLoading && error) toast({ description: error.message })
+    if (isSignedIn && !isLoading && error) toast({ description: error.message })
   }, [error])
 
   return (

@@ -1,11 +1,6 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import { useAuth } from "@clerk/clerk-react"
-import {
-  ItemResponse,
-  LoadErrorMsg,
-  UserNotSignedInMsg,
-  formatItemResponse,
-} from "./helpers"
+import { ItemResponse, LoadErrorMsg, formatItemResponse } from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import { FocusType } from "../components/Timer/useTimerForm"
@@ -36,7 +31,7 @@ export const useItemsList = () => {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then(res => {
-            if (!res.ok) throw new Error(UserNotSignedInMsg)
+            if (!res.ok) throw new Error(LoadErrorMsg)
             return res.json()
           })
           .then(data => {

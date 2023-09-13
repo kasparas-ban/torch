@@ -26,7 +26,7 @@ export function Toaster() {
             {...(isDesktop && { onSwipeEnd: e => e.preventDefault() })}
             className="rounded-2xl border-none bg-gray-800 text-white"
           >
-            <div className="grid gap-1">
+            <div className="grid gap-1 pr-5">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (
                 <ToastDescription>{description}</ToastDescription>

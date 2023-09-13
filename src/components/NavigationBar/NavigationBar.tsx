@@ -250,7 +250,7 @@ function AccountDropdown({
   setShowAccountDropdown: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const { isSignedIn, user } = useUser()
+  const { isSignedIn } = useUser()
   const { toast } = useToast()
 
   useEffect(() => {
