@@ -1,20 +1,24 @@
-import { useQuery } from "@tanstack/react-query"
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import { useAuth } from "@clerk/clerk-react"
 import { ItemResponse, formatItemResponse } from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
+import useListStore from "@/pages/ItemsPage/useListStore"
 import { FocusType } from "../components/Timer/useTimerForm"
 import useStorage from "@/pages/ItemsPage/useStorageStore"
 import { dreamsData, goalsData, tasksData } from "../data/itemData"
-import { Dream, Goal, Task, TimerHistoryRecord } from "../types"
+import { Dream, GeneralItem, Goal, Task, TimerHistoryRecord } from "../types"
 
 if (!import.meta.env.VITE_HOST_ADDRESS) {
   throw new Error("Missing host address")
 }
 const HOST = import.meta.env.VITE_HOST_ADDRESS
 
+export const queryClient = new QueryClient()
+
 export const useItemsList = () => {
   const { getToken } = useAuth()
   const { setIsStorageUsed } = useStorage()
+  const { setItems } = useListStore()
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["items"],
@@ -27,14 +31,17 @@ export const useItemsList = () => {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then(res => {
-            if (!res.ok) {
-              throw new Error("Failed to get user tasks")
-            }
-            setIsStorageUsed(false)
+            if (!res.ok) throw new Error("Failed to get user tasks")
             return res.json() as Promise<ItemResponse[]>
+          })
+          .then(data => {
+            setIsStorageUsed(false)
+            setItems(data)
+            return data
           })
           .catch(err => {
             console.error(err)
+            setIsStorageUsed(true)
             return [] as ItemResponse[]
           })
         items = response
@@ -50,6 +57,30 @@ export const useItemsList = () => {
   })
 
   return { isLoading, error, data }
+}
+
+export const useAddNewItem = () => {
+  const { getToken } = useAuth()
+
+  const { data, isLoading, mutate } = useMutation({
+    mutationFn: async (newItem: GeneralItem) => {
+      const token = await getToken()
+      if (token)
+        return fetch(`${HOST}/api/add-item`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: JSON.stringify(newItem),
+        })
+    },
+    onError: error => {
+      console.log(`Failed to add an item: ${error}`)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items"] })
+    },
+  })
+
+  return { isLoading, data, mutate }
 }
 
 export const useTimerHistory = () => {

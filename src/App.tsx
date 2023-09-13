@@ -10,13 +10,14 @@ import { neobrutalism } from "@clerk/themes"
 import { useMediaQuery } from "react-responsive"
 import { ClerkProvider } from "@clerk/clerk-react"
 import { HelmetProvider } from "react-helmet-async"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { QueryClientProvider } from "@tanstack/react-query"
 import useConfirmModal from "./components/Modals/ConfirmModal/useConfirmModal"
 import NavigationBar from "./components/NavigationBar/NavigationBar"
 import TimerToast from "./components/TimerToast/TimerToast"
 import useModal from "./components/Modals/useModal"
 import { Toaster } from "@/components/ui/toaster"
 import TimerPage from "./pages/TimerPage"
+import { queryClient } from "./API/api"
 import ItemsPage from "./pages/ItemsPage/ItemsPage"
 import TitleWrapper from "./pages/TitleWrapper"
 import CalendarPage from "./pages/CalendarPage"
@@ -26,8 +27,6 @@ import AccountPage from "./pages/AccountPage"
 import { ROUTES } from "./routes"
 import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
-
-const queryClient = new QueryClient()
 
 if (!import.meta.env.VITE_REACT_APP_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")

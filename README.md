@@ -23,7 +23,7 @@ Necessary
 - [ ] Make a Not Found page
 - [ ] Make an error toast
 - [x] Change timer design for breaks
-- [ ] Deal with authentication
+- [x] Deal with authentication
 - [ ] Add validation for username edit
 - [ ] Add registration form
 - [ ] Add some background
