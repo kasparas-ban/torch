@@ -216,3 +216,8 @@ const getProgress = (timeSpent: number, duration: number | null) => {
     : 0
   return progress > 1 ? 1 : progress
 }
+
+export const LoadErrorMsg =
+  "Failed to download user tasks. Using local storage instead."
+export const UserNotSignedInMsg =
+  "User not signed in. Using local storage instead."

@@ -1,15 +1,18 @@
+import { useEffect } from "react"
+import { AnimatePresence } from "framer-motion"
+import { useToast } from "@/components/ui/use-toast"
 import useListStore from "./useListStore"
 import { ItemsHeader } from "./ItemsHeader"
 import { useItemsList } from "../../API/api"
 import ItemsList from "./ItemsList/ItemsList"
 import { GeneralItem } from "../../types"
-import ItemListSkeleton from "./ItemsList/ItemListSkeleton"
-import { AnimatePresence } from "framer-motion"
 import { groupItemsByParent } from "@/API/helpers"
+import ItemListSkeleton from "./ItemsList/ItemListSkeleton"
 
 function ItemsPage() {
   const { itemType } = useListStore()
-  const { data, isLoading } = useItemsList()
+  const { data, isLoading, error } = useItemsList()
+  const { toast } = useToast()
   const items =
     itemType === "TASK"
       ? data?.tasks
@@ -18,6 +21,10 @@ function ItemsPage() {
       : data?.dreams
 
   const groupedItems = items ? groupItemsByParent(items, itemType) : {}
+
+  useEffect(() => {
+    if (!isLoading && error) toast({ description: error.message })
+  }, [error])
 
   return (
     <div className="mt-4 flex justify-center max-[768px]:px-6 md:space-x-36">

@@ -1,6 +1,11 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import { useAuth } from "@clerk/clerk-react"
-import { ItemResponse, formatItemResponse } from "./helpers"
+import {
+  ItemResponse,
+  LoadErrorMsg,
+  UserNotSignedInMsg,
+  formatItemResponse,
+} from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import { FocusType } from "../components/Timer/useTimerForm"
@@ -31,32 +36,31 @@ export const useItemsList = () => {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then(res => {
-            if (!res.ok) throw new Error("Failed to get user tasks")
-            return res.json() as Promise<ItemResponse[]>
+            if (!res.ok) throw new Error(UserNotSignedInMsg)
+            return res.json()
           })
           .then(data => {
             setIsStorageUsed(false)
             setItems(data)
             return data
           })
-          .catch(err => {
-            console.error(err)
+          .catch(() => {
             setIsStorageUsed(true)
-            return [] as ItemResponse[]
+            throw new Error(LoadErrorMsg)
           })
         items = response
       } else {
-        console.error("User not logged in!")
         setIsStorageUsed(true)
+        throw new Error(LoadErrorMsg)
       }
 
       const formattedItems = formatItemResponse(items)
       return formattedItems
     },
     refetchOnWindowFocus: false,
+    retry: false,
   })
-
-  return { isLoading, error, data }
+  return { isLoading, error: error as Error, data }
 }
 
 export const useAddNewItem = () => {
