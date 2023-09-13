@@ -14,13 +14,18 @@ import {
 } from "@/components/ui/form"
 import { Dream } from "@/types"
 import useModal from "../useModal"
+import { useAddNewItem } from "@/API/api"
 import { dreamFormSchema } from "../schemas"
 import { Input } from "@/components/ui/input"
 import PriorityInput from "../../Inputs/PriorityInput"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
+import { ButtonLoading } from "@/components/ui/button"
 
-type DreamForm = Omit<Dream, "id" | "type" | "progress">
+type DreamForm = Omit<
+  Dream,
+  "id" | "type" | "progress" | "timeSpent" | "totalTimeSpent"
+>
 
 type InputType = keyof z.infer<typeof dreamFormSchema>
 
@@ -36,12 +41,13 @@ const formVariants = {
 
 const getInitialDreamForm = (initialDream: Dream): DreamForm => ({
   title: initialDream?.title || "",
-  priority: initialDream?.priority,
-  targetDate: initialDream?.targetDate,
+  ...(initialDream?.priority && { priority: initialDream?.priority }),
+  ...(initialDream?.targetDate && { targetDate: initialDream?.targetDate }),
 })
 
 function DreamForm() {
-  const { editItem } = useModal()
+  const { editItem, closeModal } = useModal()
+  const { mutate, isLoading } = useAddNewItem()
   const defaultDream = getInitialDreamForm(editItem as Dream)
 
   const defaultInputOrder = Object.keys(defaultDream).filter(
@@ -55,6 +61,11 @@ function DreamForm() {
   })
 
   const onSubmit = (data: z.infer<typeof dreamFormSchema>) => {
+    mutate(data as any)
+
+    setTimeout(() => {
+      closeModal()
+    }, 3000)
     console.log("onSubmit", data)
   }
 
@@ -184,13 +195,18 @@ function DreamForm() {
           />
 
           <div className="relative mt-auto flex justify-center">
-            <motion.button
-              layout
-              className="px-3 py-1 text-xl font-medium"
-              whileTap={{ scale: 0.95 }}
-            >
-              Save
-            </motion.button>
+            {isLoading ? (
+              <ButtonLoading />
+            ) : (
+              <motion.button
+                layout
+                className="px-3 py-1 text-xl font-medium"
+                whileTap={{ scale: 0.95 }}
+                type="submit"
+              >
+                Save
+              </motion.button>
+            )}
           </div>
         </form>
       </Form>

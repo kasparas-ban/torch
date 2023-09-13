@@ -11,7 +11,7 @@ function StorageInfo() {
   const { isSignedIn } = useUser()
   const navigate = useNavigate()
 
-  const handleClick = () => navigate(ROUTES.account.path)
+  const handleClick = () => !isSignedIn && navigate(ROUTES.account.path)
 
   return (
     <AnimatePresence mode="popLayout">
@@ -21,7 +21,7 @@ function StorageInfo() {
             "flex",
             !isSignedIn ? "w-full cursor-pointer" : "cursor-default",
           )}
-          whileTap={{ scale: 0.99 }}
+          whileTap={{ scale: !isSignedIn ? 0.99 : 1 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
