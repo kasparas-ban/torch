@@ -8,9 +8,11 @@ import { useItemsList } from "../../API/api"
 import ItemsList from "./ItemsList/ItemsList"
 import { GeneralItem } from "../../types"
 import { groupItemsByParent } from "@/API/helpers"
+import useModal from "@/components/Modals/useModal"
 import ItemListSkeleton from "./ItemsList/ItemListSkeleton"
 
 function ItemsPage() {
+  const { isOpen } = useModal()
   const { isSignedIn } = useUser()
   const { itemType } = useListStore()
   const { data, isLoading, error } = useItemsList()
@@ -25,7 +27,7 @@ function ItemsPage() {
   const groupedItems = items ? groupItemsByParent(items, itemType) : {}
 
   useEffect(() => {
-    if (isSignedIn && !isLoading && error)
+    if (isSignedIn && !isLoading && error && !isOpen)
       toast({ title: error.data?.title, description: error.data?.description })
   }, [error])
 
