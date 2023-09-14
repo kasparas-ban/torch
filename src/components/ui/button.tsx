@@ -119,16 +119,14 @@ const ButtonSubmit = React.forwardRef<HTMLButtonElement, ButtonProps>(
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.2 }}
             >
-              <Button asChild ref={ref} disabled>
-                <motion.button
-                  layout
-                  className="px-3 py-1 text-xl font-medium text-red-500"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <X className="relative top-0.5 mr-1 h-4 w-4" />
-                  Failed
-                </motion.button>
-              </Button>
+              <motion.button
+                layout
+                className="flex items-center px-3 py-1 text-xl font-medium text-red-500"
+                disabled
+              >
+                <X className="relative top-0.5 mr-1 h-4 w-4" />
+                Failed
+              </motion.button>
             </motion.div>
           ) : (
             <motion.div

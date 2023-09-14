@@ -70,11 +70,15 @@ function DreamForm() {
         }, 2000)
       })
       .catch(() => {
-        toast({
-          title: "Failed to save",
-          description:
-            "Your dream has not been saved. Please try adding it again later.",
-        })
+        setTimeout(
+          () =>
+            toast({
+              title: "Failed to save",
+              description:
+                "Your dream has not been saved. Please try adding it again later.",
+            }),
+          100,
+        )
         setTimeout(() => reset(), 2000)
       })
 
