@@ -9,7 +9,6 @@ import { Subtasks } from "./Subtasks"
 import { Goal } from "../../../types"
 import PriorityInput from "../../Inputs/PriorityInput"
 import { goalFormSchema } from "../schemas"
-import { dreamsData } from "@/data/itemData"
 import {
   Form,
   FormControl,
@@ -23,7 +22,10 @@ import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 
-type GoalForm = Omit<Goal, "id" | "type" | "progress" | "dream"> & {
+type GoalForm = Omit<
+  Goal,
+  "id" | "type" | "progress" | "dream" | "timeSpent" | "totalTimeSpent"
+> & {
   dream?: { label: string; value: number }
 }
 
@@ -89,7 +91,7 @@ function GoalForm() {
 
   const addSubtask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    const defaultTask = { title: "", duration: { hours: null, minutes: null } }
+    const defaultTask = { title: "", duration: undefined }
     append(defaultTask)
 
     if (modalRef.current)
@@ -144,10 +146,10 @@ function GoalForm() {
 
               {inputOrder.map(input => {
                 if (input === "dream") {
-                  const dreamOptions = dreamsData.map(dream => ({
-                    label: dream.title,
-                    value: dream.id,
-                  }))
+                  // const dreamOptions = ([] as Dream).map(dream => ({
+                  //   label: dream.title,
+                  //   value: dream.id,
+                  // }))
 
                   return (
                     <motion.div
@@ -173,7 +175,7 @@ function GoalForm() {
                                   name="dream"
                                   value={field.value}
                                   onChange={field.onChange}
-                                  options={dreamOptions}
+                                  // options={dreamOptions}
                                   isClearable
                                   menuPosition="fixed"
                                 />

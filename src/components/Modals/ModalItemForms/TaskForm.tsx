@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { taskFormSchema } from "../schemas"
-import { goalsData } from "@/data/itemData"
+// import { goalsData } from "@/data/itemData"
 import { Input } from "@/components/ui/input"
 import { Time } from "@internationalized/date"
 import { groupItemsByParent } from "@/API/helpers"
@@ -26,7 +26,10 @@ import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 
-type TaskForm = Omit<Task, "id" | "type" | "progress" | "goal"> & {
+type TaskForm = Omit<
+  Task,
+  "id" | "type" | "progress" | "goal" | "timeSpent"
+> & {
   goal?: { label: string; value: number }
 }
 
@@ -44,7 +47,7 @@ const formVariants = {
 
 const getInitialTaskForm = (initialTask: Task): TaskForm => ({
   title: initialTask?.title || "",
-  duration: initialTask?.duration || { hours: 0, minutes: 30 },
+  duration: initialTask?.duration || 30 * 60,
   priority: initialTask?.priority,
   targetDate: initialTask?.targetDate,
   recurring: initialTask?.recurring,
@@ -117,17 +120,17 @@ function TaskForm() {
                         <DurationInput
                           hourCycle={24}
                           aria-label="Duration"
-                          value={
-                            field.value?.hours || field.value?.minutes
-                              ? new Time(
-                                  field.value.hours || 0,
-                                  field.value.minutes || 0,
-                                )
-                              : null
-                          }
-                          onChange={e =>
-                            field.onChange({ hours: e.hour, minutes: e.minute })
-                          }
+                          // value={
+                          //   field.value?.hours || field.value?.minutes
+                          //     ? new Time(
+                          //         field.value.hours || 0,
+                          //         field.value.minutes || 0,
+                          //       )
+                          //     : null
+                          // }
+                          // onChange={e =>
+                          //   field.onChange({ hours: e.hour, minutes: e.minute })
+                          // }
                         />
                       </FormControl>
                     </FormItem>
@@ -137,7 +140,7 @@ function TaskForm() {
 
               {inputOrder.map(input => {
                 if (input === "goal") {
-                  const groupedGoals = groupItemsByParent(goalsData, "GOAL")
+                  const groupedGoals = groupItemsByParent([], "GOAL")
                   const goalOptions = Object.keys(groupedGoals).map(
                     dreamId => ({
                       label: groupedGoals[dreamId].parentLabel || "Other",

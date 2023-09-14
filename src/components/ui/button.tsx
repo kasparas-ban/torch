@@ -1,5 +1,6 @@
 import * as React from "react"
-import { Loader2 } from "lucide-react"
+import { AnimatePresence, motion } from "framer-motion"
+import { Loader2, Check, X } from "lucide-react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -10,7 +11,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
@@ -38,6 +39,9 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  isLoading?: boolean
+  isSuccess?: boolean
+  isError?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -54,21 +58,100 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
-const ButtonLoading = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+const ButtonSubmit = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant,
+      size,
+      isLoading,
+      isSuccess,
+      isError,
+      asChild = false,
+      ...props
+    },
+    ref,
+  ) => {
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      >
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        Saving
-      </Comp>
+      <div className="h-10">
+        <AnimatePresence initial={false} mode="popLayout">
+          {isLoading ? (
+            <motion.div
+              key="button_loading"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <motion.button
+                layout
+                className="flex items-center px-3 py-1 text-xl font-medium text-gray-400"
+                disabled
+              >
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving
+              </motion.button>
+            </motion.div>
+          ) : isSuccess ? (
+            <motion.div
+              key="button_done"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Button asChild ref={ref} disabled>
+                <motion.button
+                  layout
+                  className="px-3 py-1 text-xl font-medium"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Check className="mr-2 h-4 w-4 text-green-500" />
+                  Saved
+                </motion.button>
+              </Button>
+            </motion.div>
+          ) : isError ? (
+            <motion.div
+              key="button_fail"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Button asChild ref={ref} disabled>
+                <motion.button
+                  layout
+                  className="px-3 py-1 text-xl font-medium text-red-500"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <X className="relative top-0.5 mr-1 h-4 w-4" />
+                  Failed
+                </motion.button>
+              </Button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="button_ready"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <motion.button
+                layout
+                className="px-3 py-1 text-xl font-medium"
+                whileTap={{ scale: 0.95 }}
+                type="submit"
+              >
+                Save
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     )
   },
 )
-ButtonLoading.displayName = "ButtonLoading"
 
-export { Button, ButtonLoading, buttonVariants }
+export { Button, ButtonSubmit, buttonVariants }

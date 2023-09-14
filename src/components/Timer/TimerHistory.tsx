@@ -10,13 +10,13 @@ function TimerHistory() {
     data && (
       <motion.div
         layout
-        className="mt-8 mb-4 flex"
+        className="mb-4 mt-8 flex"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0, transition: { duration: 0.1 } }}
       >
         <div className="mx-auto">
-          <div className="ml-3 mb-3 font-bold text-2xl text-gray-800">
+          <div className="mb-3 ml-3 text-2xl font-bold text-gray-800">
             Timer history
           </div>
           <div className="mx-4 grid grid-cols-[240px_100px_100px_100px_80px] text-gray-500 max-[700px]:grid-cols-[240px_100px_100px] max-[500px]:grid-cols-[auto_auto_auto] max-[500px]:gap-x-3">
@@ -42,7 +42,7 @@ function TimerHistory() {
                   </span>
                 </div>
                 <div className="mb-1 pl-2">
-                  {formatTimeSpent(row.timeSpent)}
+                  {/* {formatTimeSpent(row.timeSpent)} */}
                 </div>
                 <div className="mb-1 max-[700px]:hidden">
                   {dayjs(row.startTime).format("HH:mm A")}

@@ -17,10 +17,11 @@ import useModal from "../useModal"
 import { useAddNewItem } from "@/API/api"
 import { dreamFormSchema } from "../schemas"
 import { Input } from "@/components/ui/input"
+import { useToast } from "@/components/ui/use-toast"
 import PriorityInput from "../../Inputs/PriorityInput"
+import { ButtonSubmit } from "@/components/ui/button"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
-import { ButtonLoading } from "@/components/ui/button"
 
 type DreamForm = Omit<
   Dream,
@@ -46,8 +47,9 @@ const getInitialDreamForm = (initialDream: Dream): DreamForm => ({
 })
 
 function DreamForm() {
+  const { toast } = useToast()
   const { editItem, closeModal } = useModal()
-  const { mutate, isLoading } = useAddNewItem()
+  const { mutateAsync, reset, isLoading, isError, isSuccess } = useAddNewItem()
   const defaultDream = getInitialDreamForm(editItem as Dream)
 
   const defaultInputOrder = Object.keys(defaultDream).filter(
@@ -61,11 +63,21 @@ function DreamForm() {
   })
 
   const onSubmit = (data: z.infer<typeof dreamFormSchema>) => {
-    mutate(data as any)
+    mutateAsync(data as any)
+      .then(() => {
+        setTimeout(() => {
+          closeModal()
+        }, 2000)
+      })
+      .catch(() => {
+        toast({
+          title: "Failed to save",
+          description:
+            "Your dream has not been saved. Please try adding it again later.",
+        })
+        setTimeout(() => reset(), 2000)
+      })
 
-    setTimeout(() => {
-      closeModal()
-    }, 3000)
     console.log("onSubmit", data)
   }
 
@@ -195,18 +207,11 @@ function DreamForm() {
           />
 
           <div className="relative mt-auto flex justify-center">
-            {isLoading ? (
-              <ButtonLoading />
-            ) : (
-              <motion.button
-                layout
-                className="px-3 py-1 text-xl font-medium"
-                whileTap={{ scale: 0.95 }}
-                type="submit"
-              >
-                Save
-              </motion.button>
-            )}
+            <ButtonSubmit
+              isLoading={isLoading}
+              isSuccess={isSuccess}
+              isError={isError}
+            />
           </div>
         </form>
       </Form>

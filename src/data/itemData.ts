@@ -454,48 +454,48 @@ const tasks = [
   },
 ]
 
-export const goalsData = goals.map(goal => {
-  const filteredTasks = tasks
-    .filter(task => task.goalId === goal.id)
-    .map(task => {
-      const { goalId, ...rest } = task
-      return rest
-    })
+// export const goalsData = goals.map(goal => {
+//   const filteredTasks = tasks
+//     .filter(task => task.goalId === goal.id)
+//     .map(task => {
+//       const { goalId, ...rest } = task
+//       return rest
+//     })
 
-  const dream = dreams.find(dream => goal.dreamId && dream.id === goal.dreamId)
+//   const dream = dreams.find(dream => goal.dreamId && dream.id === goal.dreamId)
 
-  const { taskIds, dreamId, ...rest } = goal
+//   const { taskIds, dreamId, ...rest } = goal
 
-  return {
-    ...rest,
-    ...(dream ? { dream } : {}),
-    tasks: filteredTasks,
-  }
-}) as Goal[]
+//   return {
+//     ...rest,
+//     ...(dream ? { dream } : {}),
+//     tasks: filteredTasks,
+//   }
+// }) as Goal[]
 
-export const tasksData = tasks.map(task => {
-  const goal = goals.find(goal => goal.id === task.goalId)
+// export const tasksData = tasks.map(task => {
+//   const goal = goals.find(goal => goal.id === task.goalId)
 
-  const { goalId, ...rest } = task
+//   const { goalId, ...rest } = task
 
-  return {
-    ...rest,
-    ...(goal ? { goal } : {}),
-  }
-}) as Task[]
+//   return {
+//     ...rest,
+//     ...(goal ? { goal } : {}),
+//   }
+// }) as Task[]
 
-export const dreamsData = dreams.map(dream => {
-  const filteredGoals = goals
-    .filter(goal => dream.goalIds.includes(goal.id))
-    .map(goal => {
-      const { taskIds, ...rest } = goal
-      return rest
-    })
+// export const dreamsData = dreams.map(dream => {
+//   const filteredGoals = goals
+//     .filter(goal => dream.goalIds.includes(goal.id))
+//     .map(goal => {
+//       const { taskIds, ...rest } = goal
+//       return rest
+//     })
 
-  const { goalIds, ...rest } = dream
+//   const { goalIds, ...rest } = dream
 
-  return {
-    ...rest,
-    goals: filteredGoals,
-  }
-}) as Dream[]
+//   return {
+//     ...rest,
+//     goals: filteredGoals,
+//   }
+// }) as Dream[]

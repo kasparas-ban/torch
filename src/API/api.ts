@@ -1,11 +1,10 @@
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import { useAuth } from "@clerk/clerk-react"
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import { ItemResponse, LoadErrorMsg, formatItemResponse } from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import { FocusType } from "../components/Timer/useTimerForm"
 import useStorage from "@/pages/ItemsPage/useStorageStore"
-import { dreamsData, goalsData, tasksData } from "../data/itemData"
 import { Dream, GeneralItem, Goal, Task, TimerHistoryRecord } from "../types"
 
 if (!import.meta.env.VITE_HOST_ADDRESS) {
@@ -61,25 +60,26 @@ export const useItemsList = () => {
 export const useAddNewItem = () => {
   const { getToken } = useAuth()
 
-  const { data, isLoading, mutate } = useMutation({
-    mutationFn: async (newItem: GeneralItem) => {
-      const token = await getToken()
-      if (token)
-        return fetch(`${HOST}/api/add-item`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: JSON.stringify(newItem),
-        })
-    },
-    onError: error => {
-      console.log(`Failed to add an item: ${error}`)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["items"] })
-    },
-  })
+  const { data, mutate, isLoading, isError, isSuccess, mutateAsync, reset } =
+    useMutation({
+      mutationFn: async (newItem: GeneralItem) => {
+        const token = await getToken()
+        if (token)
+          return fetch(`${HOST}/api/add-item`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify(newItem),
+          })
+      },
+      onError: error => {
+        console.log(`Failed to add an item: ${error}`)
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["items"] })
+      },
+    })
 
-  return { isLoading, data, mutate }
+  return { isLoading, isError, isSuccess, data, mutate, mutateAsync, reset }
 }
 
 export const useTimerHistory = () => {
@@ -112,7 +112,11 @@ export const getItemsByType = ({
       ? itemData?.goals
       : focusType === "DREAMS"
       ? itemData?.dreams
-      : [...tasksData, ...goalsData, ...dreamsData]
+      : [
+          ...(itemData?.tasks || []),
+          ...(itemData?.goals || []),
+          ...(itemData?.dreams || []),
+        ]
 
   const filteredItems =
     selectedItems?.map(item => ({
@@ -130,10 +134,10 @@ export const getItemsByType = ({
 
     const parents =
       focusType === "TASKS"
-        ? goalsData.filter(goal =>
+        ? (itemData?.goals || []).filter(goal =>
             filteredItems.find(item => item.parent === goal.id),
           )
-        : dreamsData.filter(dream =>
+        : (itemData?.dreams || []).filter(dream =>
             filteredItems.find(item => item.parent === dream.id),
           )
 

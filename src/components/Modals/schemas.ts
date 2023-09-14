@@ -14,19 +14,14 @@ export const taskFormSchema = z.object({
     .string()
     .min(2, { message: "Title must be longer than 2 characters." })
     .max(50, { message: "Title must be shorter than 50 characters." }),
-  duration: z
-    .object({
-      hours: z.number().nullable(),
-      minutes: z.number().nullable(),
-    })
-    .optional(),
+  duration: z.number().optional(),
   goal: z
     .object({
       label: z.string(),
       options: z.array(z.object({ label: z.string(), value: z.number() })),
     })
     .optional(),
-  targetDate: z.date().nullable().optional(),
+  targetDate: z.string().nullable().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
   recurring: z
     .object({
@@ -43,7 +38,7 @@ export const goalFormSchema = z.object({
     .min(2, { message: "Title must be longer than 2 characters." })
     .max(50, { message: "Title must be shorter than 50 characters." }),
   dream: z.object({ label: z.string(), value: z.number() }).optional(),
-  targetDate: z.date().nullable().optional(),
+  targetDate: z.string().nullable().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
   tasks: z.array(taskFormSchema.omit({ goal: true })),
 })

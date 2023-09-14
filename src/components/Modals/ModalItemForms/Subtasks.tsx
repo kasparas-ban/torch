@@ -150,18 +150,18 @@ function SubtaskItem({
                 <DurationInput
                   hourCycle={24}
                   aria-label="Duration"
-                  value={(() => {
-                    const time = form.watch(`tasks.${index}.duration`)
-                    return time?.hours || time?.minutes
-                      ? new Time(time.hours || 0, time.minutes || 0)
-                      : null
-                  })()}
-                  onChange={e =>
-                    form.setValue(`tasks.${index}.duration`, {
-                      hours: e.hour,
-                      minutes: e.minute,
-                    })
-                  }
+                  // value={(() => {
+                  //   const time = form.watch(`tasks.${index}.duration`)
+                  //   return time?.hours || time?.minutes
+                  //     ? new Time(time.hours || 0, time.minutes || 0)
+                  //     : null
+                  // })()}
+                  // onChange={e =>
+                  //   form.setValue(`tasks.${index}.duration`, {
+                  //     hours: e.hour,
+                  //     minutes: e.minute,
+                  //   })
+                  // }
                 />
               </FormControl>
               <FormMessage className="pl-3" />
@@ -233,12 +233,12 @@ function SubtaskItem({
                             ? new Date(targetDate)?.toLocaleDateString("en-CA")
                             : ""
                         }
-                        onChange={e =>
-                          form.setValue(
-                            `tasks.${index}.targetDate`,
-                            new Date(e.target.value),
-                          )
-                        }
+                        // onChange={e =>
+                        //   form.setValue(
+                        //     `tasks.${index}.targetDate`,
+                        //     new Date(e.target.value),
+                        //   )
+                        // }
                       />
                     </FormControl>
                   </FormItem>
