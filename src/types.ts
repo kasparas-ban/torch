@@ -47,6 +47,12 @@ export type Dream = {
   totalTimeSpent: number
 }
 
+export type FormattedItems = {
+  tasks: Task[]
+  goals: Goal[]
+  dreams: Dream[]
+}
+
 export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
 
 export type ItemType = "TASK" | "GOAL" | "DREAM"

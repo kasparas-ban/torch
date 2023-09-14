@@ -1,11 +1,25 @@
 import { useAuth } from "@clerk/clerk-react"
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
-import { ItemResponse, LoadErrorMsg, formatItemResponse } from "./helpers"
+import { ItemResponse, formatItemResponse } from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import { FocusType } from "../components/Timer/useTimerForm"
 import useStorage from "@/pages/ItemsPage/useStorageStore"
-import { Dream, GeneralItem, Goal, Task, TimerHistoryRecord } from "../types"
+import {
+  Dream,
+  FormattedItems,
+  GeneralItem,
+  Goal,
+  Task,
+  TimerHistoryRecord,
+} from "../types"
+import {
+  CustomError,
+  ItemLoadServerErrorMsg,
+  ItemLoadFetchErrorMsg,
+  ItemLoadNotSignedInErrorMsg,
+  AddItemFetchErrorMsg,
+} from "./errorMsgs"
 
 if (!import.meta.env.VITE_HOST_ADDRESS) {
   throw new Error("Missing host address")
@@ -19,9 +33,9 @@ export const useItemsList = () => {
   const { setIsStorageUsed } = useStorage()
   const { setItems } = useListStore()
 
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["items"],
-    queryFn: async () => {
+  const { isLoading, error, data } = useQuery<FormattedItems, CustomError>(
+    ["items"],
+    async () => {
       let items = [] as ItemResponse[]
       const token = await getToken()
 
@@ -30,7 +44,7 @@ export const useItemsList = () => {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then(res => {
-            if (!res.ok) throw new Error(LoadErrorMsg)
+            if (!res.ok) throw new CustomError("", ItemLoadServerErrorMsg)
             return res.json()
           })
           .then(data => {
@@ -38,23 +52,25 @@ export const useItemsList = () => {
             setItems(data)
             return data
           })
-          .catch(() => {
+          .catch(err => {
             setIsStorageUsed(true)
-            throw new Error(LoadErrorMsg)
+            throw new CustomError(err, ItemLoadFetchErrorMsg)
           })
         items = response
       } else {
         setIsStorageUsed(true)
-        throw new Error(LoadErrorMsg)
+        throw new CustomError("", ItemLoadNotSignedInErrorMsg)
       }
 
       const formattedItems = formatItemResponse(items)
       return formattedItems
     },
-    refetchOnWindowFocus: false,
-    retry: false,
-  })
-  return { isLoading, error: error as Error, data }
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  )
+  return { isLoading, error, data }
 }
 
 export const useAddNewItem = () => {
@@ -64,12 +80,17 @@ export const useAddNewItem = () => {
     useMutation({
       mutationFn: async (newItem: GeneralItem) => {
         const token = await getToken()
-        if (token)
+        if (token) {
           return fetch(`${HOST}/api/add-item`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
             body: JSON.stringify(newItem),
+          }).catch(err => {
+            throw new CustomError(err, AddItemFetchErrorMsg)
           })
+        } else {
+          // TODO: add to localStorage
+        }
       },
       onError: error => {
         console.log(`Failed to add an item: ${error}`)

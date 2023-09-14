@@ -25,7 +25,8 @@ function ItemsPage() {
   const groupedItems = items ? groupItemsByParent(items, itemType) : {}
 
   useEffect(() => {
-    if (isSignedIn && !isLoading && error) toast({ description: error.message })
+    if (isSignedIn && !isLoading && error)
+      toast({ title: error.data?.title, description: error.data?.description })
   }, [error])
 
   return (
