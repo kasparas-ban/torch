@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AnimatePresence, motion } from "framer-motion"
 import clsx from "clsx"
-import { z } from "zod"
 import {
   Form,
   FormControl,
@@ -15,7 +14,7 @@ import {
 import { Dream } from "@/types"
 import useModal from "../useModal"
 import { useAddNewItem } from "@/API/api"
-import { dreamFormSchema } from "../schemas"
+import { dreamFormSchema, DreamFormType } from "../schemas"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import PriorityInput from "../../Inputs/PriorityInput"
@@ -23,12 +22,7 @@ import { ButtonSubmit } from "@/components/ui/button"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 
-type DreamForm = Omit<
-  Dream,
-  "id" | "type" | "progress" | "timeSpent" | "totalTimeSpent"
->
-
-type InputType = keyof z.infer<typeof dreamFormSchema>
+type InputType = keyof DreamFormType
 
 const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.35 } },
@@ -40,7 +34,7 @@ const formVariants = {
   },
 }
 
-const getInitialDreamForm = (initialDream: Dream): DreamForm => ({
+const getInitialDreamForm = (initialDream: Dream): DreamFormType => ({
   title: initialDream?.title || "",
   ...(initialDream?.priority && { priority: initialDream?.priority }),
   ...(initialDream?.targetDate && { targetDate: initialDream?.targetDate }),
@@ -57,13 +51,14 @@ function DreamForm() {
   ) as InputType[]
   const [inputOrder, setInputOrder] = useState(defaultInputOrder)
 
-  const form = useForm<z.infer<typeof dreamFormSchema>>({
+  const form = useForm<DreamFormType>({
     resolver: zodResolver(dreamFormSchema),
     defaultValues: defaultDream,
   })
 
-  const onSubmit = (data: z.infer<typeof dreamFormSchema>) => {
-    mutateAsync(data as any)
+  const onSubmit = (data: DreamFormType) => {
+    const newDream = { ...data, type: "DREAM" as const }
+    mutateAsync(newDream)
       .then(() => {
         setTimeout(() => {
           closeModal()

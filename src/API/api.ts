@@ -5,14 +5,7 @@ import { timerHistoryData } from "@/data/timerHistory"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import { FocusType } from "../components/Timer/useTimerForm"
 import useStorage from "@/pages/ItemsPage/useStorageStore"
-import {
-  Dream,
-  FormattedItems,
-  GeneralItem,
-  Goal,
-  Task,
-  TimerHistoryRecord,
-} from "../types"
+import { Dream, FormattedItems, Goal, Task, TimerHistoryRecord } from "../types"
 import {
   CustomError,
   ItemLoadServerErrorMsg,
@@ -20,6 +13,11 @@ import {
   ItemLoadNotSignedInErrorMsg,
   AddItemFetchErrorMsg,
 } from "./errorMsgs"
+import {
+  NewDreamType,
+  NewGoalType,
+  NewTaskType,
+} from "@/components/Modals/schemas"
 
 if (!import.meta.env.VITE_HOST_ADDRESS) {
   throw new Error("Missing host address")
@@ -78,16 +76,21 @@ export const useAddNewItem = () => {
 
   const { data, mutate, isLoading, isError, isSuccess, mutateAsync, reset } =
     useMutation({
-      mutationFn: async (newItem: GeneralItem) => {
+      mutationFn: async (newItem: NewTaskType | NewGoalType | NewDreamType) => {
         const token = await getToken()
         if (token) {
           return fetch(`${HOST}/api/add-item`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
             body: JSON.stringify(newItem),
-          }).catch(err => {
-            throw new CustomError(err, AddItemFetchErrorMsg)
           })
+            .then(res => {
+              if (!res.ok) throw new CustomError("", AddItemFetchErrorMsg)
+              return res.json()
+            })
+            .catch(err => {
+              throw new CustomError(err, AddItemFetchErrorMsg)
+            })
         } else {
           // TODO: add to localStorage
         }
