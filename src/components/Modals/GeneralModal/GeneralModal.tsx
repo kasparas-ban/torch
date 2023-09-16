@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import useModal from "../useModal"
 
-function GeneralModal({ children }: { children: ReactNode }) {
+function GeneralModal({ children }: { children?: ReactNode }) {
   const { isOpen, modalContent, modalTitle, closeModal, modalKey } = useModal()
 
   return (

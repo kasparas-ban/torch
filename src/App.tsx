@@ -12,6 +12,7 @@ import { ClerkProvider } from "@clerk/clerk-react"
 import { HelmetProvider } from "react-helmet-async"
 import { QueryClientProvider } from "@tanstack/react-query"
 import useConfirmModal from "./components/Modals/ConfirmModal/useConfirmModal"
+import { GeneralModal } from "./components/Modals/GeneralModal/GeneralModal"
 import NavigationBar from "./components/NavigationBar/NavigationBar"
 import TimerToast from "./components/TimerToast/TimerToast"
 import useModal from "./components/Modals/useModal"
@@ -61,6 +62,7 @@ const Wrapper = () => {
               <TitleWrapper>
                 <NavigationBar />
                 {!isDesktop && <TimerToast showBackdrop />}
+                <GeneralModal />
                 <Outlet />
               </TitleWrapper>
             </HelmetProvider>

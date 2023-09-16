@@ -55,18 +55,16 @@ export function ItemsHeader({ itemType }: { itemType: ItemType }) {
     <>
       <div className="flex">
         <ItemsTypeDropdown itemType={itemType} />
-        <div className="ml-auto mt-7 flex space-x-4">
-          <motion.button layout whileHover={{ scale: 1.2 }}>
-            <FilterIcon className="cursor-pointer" />
+        <div className="relative bottom-1 ml-auto mt-7 flex items-center space-x-4">
+          <motion.button layout className="cursor-default text-gray-400">
+            <FilterIcon />
           </motion.button>
-          <GeneralModal>
-            <motion.div layout whileHover={{ scale: 1.2 }}>
-              <PlusIcon
-                className="cursor-pointer"
-                onClick={() => openGeneralModal()}
-              />
-            </motion.div>
-          </GeneralModal>
+          <motion.div layout whileHover={{ scale: 1.2 }}>
+            <PlusIcon
+              className="cursor-pointer"
+              onClick={() => openGeneralModal()}
+            />
+          </motion.div>
         </div>
       </div>
       <div className="mb-8 mt-2">
