@@ -6,7 +6,7 @@ export const dreamFormSchema = z.object({
     .min(2, { message: "Title must be longer than 2 characters." })
     .max(50, { message: "Title must be shorter than 50 characters." }),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
-  targetDate: z.date().nullable().optional(),
+  targetDate: z.string().nullable().optional(),
 })
 
 export type DreamFormType = z.infer<typeof dreamFormSchema>

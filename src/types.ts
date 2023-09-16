@@ -41,7 +41,7 @@ export type Dream = {
   progress: number
   type: "DREAM"
   goals?: Goal[]
-  targetDate?: Date | null
+  targetDate?: string | null
   priority?: "LOW" | "MEDIUM" | "HIGH"
   timeSpent: number
   totalTimeSpent: number

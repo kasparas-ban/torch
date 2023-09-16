@@ -13,11 +13,12 @@ import {
 } from "@/components/ui/form"
 import { Dream } from "@/types"
 import useModal from "../useModal"
+import { pruneObject } from "@/helpers"
 import { useAddNewItem } from "@/API/api"
 import { dreamFormSchema, DreamFormType } from "../schemas"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
-import PriorityInput from "../../Inputs/PriorityInput"
+import { PriorityInputNew } from "../../Inputs/PriorityInput"
 import { ButtonSubmit } from "@/components/ui/button"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
@@ -54,10 +55,14 @@ function DreamForm() {
   const form = useForm<DreamFormType>({
     resolver: zodResolver(dreamFormSchema),
     defaultValues: defaultDream,
+    shouldUnregister: true,
   })
 
   const onSubmit = (data: DreamFormType) => {
-    const newDream = { ...data, type: "DREAM" as const }
+    const newDream = {
+      ...pruneObject(data),
+      type: "DREAM" as const,
+    }
     mutateAsync(newDream)
       .then(() => {
         setTimeout(() => {
@@ -76,8 +81,6 @@ function DreamForm() {
         )
         setTimeout(() => reset(), 2000)
       })
-
-    console.log("onSubmit", data)
   }
 
   return (
@@ -126,25 +129,23 @@ function DreamForm() {
                       <FormField
                         control={form.control}
                         name="priority"
-                        render={({ field }) => {
-                          return (
-                            <FormItem>
-                              <FormLabel className="pl-3 tracking-wide">
-                                Priority
-                              </FormLabel>
-                              <FormControl>
-                                <PriorityInput
-                                  id="dream_priority"
-                                  value={field.value || "MEDIUM"}
-                                  setValue={field.onChange}
-                                />
-                              </FormControl>
-                            </FormItem>
-                          )
-                        }}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="pl-3 tracking-wide">
+                              Priority
+                            </FormLabel>
+                            <FormControl>
+                              <PriorityInputNew
+                                value={field.value}
+                                onChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
                       />
                     </motion.div>
                   )
+
                 if (input === "targetDate")
                   return (
                     <motion.div
@@ -180,14 +181,8 @@ function DreamForm() {
                                   onClick={e =>
                                     (e.target as HTMLInputElement).showPicker()
                                   }
-                                  value={
-                                    field.value
-                                      ? field.value?.toLocaleDateString("en-CA")
-                                      : ""
-                                  }
-                                  onChange={e =>
-                                    field.onChange(new Date(e.target.value))
-                                  }
+                                  value={field.value || ""}
+                                  onChange={e => field.onChange(e.target.value)}
                                 />
                               </FormControl>
                             </FormItem>

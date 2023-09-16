@@ -16,6 +16,15 @@ export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
   return store
 }
 
+export const pruneObject = <T extends Object>(obj: T) => {
+  const deepCopy = structuredClone(obj)
+  Object.keys(deepCopy).forEach(
+    (key: string) =>
+      !deepCopy[key as keyof T] && delete deepCopy[key as keyof T],
+  )
+  return deepCopy
+}
+
 export const capitalizeString = (word: string) =>
   word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 
