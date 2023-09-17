@@ -118,7 +118,6 @@ function AccountPage() {
         <section>
           <h2 className="mb-4 text-xl font-bold text-gray-800">Settings</h2>
           <div className="flex flex-col">
-            <GeneralModal children={null} />
             <div className="hidden sm:block">
               <SignOutButton signOutCallback={showSignOutToast}>
                 <motion.div

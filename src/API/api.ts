@@ -26,7 +26,7 @@ const HOST = import.meta.env.VITE_HOST_ADDRESS
 
 export const queryClient = new QueryClient()
 
-export const useItemsList = () => {
+export const useItemsList = (enabled = true) => {
   const { getToken } = useAuth()
   const { setIsStorageUsed } = useStorage()
   const { setItems } = useListStore()
@@ -65,7 +65,8 @@ export const useItemsList = () => {
     },
     {
       refetchOnWindowFocus: false,
-      retry: false,
+      retry: 2,
+      enabled,
     },
   )
   return { isLoading, error, data }

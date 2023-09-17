@@ -1,7 +1,7 @@
 import { useState } from "react"
 import clsx from "clsx"
 import { z } from "zod"
-import { useForm, useWatch } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PriorityInputNew } from "../../Inputs/PriorityInput"
@@ -53,7 +53,7 @@ const getInitialTaskForm = (initialTask: Task): TaskFormType => ({
 
 function TaskForm() {
   const { toast } = useToast()
-  const { data } = useItemsList()
+  const { data } = useItemsList(false)
   const { editItem, closeModal } = useModal()
   const { mutateAsync, reset, isLoading, isError, isSuccess } = useAddNewItem()
   const defaultTask = getInitialTaskForm(editItem as Task)

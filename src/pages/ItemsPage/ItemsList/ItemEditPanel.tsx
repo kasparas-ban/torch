@@ -39,7 +39,7 @@ export default function ItemEditPanel<T extends GeneralItem>({
   return (
     <motion.div
       layout
-      className="flex relative"
+      className="relative flex"
       initial={{ marginTop: 0, marginBottom: 0 }}
       animate={{
         marginTop: 12,
@@ -48,14 +48,14 @@ export default function ItemEditPanel<T extends GeneralItem>({
       exit={{ marginTop: 0, marginBottom: 0 }}
     >
       {showBulletLine && (
-        <div className="bg-gray-300 w-1 absolute h-[140%] left-[6px]" />
+        <div className="absolute left-[6px] h-[140%] w-1 bg-gray-300" />
       )}
       <motion.div
         layout
         className={`mx-auto flex ${
           showAddTask
             ? "w-[360px] max-[500px]:w-full"
-            : "w-[300px] max-[300px]:w-full max-[400px]:px-6"
+            : "w-[300px] max-[400px]:px-6 max-[300px]:w-full"
         } justify-between`}
         initial={{ height: 0, opacity: 0 }}
         animate={{
