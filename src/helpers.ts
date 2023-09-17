@@ -1,4 +1,5 @@
 import { StoreApi, UseBoundStore } from "zustand"
+import { Time } from "@internationalized/date"
 
 type WithSelectors<S> = S extends { getState: () => infer T }
   ? S & { use: { [K in keyof T]: () => T[K] } }
@@ -46,6 +47,13 @@ export const toPercent = (input?: number) => {
   if (percent !== 100 && rounded === 100) return "99%"
 
   return `${rounded.toString()}%`
+}
+
+export const getTime = (seconds?: number) => {
+  if (!seconds) return new Time(0)
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  return new Time(hours, minutes)
 }
 
 export const formatTimeSpent = (totalSeconds: number) => {

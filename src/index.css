@@ -114,3 +114,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
 }
+
+*:focus {
+  outline-color: black;
+}
+
+*::selection {
+  @apply bg-gray-400;
+}

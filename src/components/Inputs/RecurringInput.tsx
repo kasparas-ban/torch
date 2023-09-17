@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import clsx from "clsx"
 import { ReccuringPeriod, RecurringType } from "../../types"
@@ -28,14 +28,18 @@ export default function RecurringInput({
   value?: RecurringType
   setValue: (input: RecurringType) => void
 }) {
+  useEffect(() => {
+    setValue({ times: 1, period: "DAY" })
+  }, [])
+
   return (
-    <div className="flex">
+    <motion.div layout className="flex">
       <input
         type="number"
-        className="peer h-10 w-full flex-1 outline-none rounded-2xl bg-gray-200 px-4 text-center text-gray-900 focus:bg-white focus:ring-2 focus:ring-ring"
+        className="focus:ring-ring h-10 w-full flex-1 rounded-2xl bg-gray-200 px-4 text-center text-gray-900 outline-0 focus:bg-white focus:ring-2"
         min={1}
         max={99}
-        value={value?.times ?? 1}
+        value={value?.times || 1}
         onChange={e =>
           setValue({
             times: Number(e.target.value),
@@ -48,7 +52,7 @@ export default function RecurringInput({
         value={value}
         setPeriod={period => setValue({ times: value?.times || 1, period })}
       />
-    </div>
+    </motion.div>
   )
 }
 
@@ -98,15 +102,15 @@ function PeriodSelect({
       <motion.div
         key="period-select"
         className={clsx(
-          "flex h-10 flex-1 cursor-pointer items-center gap-1 rounded-2xl bg-gray-200 pr-3 pl-5",
-          isDropdownOpen ? "bg-white ring-2 ring-ring" : "",
+          "flex h-10 flex-1 cursor-pointer items-center gap-1 rounded-2xl bg-gray-200 pl-5 pr-3",
+          isDropdownOpen ? "ring-ring bg-white ring-2" : "",
         )}
         ref={dropdownSelectRef}
         onClick={toggleDropdown}
         whileHover={{ scale: isDropdownOpen ? 1 : 1.02 }}
       >
         {selectedOption?.label}
-        <div className="mt-0.5 ml-auto scale-75 text-gray-400">
+        <div className="ml-auto mt-0.5 scale-75 text-gray-400">
           <motion.div
             animate={{
               rotate: isDropdownOpen ? 180 : 0,
@@ -122,7 +126,7 @@ function PeriodSelect({
           {isDropdownOpen && (
             <motion.div
               className={clsx(
-                "absolute top-10 right-1 z-20 mt-2 w-32 origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none",
+                "absolute right-1 top-10 z-20 mt-2 w-32 origin-top-right rounded-xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none",
                 isDropdownOpen ? "bg-white outline-2 outline-blue-500/50" : "",
               )}
               role="menu"

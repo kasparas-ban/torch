@@ -56,9 +56,9 @@ export function ItemsHeader({ itemType }: { itemType: ItemType }) {
       <div className="flex">
         <ItemsTypeDropdown itemType={itemType} />
         <div className="relative bottom-1 ml-auto mt-7 flex items-center space-x-4">
-          <motion.button layout className="cursor-default text-gray-400">
+          {/* <motion.button layout className="cursor-default text-gray-400">
             <FilterIcon />
-          </motion.button>
+          </motion.button> */}
           <motion.div layout whileHover={{ scale: 1.2 }}>
             <PlusIcon
               className="cursor-pointer"

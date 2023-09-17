@@ -1,10 +1,10 @@
 import { useState } from "react"
 import clsx from "clsx"
 import { z } from "zod"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
-import PriorityInput from "../../Inputs/PriorityInput"
+import { PriorityInputNew } from "../../Inputs/PriorityInput"
 import DurationInput from "../../Inputs/DurationInput"
 import RecurringInput from "../../Inputs/RecurringInput"
 import { Task } from "../../../types"
@@ -17,21 +17,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { taskFormSchema } from "../schemas"
-// import { goalsData } from "@/data/itemData"
+import { TaskFormType, taskFormSchema } from "../schemas"
 import { Input } from "@/components/ui/input"
-import { Time } from "@internationalized/date"
 import { groupItemsByParent } from "@/API/helpers"
+import { getTime, pruneObject } from "@/helpers"
+import { useToast } from "@/components/ui/use-toast"
+import { ButtonSubmit } from "@/components/ui/button"
+import { useAddNewItem, useItemsList } from "@/API/api"
 import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
-
-type TaskForm = Omit<
-  Task,
-  "id" | "type" | "progress" | "goal" | "timeSpent"
-> & {
-  goal?: { label: string; value: number }
-}
 
 type InputType = keyof z.infer<typeof taskFormSchema>
 
@@ -45,7 +40,7 @@ const formVariants = {
   },
 }
 
-const getInitialTaskForm = (initialTask: Task): TaskForm => ({
+const getInitialTaskForm = (initialTask: Task): TaskFormType => ({
   title: initialTask?.title || "",
   duration: initialTask?.duration || 30 * 60,
   priority: initialTask?.priority,
@@ -57,7 +52,10 @@ const getInitialTaskForm = (initialTask: Task): TaskForm => ({
 })
 
 function TaskForm() {
-  const { editItem } = useModal()
+  const { toast } = useToast()
+  const { data } = useItemsList()
+  const { editItem, closeModal } = useModal()
+  const { mutateAsync, reset, isLoading, isError, isSuccess } = useAddNewItem()
   const defaultTask = getInitialTaskForm(editItem as Task)
 
   const defaultInputOrder = Object.keys(defaultTask).filter(
@@ -65,13 +63,35 @@ function TaskForm() {
   ) as InputType[]
   const [inputOrder, setInputOrder] = useState(defaultInputOrder)
 
-  const form = useForm<z.infer<typeof taskFormSchema>>({
+  const form = useForm<TaskFormType>({
     resolver: zodResolver(taskFormSchema),
     defaultValues: defaultTask,
+    shouldUnregister: true,
   })
 
-  const onSubmit = (data: z.infer<typeof taskFormSchema>) => {
-    console.log("onSubmit", data)
+  const onSubmit = (data: TaskFormType) => {
+    const newTask = {
+      ...pruneObject(data),
+      type: "TASK" as const,
+    }
+    mutateAsync(newTask)
+      .then(() => {
+        setTimeout(() => {
+          closeModal()
+        }, 2000)
+      })
+      .catch(() => {
+        setTimeout(
+          () =>
+            toast({
+              title: "Failed to save",
+              description:
+                "Your task has not been saved. Please try adding it again later.",
+            }),
+          100,
+        )
+        setTimeout(() => reset(), 2000)
+      })
   }
 
   return (
@@ -120,19 +140,13 @@ function TaskForm() {
                         <DurationInput
                           hourCycle={24}
                           aria-label="Duration"
-                          // value={
-                          //   field.value?.hours || field.value?.minutes
-                          //     ? new Time(
-                          //         field.value.hours || 0,
-                          //         field.value.minutes || 0,
-                          //       )
-                          //     : null
-                          // }
-                          // onChange={e =>
-                          //   field.onChange({ hours: e.hour, minutes: e.minute })
-                          // }
+                          value={getTime(field.value)}
+                          onChange={e =>
+                            field.onChange(e.hour * 60 * 60 + e.minute * 60)
+                          }
                         />
                       </FormControl>
+                      <FormMessage className="pl-3" />
                     </FormItem>
                   )}
                 />
@@ -140,7 +154,8 @@ function TaskForm() {
 
               {inputOrder.map(input => {
                 if (input === "goal") {
-                  const groupedGoals = groupItemsByParent([], "GOAL")
+                  const goals = data?.goals || []
+                  const groupedGoals = groupItemsByParent(goals, "GOAL")
                   const goalOptions = Object.keys(groupedGoals).map(
                     dreamId => ({
                       label: groupedGoals[dreamId].parentLabel || "Other",
@@ -176,8 +191,8 @@ function TaskForm() {
                                   value={field.value}
                                   onChange={field.onChange}
                                   options={goalOptions}
-                                  isClearable
                                   menuPosition="fixed"
+                                  isClearable
                                 />
                               </FormControl>
                             </FormItem>
@@ -209,10 +224,9 @@ function TaskForm() {
                                 Priority
                               </FormLabel>
                               <FormControl>
-                                <PriorityInput
-                                  id="task_priority"
-                                  value={field.value || "MEDIUM"}
-                                  setValue={field.onChange}
+                                <PriorityInputNew
+                                  value={field.value}
+                                  onChange={field.onChange}
                                 />
                               </FormControl>
                             </FormItem>
@@ -250,6 +264,7 @@ function TaskForm() {
                                   setValue={field.onChange}
                                 />
                               </FormControl>
+                              <FormMessage className="pl-3" />
                             </FormItem>
                           )
                         }}
@@ -291,13 +306,7 @@ function TaskForm() {
                                   onClick={e =>
                                     (e.target as HTMLInputElement).showPicker()
                                   }
-                                  value={
-                                    field.value
-                                      ? new Date(
-                                          field.value,
-                                        )?.toLocaleDateString("en-CA")
-                                      : ""
-                                  }
+                                  value={field.value || ""}
                                   onChange={e => field.onChange(e.target.value)}
                                 />
                               </FormControl>
@@ -318,13 +327,11 @@ function TaskForm() {
           />
 
           <div className="relative mt-auto flex justify-center">
-            <motion.button
-              layout
-              className="px-3 py-1 text-xl font-medium"
-              whileTap={{ scale: 0.95 }}
-            >
-              Save
-            </motion.button>
+            <ButtonSubmit
+              isLoading={isLoading}
+              isSuccess={isSuccess}
+              isError={isError}
+            />
           </div>
         </form>
       </Form>
@@ -402,9 +409,9 @@ function AddTaskSections({
         Target date
         <div className="relative top-1 ml-0.5">
           {getInput("targetDate") ? (
-            <PlusSmallIcon className="h-4 w-4" />
-          ) : (
             <MinusSmallIcon className="h-4 w-4" />
+          ) : (
+            <PlusSmallIcon className="h-4 w-4" />
           )}
         </div>
       </button>

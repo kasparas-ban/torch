@@ -17,20 +17,23 @@ export const taskFormSchema = z.object({
     .string()
     .min(2, { message: "Title must be longer than 2 characters." })
     .max(50, { message: "Title must be shorter than 50 characters." }),
-  duration: z.number().optional(),
+  duration: z
+    .number()
+    .gt(0, { message: "Duration is required to track your progress" })
+    .optional(),
   goal: z
     .object({
       label: z.string(),
-      options: z.array(z.object({ label: z.string(), value: z.number() })),
+      value: z.number(),
     })
-    .optional(),
+    .optional()
+    .nullable(),
   targetDate: z.string().nullable().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
   recurring: z
     .object({
-      times: z.number(),
+      times: z.number().gt(0, "Value must be > 1"),
       period: z.enum(["DAY", "WEEK", "MONTH"]),
-      progress: z.number().optional(),
     })
     .optional(),
 })

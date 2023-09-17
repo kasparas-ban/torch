@@ -61,7 +61,7 @@ function DateSegment({
           minWidth: String(segment.maxValue).length + "ch",
         }),
       }}
-      className={`group box-content rounded-sm px-0.5 text-right tabular-nums outline-none focus:bg-gray-500 focus:text-white ${
+      className={`group box-content rounded-sm px-0.5 text-right tabular-nums outline-0 focus:bg-gray-500 focus:text-white ${
         !segment.isEditable ? "text-gray-500" : "text-gray-800"
       }`}
     >

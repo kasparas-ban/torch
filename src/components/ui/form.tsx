@@ -139,7 +139,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
   )
@@ -153,9 +153,16 @@ const FormMessage = React.forwardRef<
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message) : children
 
+  const message =
+    body === "undefined"
+      ? error
+        ? (Object.values(error) as any).find((e: any) => e.message)?.message
+        : ""
+      : body
+
   return (
     <AnimatePresence>
-      {body && (
+      {message && (
         <motion.div
           layout
           initial={{ opacity: 0, height: 0, marginTop: 0 }}
@@ -165,10 +172,10 @@ const FormMessage = React.forwardRef<
           <p
             ref={ref}
             id={formMessageId}
-            className={cn("text-sm font-medium text-destructive", className)}
+            className={cn("text-destructive text-sm font-medium", className)}
             {...props}
           >
-            {body}
+            {message}
           </p>
         </motion.div>
       )}
