@@ -1,7 +1,6 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import { GeneralItem, ItemType } from "@/types"
-import { ItemResponse } from "@/API/helpers"
+import { FormattedItems, GeneralItem, ItemType } from "@/types"
 
 type CollapsedItemState = {
   itemId: number
@@ -19,8 +18,8 @@ interface ItemListState {
   saveItemType: (type: ItemType) => void
 
   // Items
-  items: ItemResponse[]
-  setItems: (items: ItemResponse[]) => void
+  items: FormattedItems
+  setItems: (items: FormattedItems) => void
 }
 
 const useListStore = create<ItemListState>()(
@@ -52,8 +51,8 @@ const useListStore = create<ItemListState>()(
       saveItemType: (type: ItemType) => set({ itemType: type }),
 
       // Items
-      items: [],
-      setItems: (items: ItemResponse[]) =>
+      items: { tasks: [], goals: [], dreams: [] },
+      setItems: (items: FormattedItems) =>
         set({
           items,
         }),

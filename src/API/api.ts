@@ -34,7 +34,7 @@ export const useItemsList = (enabled = true) => {
   const { isLoading, error, data } = useQuery<FormattedItems, CustomError>(
     ["items"],
     async () => {
-      let items = [] as ItemResponse[]
+      let items = { tasks: [], goals: [], dreams: [] } as FormattedItems
       const token = await getToken()
 
       if (token) {
@@ -46,9 +46,10 @@ export const useItemsList = (enabled = true) => {
             return res.json()
           })
           .then(data => {
+            const formattedItems = formatItemResponse(data)
             setIsStorageUsed(false)
-            setItems(data)
-            return data
+            setItems(formattedItems)
+            return formattedItems
           })
           .catch(err => {
             setIsStorageUsed(true)
@@ -60,8 +61,7 @@ export const useItemsList = (enabled = true) => {
         throw new CustomError("", ItemLoadNotSignedInErrorMsg)
       }
 
-      const formattedItems = formatItemResponse(items)
-      return formattedItems
+      return items
     },
     {
       refetchOnWindowFocus: false,

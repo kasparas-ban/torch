@@ -23,7 +23,8 @@ import { groupItemsByParent } from "@/API/helpers"
 import { getTime, pruneObject } from "@/helpers"
 import { useToast } from "@/components/ui/use-toast"
 import { ButtonSubmit } from "@/components/ui/button"
-import { useAddNewItem, useItemsList } from "@/API/api"
+import { useAddNewItem } from "@/API/api"
+import useListStore from "@/pages/ItemsPage/useListStore"
 import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
@@ -53,7 +54,9 @@ const getInitialTaskForm = (initialTask: Task): TaskFormType => ({
 
 function TaskForm() {
   const { toast } = useToast()
-  const { data } = useItemsList(false)
+  const {
+    items: { goals },
+  } = useListStore()
   const { editItem, closeModal } = useModal()
   const { mutateAsync, reset, isLoading, isError, isSuccess } = useAddNewItem()
   const defaultTask = getInitialTaskForm(editItem as Task)
@@ -154,7 +157,6 @@ function TaskForm() {
 
               {inputOrder.map(input => {
                 if (input === "goal") {
-                  const goals = data?.goals || []
                   const groupedGoals = groupItemsByParent(goals, "GOAL")
                   const goalOptions = Object.keys(groupedGoals).map(
                     dreamId => ({
