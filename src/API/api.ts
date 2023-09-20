@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/clerk-react"
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
-import { formatItemResponse } from "./helpers"
+import { ItemResponse, formatItemResponse } from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import { FocusType } from "../components/Timer/useTimerForm"
@@ -87,7 +87,7 @@ export const useAddNewItem = () => {
           })
             .then(res => {
               if (!res.ok) throw new CustomError("", AddItemFetchErrorMsg)
-              return res.json()
+              return res.json() as Promise<ItemResponse>
             })
             .catch(err => {
               throw new CustomError(err, AddItemFetchErrorMsg)
@@ -95,9 +95,7 @@ export const useAddNewItem = () => {
         } else {
           // TODO: add to localStorage
         }
-      },
-      onError: error => {
-        console.log(`Failed to add an item: ${error}`)
+        return undefined
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["items"] })

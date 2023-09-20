@@ -79,11 +79,24 @@ function GoalForm() {
       ...pruneObject({ ...data, parentId: data.dream?.value }),
       type: "GOAL" as const,
     }
+
     mutateAsync(newGoal)
-      .then(() => {
-        setTimeout(() => {
-          closeModal()
-        }, 2000)
+      .then(goal => {
+        if (!goal?.itemID) throw Error("Failed to save the goal")
+
+        const taskPromises = newGoal.tasks.map(task =>
+          mutateAsync({
+            ...task,
+            parentId: goal.itemID,
+            type: "TASK" as const,
+          }),
+        )
+
+        Promise.all(taskPromises).then(() =>
+          setTimeout(() => {
+            closeModal()
+          }, 2000),
+        )
       })
       .catch(() => {
         setTimeout(

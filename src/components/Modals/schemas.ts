@@ -39,7 +39,10 @@ export const taskFormSchema = z.object({
 })
 
 export type TaskFormType = z.infer<typeof taskFormSchema>
-export type NewTaskType = TaskFormType & { type: "TASK" }
+export type NewTaskType = Omit<TaskFormType, "task"> & {
+  parentId?: number
+  type: "TASK"
+}
 
 export const goalFormSchema = z.object({
   title: z
