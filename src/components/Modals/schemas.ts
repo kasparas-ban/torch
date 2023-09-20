@@ -53,7 +53,10 @@ export const goalFormSchema = z.object({
 })
 
 export type GoalFormType = z.infer<typeof goalFormSchema>
-export type NewGoalType = GoalFormType & { type: "GOAL" }
+export type NewGoalType = Omit<GoalFormType, "dream"> & {
+  parentId?: number
+  type: "GOAL"
+}
 
 const subtaskFormSchema = taskFormSchema.extend({ id: z.number() })
 export type SubitemType = z.infer<typeof subtaskFormSchema>

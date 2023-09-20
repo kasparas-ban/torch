@@ -4,7 +4,7 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PriorityInputNew } from "../../Inputs/PriorityInput"
+import PriorityInput from "../../Inputs/PriorityInput"
 import DurationInput from "../../Inputs/DurationInput"
 import RecurringInput from "../../Inputs/RecurringInput"
 import { Task } from "../../../types"
@@ -226,7 +226,7 @@ function TaskForm() {
                                 Priority
                               </FormLabel>
                               <FormControl>
-                                <PriorityInputNew
+                                <PriorityInput
                                   value={field.value}
                                   onChange={field.onChange}
                                 />

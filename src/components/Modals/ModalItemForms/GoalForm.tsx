@@ -3,12 +3,11 @@ import { useFieldArray, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
 import clsx from "clsx"
-import { z } from "zod"
 import useModal from "../useModal"
 import { Subtasks } from "./Subtasks"
 import { Goal } from "../../../types"
 import PriorityInput from "../../Inputs/PriorityInput"
-import { goalFormSchema } from "../schemas"
+import { GoalFormType, goalFormSchema } from "../schemas"
 import {
   Form,
   FormControl,
@@ -18,18 +17,16 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import useListStore from "@/pages/ItemsPage/useListStore"
 import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
+import { ButtonSubmit } from "@/components/ui/button"
+import { useAddNewItem } from "@/API/api"
+import { pruneObject } from "@/helpers"
+import { useToast } from "@/components/ui/use-toast"
 
-type GoalForm = Omit<
-  Goal,
-  "id" | "type" | "progress" | "dream" | "timeSpent" | "totalTimeSpent"
-> & {
-  dream?: { label: string; value: number }
-}
-
-type InputType = keyof z.infer<typeof goalFormSchema>
+type InputType = keyof GoalFormType
 
 const formVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.35 } },
@@ -41,7 +38,7 @@ const formVariants = {
   },
 }
 
-const getInitialGoalForm = (initialGoal: Goal): GoalForm => ({
+const getInitialGoalForm = (initialGoal: Goal): GoalFormType => ({
   title: initialGoal?.title || "",
   priority: initialGoal?.priority,
   targetDate: initialGoal?.targetDate,
@@ -52,7 +49,12 @@ const getInitialGoalForm = (initialGoal: Goal): GoalForm => ({
 })
 
 function GoalForm() {
-  const { editItem, addTaskOnOpen, modalKey } = useModal()
+  const {
+    items: { dreams },
+  } = useListStore()
+  const { toast } = useToast()
+  const { editItem, addTaskOnOpen, modalKey, closeModal } = useModal()
+  const { mutateAsync, reset, isLoading, isError, isSuccess } = useAddNewItem()
   const defaultGoal = getInitialGoalForm(editItem as Goal)
 
   const defaultInputOrder = (Object.keys(defaultGoal) as InputType[]).filter(
@@ -60,9 +62,10 @@ function GoalForm() {
   )
   const [inputOrder, setInputOrder] = useState(defaultInputOrder)
 
-  const form = useForm<z.infer<typeof goalFormSchema>>({
+  const form = useForm<GoalFormType>({
     resolver: zodResolver(goalFormSchema),
     defaultValues: defaultGoal,
+    shouldUnregister: true,
   })
 
   const { fields, append, remove } = useFieldArray({
@@ -70,8 +73,30 @@ function GoalForm() {
     name: "tasks",
   })
 
-  const onSubmit = (data: z.infer<typeof goalFormSchema>) => {
+  const onSubmit = (data: GoalFormType) => {
     console.log("onSubmit", data)
+    const newGoal = {
+      ...pruneObject({ ...data, parentId: data.dream?.value }),
+      type: "GOAL" as const,
+    }
+    mutateAsync(newGoal)
+      .then(() => {
+        setTimeout(() => {
+          closeModal()
+        }, 2000)
+      })
+      .catch(() => {
+        setTimeout(
+          () =>
+            toast({
+              title: "Failed to save",
+              description:
+                "Your goal has not been saved. Please try adding it again later.",
+            }),
+          100,
+        )
+        setTimeout(() => reset(), 2000)
+      })
   }
 
   const modalRef = useRef<HTMLElement | null>(null)
@@ -146,10 +171,10 @@ function GoalForm() {
 
               {inputOrder.map(input => {
                 if (input === "dream") {
-                  // const dreamOptions = ([] as Dream).map(dream => ({
-                  //   label: dream.title,
-                  //   value: dream.id,
-                  // }))
+                  const dreamOptions = dreams.map(dream => ({
+                    label: dream.title,
+                    value: dream.id,
+                  }))
 
                   return (
                     <motion.div
@@ -175,7 +200,7 @@ function GoalForm() {
                                   name="dream"
                                   value={field.value}
                                   onChange={field.onChange}
-                                  // options={dreamOptions}
+                                  options={dreamOptions}
                                   isClearable
                                   menuPosition="fixed"
                                 />
@@ -209,9 +234,8 @@ function GoalForm() {
                               </FormLabel>
                               <FormControl>
                                 <PriorityInput
-                                  id="goal_priority"
-                                  value={field.value || "MEDIUM"}
-                                  setValue={field.onChange}
+                                  value={field.value}
+                                  onChange={field.onChange}
                                 />
                               </FormControl>
                             </FormItem>
@@ -255,16 +279,8 @@ function GoalForm() {
                                   onClick={e =>
                                     (e.target as HTMLInputElement).showPicker()
                                   }
-                                  value={
-                                    field.value
-                                      ? new Date(
-                                          field.value,
-                                        )?.toLocaleDateString("en-CA")
-                                      : ""
-                                  }
-                                  onChange={e =>
-                                    field.onChange(new Date(e.target.value))
-                                  }
+                                  value={field.value || ""}
+                                  onChange={e => field.onChange(e.target.value)}
                                 />
                               </FormControl>
                             </FormItem>
@@ -304,13 +320,11 @@ function GoalForm() {
           </div>
 
           <div className="relative mt-auto flex justify-center">
-            <motion.button
-              layout
-              className="px-3 py-1 text-xl font-medium"
-              whileTap={{ scale: 0.95 }}
-            >
-              Save
-            </motion.button>
+            <ButtonSubmit
+              isLoading={isLoading}
+              isSuccess={isSuccess}
+              isError={isError}
+            />
           </div>
         </form>
       </Form>

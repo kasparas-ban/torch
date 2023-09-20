@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/clerk-react"
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
-import { ItemResponse, formatItemResponse } from "./helpers"
+import { formatItemResponse } from "./helpers"
 import { timerHistoryData } from "@/data/timerHistory"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import { FocusType } from "../components/Timer/useTimerForm"

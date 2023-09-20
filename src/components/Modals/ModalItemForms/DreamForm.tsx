@@ -18,7 +18,7 @@ import { useAddNewItem } from "@/API/api"
 import { dreamFormSchema, DreamFormType } from "../schemas"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
-import { PriorityInputNew } from "../../Inputs/PriorityInput"
+import PriorityInput from "../../Inputs/PriorityInput"
 import { ButtonSubmit } from "@/components/ui/button"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
@@ -135,7 +135,7 @@ function DreamForm() {
                               Priority
                             </FormLabel>
                             <FormControl>
-                              <PriorityInputNew
+                              <PriorityInput
                                 value={field.value}
                                 onChange={field.onChange}
                               />
