@@ -17,10 +17,7 @@ export const taskFormSchema = z.object({
     .string()
     .min(2, { message: "Title must be longer than 2 characters." })
     .max(50, { message: "Title must be shorter than 50 characters." }),
-  duration: z
-    .number()
-    .gt(0, { message: "Duration is required to track your progress" })
-    .optional(),
+  duration: z.number().optional(),
   goal: z
     .object({
       label: z.string(),

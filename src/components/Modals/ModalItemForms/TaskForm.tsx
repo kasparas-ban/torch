@@ -138,6 +138,9 @@ function TaskForm() {
                     <FormItem>
                       <FormLabel className="pl-3 tracking-wide">
                         Duration
+                        <span className="ml-1 text-xs opacity-70">
+                          (Important to track your progress)
+                        </span>
                       </FormLabel>
                       <FormControl>
                         <DurationInput

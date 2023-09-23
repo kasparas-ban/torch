@@ -16,15 +16,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { pruneObject } from "@/helpers"
+import { useAddNewItem } from "@/API/api"
 import { Input } from "@/components/ui/input"
+import { useToast } from "@/components/ui/use-toast"
+import { ButtonSubmit } from "@/components/ui/button"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
-import { ButtonSubmit } from "@/components/ui/button"
-import { useAddNewItem } from "@/API/api"
-import { pruneObject } from "@/helpers"
-import { useToast } from "@/components/ui/use-toast"
 
 type InputType = keyof GoalFormType
 
