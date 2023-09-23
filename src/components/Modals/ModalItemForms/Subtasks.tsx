@@ -1,20 +1,20 @@
 import { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { FieldArrayWithId, UseFormReturn } from "react-hook-form"
-import { Time } from "@internationalized/date"
 import clsx from "clsx"
-import { z } from "zod"
 import {
   FormControl,
+  FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { getTime } from "@/helpers"
 import { Input } from "@/components/ui/input"
 import PriorityInput from "../../Inputs/PriorityInput"
 import DurationInput from "../../Inputs/DurationInput"
 import RecurringInput from "../../Inputs/RecurringInput"
-import { SubitemKeyType, SubitemType, goalFormSchema } from "../schemas"
+import { GoalFormType, SubitemKeyType, SubitemType } from "../schemas"
 import { ReactComponent as CloseIcon } from "../../../assets/close.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
@@ -29,11 +29,7 @@ const formVariants = {
   },
 }
 
-type SubtaskArrayType = FieldArrayWithId<
-  z.infer<typeof goalFormSchema>,
-  "tasks",
-  "id"
->[]
+type SubtaskArrayType = FieldArrayWithId<GoalFormType, "tasks", "id">[]
 
 export function Subtasks({
   subtasks,
@@ -45,7 +41,7 @@ export function Subtasks({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     index: number,
   ) => void
-  form: UseFormReturn<z.infer<typeof goalFormSchema>>
+  form: UseFormReturn<GoalFormType>
 }) {
   return (
     <>
@@ -71,7 +67,7 @@ export function Subtasks({
             <div className="relative" key={task.id}>
               <SubtaskItem
                 index={idx}
-                subtask={task as any}
+                subtask={task}
                 removeSubtask={removeSubtask}
                 form={form}
               />
@@ -95,7 +91,7 @@ function SubtaskItem({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     index: number,
   ) => void
-  form: UseFormReturn<z.infer<typeof goalFormSchema>>
+  form: UseFormReturn<GoalFormType>
 }) {
   const defaultInputOrder = (Object.keys(subtask) as SubitemKeyType[]).filter(
     key => !!subtask[key],
@@ -144,28 +140,27 @@ function SubtaskItem({
             key={`subtask_duration_${subtask.id}`}
             className="relative"
           >
-            <FormItem>
-              <FormLabel className="pl-3 tracking-wide">Duration</FormLabel>
-              <FormControl>
-                <DurationInput
-                  hourCycle={24}
-                  aria-label="Duration"
-                  // value={(() => {
-                  //   const time = form.watch(`tasks.${index}.duration`)
-                  //   return time?.hours || time?.minutes
-                  //     ? new Time(time.hours || 0, time.minutes || 0)
-                  //     : null
-                  // })()}
-                  // onChange={e =>
-                  //   form.setValue(`tasks.${index}.duration`, {
-                  //     hours: e.hour,
-                  //     minutes: e.minute,
-                  //   })
-                  // }
-                />
-              </FormControl>
-              <FormMessage className="pl-3" />
-            </FormItem>
+            <FormField
+              control={form.control}
+              key={`subtask_duration_${subtask.id}`}
+              name={`tasks.${index}.duration`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="pl-3 tracking-wide">Duration</FormLabel>
+                  <FormControl>
+                    <DurationInput
+                      hourCycle={24}
+                      aria-label="Duration"
+                      value={getTime(field.value)}
+                      onChange={e =>
+                        field.onChange(e.hour * 60 * 60 + e.minute * 60)
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage className="pl-3" />
+                </FormItem>
+              )}
+            />
           </motion.div>
 
           {inputOrder.map(input => {
@@ -186,11 +181,10 @@ function SubtaskItem({
                     </FormLabel>
                     <FormControl>
                       <PriorityInput
-                        id={`task_priority_${subtask.id}`}
                         value={
                           form.watch(`tasks.${index}.priority`) || "MEDIUM"
                         }
-                        setValue={value =>
+                        onChange={value =>
                           form.setValue(`tasks.${index}.priority`, value)
                         }
                       />

@@ -61,7 +61,9 @@ export type NewGoalType = Omit<GoalFormType, "dream"> & {
   type: "GOAL"
 }
 
-const subtaskFormSchema = taskFormSchema.extend({ id: z.number() })
+const subtaskFormSchema = taskFormSchema
+  .extend({ id: z.string() })
+  .omit({ goal: true })
 export type SubitemType = z.infer<typeof subtaskFormSchema>
 export type SubitemKeyType = keyof SubitemType
 
