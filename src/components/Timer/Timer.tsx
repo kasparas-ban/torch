@@ -1,11 +1,13 @@
 import { forwardRef } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import clsx from "clsx"
 import useTimerStore from "./useTimer"
 import useTimerForm from "./useTimerForm"
 import { TimerShape } from "./TimerShape"
 import useModal from "../Modals/useModal"
 import TimerHistory from "./TimerHistory"
-import { TimerFocusForm, TimerFocusInfo } from "./TimerFocusForm"
+import TimerFocusForm from "./TimerFocusForm/TimerFocusForm"
+import TimerFocusInfo from "./TimerFocusForm/TimerFocusInfo"
 import { GeneralModal } from "../Modals/GeneralModal/GeneralModal"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
 
@@ -180,13 +182,14 @@ const TimerClock = forwardRef<HTMLDivElement>((_, ref) => {
     <motion.div
       layout
       ref={ref}
-      className={`m-auto mt-8 flex aspect-square max-w-xs flex-col justify-center rounded-full border ${
+      className={clsx(
+        "m-auto mt-6 flex aspect-square max-w-xs flex-col justify-center rounded-full border",
         isBreakActive && timerState === "idle"
           ? "border-blue-400"
           : timerState === "idle"
           ? "border-rose-600"
-          : ""
-      }`}
+          : "",
+      )}
     >
       <TimerShape
         initialTime={initialTime}

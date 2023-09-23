@@ -1,16 +1,14 @@
 import { forwardRef } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import useTimerForm, { FocusType } from "./useTimerForm"
-import useTimerStore from "./useTimer"
 import {
   SelectTypeFirstField,
   SelectTypeSecondField,
-} from "../../components/Inputs/SelectField"
-import { ReactComponent as TimerIcon } from "../../assets/navigation_icons/timer.svg"
-import { ReactComponent as TimerBoldIcon } from "../../assets/timer_bold.svg"
-import { GroupedOptionType, ItemOptionType } from "../../types"
-import { getItemsByType, useItemsList } from "../../API/api"
-import { formatPercentages, formatTimeSpent, toPercent } from "../../helpers"
+} from "../../Inputs/SelectField"
+import useTimerStore from "../useTimer"
+import { toPercent } from "../../../helpers"
+import useTimerForm, { FocusType } from "../useTimerForm"
+import { getItemsByType, useItemsList } from "../../../API/api"
+import { GroupedOptionType, ItemOptionType } from "../../../types"
 
 const focusTypeOptions = [
   { label: "All", value: "ALL" as FocusType },
@@ -19,7 +17,7 @@ const focusTypeOptions = [
   { label: "Dreams", value: "DREAMS" as FocusType },
 ]
 
-export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
+const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
   const timerState = useTimerStore.use.timerState()
   const { focusOn, setFocusOn, focusType, setFocusType } = useTimerForm()
   const { data } = useItemsList()
@@ -72,68 +70,6 @@ export const TimerFocusForm = forwardRef<HTMLDivElement>((_, ref) => {
   )
 })
 
-export const TimerFocusInfo = forwardRef<
-  HTMLDivElement,
-  { focusOn: ItemOptionType }
->(({ focusOn }, ref) => {
-  if (!focusOn.duration) return null
-
-  const timeLeft =
-    focusOn.duration && focusOn.timeSpent
-      ? focusOn.duration - focusOn.timeSpent
-      : undefined
-
-  const timeSpent = focusOn.totalTimeSpent ?? focusOn.timeSpent
-
-  return (
-    <motion.div
-      layout
-      ref={ref}
-      className="relative mt-4 flex flex-col justify-center"
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-        transition: { duration: 0.6 },
-      }}
-      exit={{ opacity: 0, y: 20, transition: { duration: 0.1 } }}
-    >
-      <motion.div
-        layout
-        className="mx-auto max-w-2xl px-6 text-center text-xl font-semibold [text-wrap:balance]"
-      >
-        {focusOn?.label}
-      </motion.div>
-      <motion.div layout className="flex justify-center">
-        {focusOn.progress !== undefined && (
-          <div className="text-6xl font-bold">
-            {formatPercentages(focusOn.progress)}
-          </div>
-        )}
-        {timeSpent !== undefined && (
-          <div className="ml-1.5 mt-1.5 flex flex-col justify-evenly gap-1">
-            <div className="flex gap-2">
-              <TimerBoldIcon />
-              <span className="font-semibold">
-                {formatTimeSpent(timeSpent)}
-              </span>
-              <span className="text-gray-600">spent</span>
-            </div>
-            {timeLeft && (
-              <div className="flex gap-2">
-                <TimerIcon />
-                <span className="font-semibold">
-                  {formatTimeSpent(timeLeft)}
-                </span>
-                <span className="text-gray-600">left</span>
-              </div>
-            )}
-          </div>
-        )}
-      </motion.div>
-    </motion.div>
-  )
-})
-
 const optionLabel = (
   option: ItemOptionType,
   { context }: { context: "menu" | "value" },
@@ -143,7 +79,7 @@ const optionLabel = (
       {context === "menu" ? (
         <>
           <div className="shrink-0 basis-10 text-center font-bold text-rose-500">
-            {option.duration ? toPercent(option.progress) : "-%"}
+            {toPercent(option.progress)}
           </div>
           <div>{option.label}</div>
         </>
@@ -155,3 +91,5 @@ const optionLabel = (
 }
 
 const groupLabel = (data: GroupedOptionType) => <div>{data.label}</div>
+
+export default TimerFocusForm

@@ -141,10 +141,10 @@ export const formatItemResponse = (response: ItemResponse[]) => {
           progressInfo.totalDuration,
         ),
         totalTimeSpent: goal.timeSpent + progressInfo.timeSpent,
+        timeSpent: goal.timeSpent,
         type: "GOAL",
         ...(goal.priority && { priority: goal.priority }),
         ...(goal.targetDate && { targetDate: goal.targetDate }),
-        timeSpent: goal.timeSpent,
         ...(goal.parentID &&
           dream && {
             dream: {

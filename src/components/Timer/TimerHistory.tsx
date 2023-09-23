@@ -35,10 +35,9 @@ function TimerHistory() {
                   {row.focusOn?.label}
                 </div>
                 <div className="mb-1">
-                  {formatPercentages(row.progress)}
-                  {` + `}
+                  {formatPercentages(row.progress)}%{` + `}
                   <span className="font-bold">
-                    {formatPercentages(row.difference)}
+                    {formatPercentages(row.difference)}%
                   </span>
                 </div>
                 <div className="mb-1 pl-2">

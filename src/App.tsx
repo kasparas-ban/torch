@@ -62,8 +62,8 @@ const Wrapper = () => {
               <TitleWrapper>
                 <NavigationBar />
                 {!isDesktop && <TimerToast showBackdrop />}
-                <GeneralModal />
                 <Outlet />
+                <GeneralModal />
               </TitleWrapper>
             </HelmetProvider>
           </QueryClientProvider>

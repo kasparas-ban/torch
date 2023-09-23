@@ -74,10 +74,10 @@ export const formatPercentages = (fraction?: number) => {
   if (fraction === undefined) return "-"
   const rounded = Math.round(fraction * 100 * 10) / 10
 
-  if (rounded === 0 && fraction !== 0) return "<0.1%"
-  if (rounded === 100 && fraction !== 1) return ">99%"
+  if (rounded === 0 && fraction !== 0) return "<0.1"
+  if (rounded === 100 && fraction !== 1) return ">99"
 
-  return `${rounded}%`
+  return `${rounded}`
 }
 
 export const getAllCountries = (lang = "en") => {

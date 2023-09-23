@@ -61,6 +61,7 @@ export type ItemOptionType = {
   value: number
   label: string
   type: ItemType
+  containsTasks: boolean
   progress?: number
   timeSpent?: number
   totalTimeSpent?: number
