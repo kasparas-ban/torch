@@ -40,6 +40,7 @@ function ItemStrip<T extends GeneralItem>({
       progress: item.progress,
       timeSpent: item.timeSpent,
       duration: (item as Task).duration,
+      containsTasks: !!(item as Goal).tasks?.length,
     })
     setFocusType(
       itemType === "TASK"
