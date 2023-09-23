@@ -129,7 +129,7 @@ function GoalForm() {
 
   const addSubtask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
-    const defaultTask = { title: "", duration: undefined }
+    const defaultTask = { title: "", duration: 1800 }
     append(defaultTask)
 
     if (modalRef.current)

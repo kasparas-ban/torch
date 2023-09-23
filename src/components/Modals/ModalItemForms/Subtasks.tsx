@@ -62,18 +62,16 @@ export function Subtasks({
       </AnimatePresence>
 
       <div key="subtasks_list" className="flex flex-col gap-4">
-        <AnimatePresence initial={false} mode="popLayout">
-          {subtasks?.map((task, idx) => (
-            <div className="relative" key={task.id}>
-              <SubtaskItem
-                index={idx}
-                subtask={task}
-                removeSubtask={removeSubtask}
-                form={form}
-              />
-            </div>
-          ))}
-        </AnimatePresence>
+        {subtasks?.map((task, idx) => (
+          <div className="relative" key={task.id}>
+            <SubtaskItem
+              index={idx}
+              subtask={task}
+              removeSubtask={removeSubtask}
+              form={form}
+            />
+          </div>
+        ))}
       </div>
     </>
   )
@@ -131,7 +129,11 @@ function SubtaskItem({
                   {...form.register(`tasks.${index}.title`)}
                 />
               </FormControl>
-              <FormMessage className="pl-3" />
+              {form.formState.errors && (
+                <FormMessage className="pl-3">
+                  {form.formState.errors.tasks?.[index]?.title?.message}
+                </FormMessage>
+              )}
             </FormItem>
           </motion.div>
 
@@ -142,7 +144,6 @@ function SubtaskItem({
           >
             <FormField
               control={form.control}
-              key={`subtask_duration_${subtask.id}`}
               name={`tasks.${index}.duration`}
               render={({ field }) => (
                 <FormItem>
@@ -206,36 +207,33 @@ function SubtaskItem({
                   animate="default"
                   exit="remove"
                 >
-                  <FormItem>
-                    <FormLabel className="pl-3 tracking-wide">
-                      Target date
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className={clsx(
-                          "bg-gray-200 placeholder:text-red-200 focus:bg-white",
-                          targetDate ? "text-gray-800" : "text-gray-400",
-                        )}
-                        type="date"
-                        min={new Date().toLocaleDateString("en-CA")}
-                        onFocus={e => e.target.showPicker()}
-                        onClick={e =>
-                          (e.target as HTMLInputElement).showPicker()
-                        }
-                        value={
-                          targetDate
-                            ? new Date(targetDate)?.toLocaleDateString("en-CA")
-                            : ""
-                        }
-                        // onChange={e =>
-                        //   form.setValue(
-                        //     `tasks.${index}.targetDate`,
-                        //     new Date(e.target.value),
-                        //   )
-                        // }
-                      />
-                    </FormControl>
-                  </FormItem>
+                  <FormField
+                    control={form.control}
+                    name={`tasks.${index}.targetDate`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="pl-3 tracking-wide">
+                          Target date
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            className={clsx(
+                              "bg-gray-200 placeholder:text-red-200 focus:bg-white",
+                              targetDate ? "text-gray-800" : "text-gray-400",
+                            )}
+                            type="date"
+                            min={new Date().toLocaleDateString("en-CA")}
+                            onFocus={e => e.target.showPicker()}
+                            onClick={e =>
+                              (e.target as HTMLInputElement).showPicker()
+                            }
+                            value={field.value || ""}
+                            onChange={e => field.onChange(e.target.value)}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
                 </motion.div>
               )
             }
