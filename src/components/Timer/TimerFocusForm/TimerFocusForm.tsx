@@ -4,9 +4,9 @@ import {
   SelectTypeFirstField,
   SelectTypeSecondField,
 } from "../../Inputs/SelectField"
-import useTimerStore from "../useTimer"
+import useTimerStore from "../hooks/useTimer"
 import { toPercent } from "../../../helpers"
-import useTimerForm, { FocusType } from "../useTimerForm"
+import useTimerForm, { FocusType } from "../hooks/useTimerForm"
 import { getItemsByType, useItemsList } from "../../../API/api"
 import { GroupedOptionType, ItemOptionType } from "../../../types"
 

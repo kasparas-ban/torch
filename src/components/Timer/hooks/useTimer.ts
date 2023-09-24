@@ -1,9 +1,6 @@
 import { create } from "zustand"
-import { TimerState } from "../../types"
-import { createSelectors } from "../../helpers"
-
-// TimerState = "idle" | "paused" | "running"
-// Timer State
+import { TimerState } from "../../../types"
+import { createSelectors } from "../../../helpers"
 
 type TimerStoreState = {
   time: number
@@ -22,17 +19,31 @@ type TimerStoreState = {
   resetTimer: () => void
   endTimer: () => void
   tickTimer: () => void
+
+  setDurations: (
+    timerDuration: number,
+    breakDuration: number,
+    longBreakDuration: number,
+  ) => void
 }
 
-const DEFAULT_TIME = 10 // 25 * 60
-const DEFAULT_BREAK_TIME = 5 // 25 * 60
-const DEFAULT_LONG_BREAK_TIME = 7 // 25 * 60
+const DEFAULT_TIME = 25
+const DEFAULT_BREAK_TIME = 5
+const DEFAULT_LONG_BREAK_TIME = 15
+
+const timerSettings = JSON.parse(
+  localStorage.getItem("timer-settings-storage") || "null",
+)
+const defaultTime = (timerSettings.state.timerDuration ?? DEFAULT_TIME) * 60
+const breakTime = (timerSettings.state.breakDuration || DEFAULT_BREAK_TIME) * 60
+const longBreakTime =
+  (timerSettings.state.longBreakDuration || DEFAULT_LONG_BREAK_TIME) * 60
 
 const useTimerStoreBase = create<TimerStoreState>(set => ({
-  time: DEFAULT_TIME,
-  initialTime: DEFAULT_TIME,
-  breakTime: DEFAULT_BREAK_TIME,
-  longBreakTime: DEFAULT_LONG_BREAK_TIME,
+  time: defaultTime,
+  initialTime: defaultTime,
+  breakTime: breakTime,
+  longBreakTime: longBreakTime,
   timerState: "idle",
 
   break: false,
@@ -103,6 +114,18 @@ const useTimerStoreBase = create<TimerStoreState>(set => ({
   tickTimer: () =>
     set(state => ({
       time: state.time - 1,
+    })),
+
+  setDurations: (
+    timerDuration: number,
+    breakDuration: number,
+    longBreakDuration: number,
+  ) =>
+    set(state => ({
+      time: timerDuration < state.time ? timerDuration : state.time,
+      initialTime: timerDuration,
+      breakTime: breakDuration,
+      longBreakTime: longBreakDuration,
     })),
 }))
 

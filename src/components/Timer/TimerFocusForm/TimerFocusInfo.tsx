@@ -83,9 +83,11 @@ const ParentInfo = ({ focusOn }: { focusOn: ItemOptionType }) => {
   return (
     <motion.div layout className="flex justify-center gap-2">
       {showProgress && (
-        <div className="flex items-center text-4xl font-bold max-sm:text-center sm:flex sm:items-center sm:text-6xl">
-          {formatPercentages(focusOn.progress)}
-          <span className="text-3xl">%</span>
+        <div className="flex items-center max-sm:text-center sm:flex sm:items-center sm:text-6xl">
+          <div className="text-4xl font-bold">
+            {formatPercentages(focusOn.progress)}
+            <span className="text-3xl">%</span>
+          </div>
         </div>
       )}
       <div className="mt-1.5 flex flex-col justify-evenly gap-1 max-sm:w-fit max-sm:items-start">

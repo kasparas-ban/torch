@@ -1,12 +1,12 @@
 import { useLocation } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import clsx from "clsx"
-import useTimerStore from "../Timer/useTimer"
 import { secondsToMinutes } from "../../helpers"
+import useTimerStore from "../Timer/hooks/useTimer"
+import useTimerForm from "../Timer/hooks/useTimerForm"
 import { ReactComponent as PlayIcon } from "../../assets/timer_icons/play.svg"
 import { ReactComponent as PauseIcon } from "../../assets/timer_icons/pause.svg"
 import { ReactComponent as ResetIcon } from "../../assets/timer_icons/reset.svg"
-import useTimerForm from "../Timer/useTimerForm"
 
 const buttonVariants = {
   default: { opacity: 1, scale: 1, transition: { duration: 0.8 } },

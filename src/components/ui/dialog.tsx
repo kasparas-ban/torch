@@ -1,10 +1,11 @@
 import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X, ArrowLeft } from "lucide-react"
+import { LayoutGroup, motion } from "framer-motion"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
 
 import { cn } from "@/lib/utils"
 import useModal from "@/components/Modals/useModal"
-import { LayoutGroup, motion } from "framer-motion"
+import useEditItem from "@/pages/ItemsPage/useEditItem"
 
 const Dialog = DialogPrimitive.Root
 
@@ -45,7 +46,8 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
-  const { goBack, showBackButton } = useModal()
+  const { goBack, showBackButton, closeModal } = useModal()
+  const { setEditItem } = useEditItem()
 
   return (
     <DialogPortal>
@@ -73,15 +75,19 @@ const DialogContent = React.forwardRef<
                 <span className="sr-only">Back</span>
               </motion.button>
             )}
-            <DialogPrimitive.Close
-              className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none"
-              asChild
-            >
-              <motion.button layout whileTap={{ scale: 0.9 }}>
+            <motion.div className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none">
+              <motion.button
+                layout
+                whileTap={{ scale: 0.9 }}
+                onClick={() => {
+                  closeModal()
+                  setEditItem(undefined)
+                }}
+              >
                 <X className="h-6 w-6" />
                 <span className="sr-only">Close</span>
               </motion.button>
-            </DialogPrimitive.Close>
+            </motion.div>
           </motion.div>
         </DialogPrimitive.Content>
       </LayoutGroupWrapper>

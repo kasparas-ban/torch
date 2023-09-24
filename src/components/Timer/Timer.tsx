@@ -1,14 +1,13 @@
 import { forwardRef } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import clsx from "clsx"
-import useTimerStore from "./useTimer"
-import useTimerForm from "./useTimerForm"
+import useTimerStore from "./hooks/useTimer"
+import useTimerForm from "./hooks/useTimerForm"
 import { TimerShape } from "./TimerShape"
 import useModal from "../Modals/useModal"
 import TimerHistory from "./TimerHistory"
 import TimerFocusForm from "./TimerFocusForm/TimerFocusForm"
 import TimerFocusInfo from "./TimerFocusForm/TimerFocusInfo"
-import { GeneralModal } from "../Modals/GeneralModal/GeneralModal"
 import { ReactComponent as SettingsIcon } from "../../assets/settings.svg"
 
 const buttonVariants = {
@@ -65,16 +64,14 @@ function Timer() {
             }}
             exit={{ opacity: 0, height: 0, transition: { duration: 0.01 } }}
           >
-            <GeneralModal>
-              <motion.div
-                className="flex items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
-                whileHover={{ scale: 1.06 }}
-                onClick={openTimerSettingsModal}
-              >
-                <SettingsIcon className="mr-1 h-4 w-4" />
-                Settings
-              </motion.div>
-            </GeneralModal>
+            <motion.div
+              className="flex cursor-pointer items-center rounded-xl px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+              whileHover={{ scale: 1.06 }}
+              onClick={openTimerSettingsModal}
+            >
+              <SettingsIcon className="mr-1 h-4 w-4" />
+              Settings
+            </motion.div>
           </motion.div>
         )}
         {timerState === "idle" ? (

@@ -11,6 +11,9 @@ import {
 } from "../ui/form"
 import { z } from "zod"
 import { Input } from "../ui/input"
+import useTimerSettings from "./hooks/useTimerSettings"
+import useTimerStore from "./hooks/useTimer"
+import useModal from "../Modals/useModal"
 
 const timerSettingsSchema = z.object({
   timer: z.number().nonnegative().int(),
@@ -18,20 +21,33 @@ const timerSettingsSchema = z.object({
   longBreak: z.number().nonnegative().int(),
 })
 
-const defaultSettings = {
-  timer: 25,
-  break: 5,
-  longBreak: 15,
-}
-
 function TimerSettings() {
+  const {
+    timerDuration,
+    breakDuration,
+    longBreakDuration,
+    setDurations: setStorageDurations,
+  } = useTimerSettings()
+
+  const { closeModal } = useModal()
+
+  const setTimerDurations = useTimerStore.use.setDurations()
+
+  const defaultSettings = {
+    timer: timerDuration,
+    break: breakDuration,
+    longBreak: longBreakDuration,
+  }
+
   const form = useForm<z.infer<typeof timerSettingsSchema>>({
     resolver: zodResolver(timerSettingsSchema),
     defaultValues: defaultSettings,
   })
 
   const onSubmit = (data: z.infer<typeof timerSettingsSchema>) => {
-    console.log("onSubmit", data)
+    setStorageDurations(data.timer, data.break, data.longBreak)
+    setTimerDurations(data.timer * 60, data.break * 60, data.longBreak * 60)
+    closeModal()
   }
 
   return (

@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async"
 import { useLocation } from "react-router-dom"
-import useTimerStore from "../components/Timer/useTimer"
+import useTimerStore from "../components/Timer/hooks/useTimer"
 
 const pageTitles = {
   "/items": "Torch | Goals",
