@@ -85,12 +85,12 @@ export type RecurringType = {
 export type ReccuringPeriod = "DAY" | "WEEK" | "MONTH"
 
 export type TimerHistoryRecord = {
-  timeSpent: Time
+  timeSpent: number
   focusOn?: { label: string; value: number; type: ItemType }
   progress: number
   difference?: number
-  startTime: Date
-  finishTime: Date
+  startTime: number
+  finishTime: number
 }
 
 export type Profile = {

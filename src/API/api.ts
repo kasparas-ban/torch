@@ -149,7 +149,9 @@ export const getItemsByType = ({
       progress: item.progress,
       timeSpent: item.timeSpent,
       totalTimeSpent: (item as Goal)?.totalTimeSpent,
-      containsTasks: !!(item as Goal).tasks?.length,
+      containsTasks:
+        !!(item as Goal).tasks?.length ||
+        !!(item as Dream).goals?.find(goal => !!goal.tasks?.length),
       duration:
         (item as Task)?.duration ||
         (item as Goal).tasks?.reduce(

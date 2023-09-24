@@ -14,23 +14,25 @@ function GeneralModal({ children }: { children?: ReactNode }) {
   const { isOpen, modalContent, modalTitle, closeModal, modalKey } = useModal()
 
   return (
-    <Dialog open={isOpen} onOpenChange={isOpen => !isOpen && closeModal()}>
-      <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent
-        id={modalKey}
-        className={clsx(
-          "flex flex-col",
-          modalKey === "general_modal" && "overflow-y-hidden",
-        )}
-      >
-        <DialogHeader>
-          <DialogTitle asChild>
-            <motion.h1 layout>{modalTitle}</motion.h1>
-          </DialogTitle>
-        </DialogHeader>
-        {modalContent}
-      </DialogContent>
-    </Dialog>
+    <div className="absolute">
+      <Dialog open={isOpen} onOpenChange={isOpen => !isOpen && closeModal()}>
+        <DialogTrigger>{children}</DialogTrigger>
+        <DialogContent
+          id={modalKey}
+          className={clsx(
+            "flex flex-col",
+            modalKey === "general_modal" && "overflow-y-hidden",
+          )}
+        >
+          <DialogHeader>
+            <DialogTitle asChild>
+              <motion.h1 layout>{modalTitle}</motion.h1>
+            </DialogTitle>
+          </DialogHeader>
+          {modalContent}
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
 
