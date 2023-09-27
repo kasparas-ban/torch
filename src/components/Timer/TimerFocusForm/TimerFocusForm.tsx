@@ -4,10 +4,11 @@ import {
   SelectTypeFirstField,
   SelectTypeSecondField,
 } from "../../Inputs/SelectField"
+import { useItemsList } from "@/API/itemAPI"
+import { getItemsByType } from "@/API/helpers"
 import useTimerStore from "../hooks/useTimer"
 import { toPercent } from "../../../helpers"
 import useTimerForm, { FocusType } from "../hooks/useTimerForm"
-import { getItemsByType, useItemsList } from "../../../API/api"
 import { GroupedOptionType, ItemOptionType } from "../../../types"
 
 const focusTypeOptions = [

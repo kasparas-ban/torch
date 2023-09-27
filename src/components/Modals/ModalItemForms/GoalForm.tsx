@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { pruneObject } from "@/helpers"
-import { useAddNewItem } from "@/API/api"
+import { useAddNewItem } from "@/API/itemAPI"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import { ButtonSubmit } from "@/components/ui/button"

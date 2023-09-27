@@ -14,7 +14,7 @@ import {
 import { Dream } from "@/types"
 import useModal from "../useModal"
 import { pruneObject } from "@/helpers"
-import { useAddNewItem } from "@/API/api"
+import { useAddNewItem } from "@/API/itemAPI"
 import { dreamFormSchema, DreamFormType } from "../schemas"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"

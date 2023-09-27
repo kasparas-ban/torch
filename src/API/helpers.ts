@@ -1,5 +1,7 @@
+import { FocusType } from "@/components/Timer/hooks/useTimerForm"
 import {
   Dream,
+  FormattedItems,
   GeneralItem,
   Goal,
   GroupedItems,
@@ -8,6 +10,7 @@ import {
   RecurringType,
   Task,
 } from "../types"
+import dayjs from "dayjs"
 
 export type ItemResponse = {
   itemID: number
@@ -24,6 +27,12 @@ export type ItemResponse = {
   parentID: number
   timeSpent: number
   createdAt: number
+}
+
+export type TimerHistoryResponse = {
+  startTime: string
+  endTime: string
+  itemID: number
 }
 
 export const groupItemsByParent = (
@@ -215,4 +224,129 @@ const getProgress = (timeSpent: number, duration: number | null) => {
     ? Math.round((timeSpent / duration) * 1000) / 1000
     : 0
   return progress > 1 ? 1 : progress
+}
+
+export const getItemsByType = ({
+  itemData,
+  focusType,
+  grouped,
+}: {
+  itemData?: { tasks: Task[]; goals: Goal[]; dreams: Dream[] }
+  focusType: FocusType
+  grouped?: boolean
+}) => {
+  const selectedItems =
+    focusType === "TASKS"
+      ? itemData?.tasks
+      : focusType === "GOALS"
+      ? itemData?.goals
+      : focusType === "DREAMS"
+      ? itemData?.dreams
+      : [
+          ...(itemData?.tasks || []),
+          ...(itemData?.goals || []),
+          ...(itemData?.dreams || []),
+        ]
+
+  const filteredItems =
+    selectedItems?.map(item => ({
+      label: item.title,
+      value: item.id,
+      type: item.type,
+      progress: item.progress,
+      timeSpent: item.timeSpent,
+      totalTimeSpent: (item as Goal)?.totalTimeSpent,
+      containsTasks:
+        !!(item as Goal).tasks?.length ||
+        !!(item as Dream).goals?.find(goal => !!goal.tasks?.length),
+      duration:
+        (item as Task)?.duration ||
+        (item as Goal).tasks?.reduce(
+          (prev, curr) => (prev += curr.duration || 0),
+          0,
+        ),
+      parent: (item as Task).goal?.id || (item as Goal).dream?.id,
+    })) || []
+
+  if (grouped) {
+    if (focusType === "ALL" || focusType === "DREAMS") return filteredItems
+
+    const parents =
+      focusType === "TASKS"
+        ? (itemData?.goals || []).filter(goal =>
+            filteredItems.find(item => item.parent === goal.id),
+          )
+        : (itemData?.dreams || []).filter(dream =>
+            filteredItems.find(item => item.parent === dream.id),
+          )
+
+    const groupedItems = parents.map(parent => ({
+      label: parent.title,
+      value: parent.id,
+      options: filteredItems.filter(item => item.parent === parent.id),
+    }))
+
+    return groupedItems
+  }
+
+  return filteredItems
+}
+
+export const findItemByID = (
+  itemID: number,
+  formattedItems: FormattedItems,
+) => {
+  let item
+  item = formattedItems.dreams.find(item => item.id === itemID)
+  if (item) return item
+
+  item = formattedItems.goals.find(item => item.id === itemID)
+  if (item) return item
+
+  item = formattedItems.tasks.find(item => item.id === itemID)
+  if (item) return item
+}
+
+export const formatTimerHistory = (
+  timerData: TimerHistoryResponse[],
+  formattedItems: FormattedItems,
+) => {
+  const formattedData = timerData.map(record => {
+    const timeSpent = dayjs(record.endTime).diff(
+      dayjs(record.startTime),
+      "seconds",
+    )
+
+    const item = findItemByID(record.itemID, formattedItems)
+
+    let progressDifference
+    if ((item as Task).duration) {
+      const duration = (item as Task).duration
+      progressDifference = duration ? timeSpent / duration : undefined
+      console.log("duration", duration, progressDifference, timerData)
+    } else {
+      const totalDuration = (item as Goal).tasks?.reduce(
+        (prev, curr) => (prev += curr.duration || 0),
+        0,
+      )
+      progressDifference = totalDuration ? timeSpent / totalDuration : undefined
+    }
+
+    return {
+      focusOn: item
+        ? {
+            value: record.itemID,
+            label: item.title,
+            type: item.type,
+          }
+        : undefined,
+      startTime: dayjs(record.startTime).format("HH:mm A"),
+      finishTime: dayjs(record.endTime).format("HH:mm A"),
+      progress: item?.progress,
+      progressDifference,
+      timeSpent,
+    }
+  })
+
+  return formattedData
 }

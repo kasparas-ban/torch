@@ -23,7 +23,7 @@ export const ItemLoadNotSignedInErrorMsg = {
   description: "Using local storage instead.",
 }
 
-export const AddItemFetchErrorMsg = {
+export const PostFetchErrorMsg = {
   title: "Failed to save data online",
   description: "Saving to local storage instead.",
 }
