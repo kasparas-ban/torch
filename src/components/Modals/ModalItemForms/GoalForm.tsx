@@ -84,23 +84,10 @@ function GoalForm() {
     }
 
     mutateAsync(newGoal)
-      .then((goal?: ItemResponse) => {
-        if (!goal?.itemID) throw Error("Failed to save the goal")
-
-        const taskPromises = tasks.map((task, idx) =>
-          mutateAsync({
-            ...task,
-            ...(fields[idx].itemID ? { itemID: fields[idx].itemID } : {}),
-            parentID: goal.itemID,
-            type: "TASK" as const,
-          }),
-        )
-
-        Promise.all(taskPromises).then(() =>
-          setTimeout(() => {
-            closeModal()
-          }, 2000),
-        )
+      .then(() => {
+        setTimeout(() => {
+          closeModal()
+        }, 2000)
       })
       .catch(() => {
         setTimeout(
@@ -315,13 +302,13 @@ function GoalForm() {
             setInputOrder={setInputOrder}
           />
 
-          <Subtasks
+          {/* <Subtasks
             form={form}
             subtasks={fields}
             removeSubtask={removeSubtask}
-          />
+          /> */}
 
-          <div className="relative mb-5 mt-2 flex justify-center">
+          {/* <div className="relative mb-5 mt-2 flex justify-center">
             <motion.button
               layout
               className="flex px-3 py-1 text-[15px] text-gray-500"
@@ -334,7 +321,7 @@ function GoalForm() {
               </div>
               Add Subtask
             </motion.button>
-          </div>
+          </div> */}
 
           <div className="relative mt-auto flex justify-center">
             <ButtonSubmit
