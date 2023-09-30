@@ -100,3 +100,6 @@ export const getAllCountries = (lang = "en") => {
     .map(([key, value]) => ({ label: value as string, value: key }))
   return countryOptions
 }
+
+export const formatDate = (date: Date) =>
+  date.toISOString().slice(0, 19).replace("T", " ")

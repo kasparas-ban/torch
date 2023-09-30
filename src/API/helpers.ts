@@ -323,7 +323,6 @@ export const formatTimerHistory = (
     if ((item as Task).duration) {
       const duration = (item as Task).duration
       progressDifference = duration ? timeSpent / duration : undefined
-      console.log("duration", duration, progressDifference, timerData)
     } else {
       const totalDuration = (item as Goal).tasks?.reduce(
         (prev, curr) => (prev += curr.duration || 0),

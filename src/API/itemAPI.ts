@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { ItemResponse, formatItemResponse } from "./helpers"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import useStorage from "@/pages/ItemsPage/useStorageStore"
-import { FormattedItems } from "../types"
+import { FormattedItems, GeneralItem } from "../types"
 import {
   CustomError,
   ItemLoadServerErrorMsg,
@@ -15,6 +15,9 @@ import {
   NewDreamType,
   NewGoalType,
   NewTaskType,
+  UpdateDreamType,
+  UpdateGoalType,
+  UpdateTaskType,
 } from "@/components/Modals/schemas"
 import { HOST, queryClient } from "./apiConfig"
 
@@ -95,4 +98,59 @@ export const useAddNewItem = () => {
     })
 
   return { isLoading, isError, isSuccess, data, mutate, mutateAsync, reset }
+}
+
+export const useUpdateItem = () => {
+  const { getToken } = useAuth()
+
+  const { data, mutate, isLoading, isError, isSuccess, mutateAsync, reset } =
+    useMutation({
+      mutationFn: async (
+        item: UpdateTaskType | UpdateGoalType | UpdateDreamType,
+      ) => {
+        const token = await getToken()
+        if (token) {
+          return fetch(`${HOST}/api/update-item`, {
+            method: "PUT",
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify(item),
+          })
+            .then(res => {
+              if (!res.ok) throw new CustomError("", PostFetchErrorMsg)
+              return res.json() as Promise<ItemResponse>
+            })
+            .catch(err => {
+              throw new CustomError(err, PostFetchErrorMsg)
+            })
+        } else {
+          // TODO: add to localStorage
+        }
+        return undefined
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["items"] })
+      },
+    })
+
+  return { isLoading, isError, isSuccess, data, mutate, mutateAsync, reset }
+}
+
+export const useUpsertItem = (editItem?: GeneralItem) => {
+  const {
+    mutateAsync: mutateAsyncNew,
+    reset: resetNew,
+    isLoading: isLoadingNew,
+    isError: isErrorNew,
+    isSuccess: isSuccessNew,
+  } = useAddNewItem()
+  const { mutateAsync, reset, isLoading, isError, isSuccess } = useUpdateItem()
+
+  if (editItem) return { mutateAsync, reset, isLoading, isError, isSuccess }
+  return {
+    mutateAsync: mutateAsyncNew,
+    reset: resetNew,
+    isLoading: isLoadingNew,
+    isError: isErrorNew,
+    isSuccess: isSuccessNew,
+  }
 }

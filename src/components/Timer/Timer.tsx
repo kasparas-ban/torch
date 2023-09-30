@@ -1,7 +1,7 @@
 import { forwardRef } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import clsx from "clsx"
-import useTimerStore from "./hooks/useTimer"
+import useTimerStore, { useTimerListener } from "./hooks/useTimer"
 import useTimerForm from "./hooks/useTimerForm"
 import { TimerShape } from "./TimerShape"
 import useModal from "../Modals/useModal"
@@ -158,6 +158,8 @@ function Timer() {
 }
 
 const TimerClock = forwardRef<HTMLDivElement>((_, ref) => {
+  useTimerListener()
+
   const time = useTimerStore.use.time()
   const timerState = useTimerStore.use.timerState()
 

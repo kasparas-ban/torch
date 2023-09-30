@@ -4,7 +4,6 @@ import SignInPage from "./SignInPage"
 import { Button } from "@/components/ui/button"
 import useModal from "@/components/Modals/useModal"
 import { useToast } from "@/components/ui/use-toast"
-import { GeneralModal } from "@/components/Modals/GeneralModal/GeneralModal"
 import { ReactComponent as AccountIcon } from "../assets/account.svg"
 import { ReactComponent as ArrowIcon } from "../assets/arrow.svg"
 import { ReactComponent as EmailIcon } from "../assets/email.svg"
@@ -84,7 +83,7 @@ function AccountPage() {
 
         <section className="flex sm:hidden">
           <motion.div className="mx-auto w-full" whileTap={{ scale: 0.95 }}>
-            <Button className="text-md w-full bg-gray-600 pl-8 pr-10 hover:bg-gray-600">
+            <Button className="text-md w-full bg-gray-600 pl-8 pr-10 text-white hover:bg-gray-600">
               <SignOutIcon className="t-2 relative top-px mr-3 h-5 w-5" />
               Sign Out
             </Button>

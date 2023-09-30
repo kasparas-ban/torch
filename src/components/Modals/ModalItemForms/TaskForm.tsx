@@ -23,7 +23,7 @@ import { groupItemsByParent } from "@/API/helpers"
 import { getTime, pruneObject } from "@/helpers"
 import { useToast } from "@/components/ui/use-toast"
 import { ButtonSubmit } from "@/components/ui/button"
-import { useAddNewItem } from "@/API/itemAPI"
+import { useUpsertItem } from "@/API/itemAPI"
 import useListStore from "@/pages/ItemsPage/useListStore"
 import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
@@ -58,7 +58,10 @@ function TaskForm() {
     items: { goals },
   } = useListStore()
   const { editItem, closeModal } = useModal()
-  const { mutateAsync, reset, isLoading, isError, isSuccess } = useAddNewItem()
+
+  const { mutateAsync, reset, isLoading, isError, isSuccess } =
+    useUpsertItem(editItem)
+
   const defaultTask = getInitialTaskForm(editItem as Task)
 
   const defaultInputOrder = Object.keys(defaultTask).filter(
@@ -73,8 +76,11 @@ function TaskForm() {
   })
 
   const onSubmit = (data: TaskFormType) => {
+    const { goal, ...rest } = data
     const newTask = {
-      ...pruneObject(data),
+      ...pruneObject(rest),
+      ...(editItem ? { itemID: editItem.id } : {}),
+      ...(goal ? { parentID: goal.value } : {}),
       type: "TASK" as const,
     }
     mutateAsync(newTask)

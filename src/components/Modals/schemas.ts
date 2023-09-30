@@ -11,6 +11,7 @@ export const dreamFormSchema = z.object({
 
 export type DreamFormType = z.infer<typeof dreamFormSchema>
 export type NewDreamType = DreamFormType & { type: "DREAM" }
+export type UpdateDreamType = NewDreamType & { itemID?: number }
 
 export const taskFormSchema = z.object({
   title: z
@@ -36,10 +37,11 @@ export const taskFormSchema = z.object({
 })
 
 export type TaskFormType = z.infer<typeof taskFormSchema>
-export type NewTaskType = Omit<TaskFormType, "task"> & {
-  parentId?: number
+export type NewTaskType = Omit<TaskFormType, "goal"> & {
+  parentID?: number
   type: "TASK"
 }
+export type UpdateTaskType = NewTaskType & { itemID?: number }
 
 export const goalFormSchema = z.object({
   title: z
@@ -54,8 +56,13 @@ export const goalFormSchema = z.object({
 
 export type GoalFormType = z.infer<typeof goalFormSchema>
 export type NewGoalType = Omit<GoalFormType, "dream"> & {
-  parentId?: number
+  parentID?: number
   type: "GOAL"
+}
+export type UpdateGoalType = Omit<NewGoalType, "tasks"> & {
+  itemID?: number
+  tasks: UpdateTaskType
+  type: "TASK"
 }
 
 const subtaskFormSchema = taskFormSchema

@@ -15,7 +15,7 @@ import {
 type TimerRecordReq = {
   startTime: string
   endTime: string
-  itemID: number
+  itemID?: number
 }
 
 export const useTimerHistory = () => {
