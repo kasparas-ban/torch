@@ -14,7 +14,7 @@ import {
 import { Dream } from "@/types"
 import useModal from "../useModal"
 import { pruneObject } from "@/helpers"
-import { useAddNewItem } from "@/API/itemAPI"
+import { useUpsertItem } from "@/API/itemAPI"
 import { dreamFormSchema, DreamFormType } from "../schemas"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
@@ -44,7 +44,7 @@ const getInitialDreamForm = (initialDream: Dream): DreamFormType => ({
 function DreamForm() {
   const { toast } = useToast()
   const { editItem, closeModal } = useModal()
-  const { mutateAsync, reset, isLoading, isError, isSuccess } = useAddNewItem()
+  const { mutateAsync, reset, isLoading, isError, isSuccess } = useUpsertItem()
   const defaultDream = getInitialDreamForm(editItem as Dream)
 
   const defaultInputOrder = Object.keys(defaultDream).filter(
@@ -61,6 +61,7 @@ function DreamForm() {
   const onSubmit = (data: DreamFormType) => {
     const newDream = {
       ...pruneObject(data),
+      ...(editItem ? { itemID: editItem.id } : {}),
       type: "DREAM" as const,
     }
     mutateAsync(newDream)

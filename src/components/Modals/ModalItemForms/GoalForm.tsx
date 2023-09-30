@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { pruneObject } from "@/helpers"
-import { useAddNewItem } from "@/API/itemAPI"
+import { useUpsertItem } from "@/API/itemAPI"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import { ButtonSubmit } from "@/components/ui/button"
@@ -25,6 +25,7 @@ import useListStore from "@/pages/ItemsPage/useListStore"
 import SelectField from "@/components/Inputs/SelectField"
 import { ReactComponent as MinusSmallIcon } from "../../../assets/minus_small.svg"
 import { ReactComponent as PlusSmallIcon } from "../../../assets/plus_small.svg"
+import { ItemResponse } from "@/API/helpers"
 
 type InputType = keyof GoalFormType
 
@@ -42,7 +43,7 @@ const getInitialGoalForm = (initialGoal: Goal): GoalFormType => ({
   title: initialGoal?.title || "",
   priority: initialGoal?.priority,
   targetDate: initialGoal?.targetDate,
-  tasks: initialGoal?.tasks || [],
+  tasks: initialGoal?.tasks?.map(task => ({ ...task, itemID: task.id })) || [],
   dream: initialGoal?.dream
     ? { label: initialGoal.dream.title, value: initialGoal.dream.id }
     : undefined,
@@ -54,7 +55,7 @@ function GoalForm() {
   } = useListStore()
   const { toast } = useToast()
   const { editItem, addTaskOnOpen, modalKey, closeModal } = useModal()
-  const { mutateAsync, reset, isLoading, isError, isSuccess } = useAddNewItem()
+  const { mutateAsync, reset, isLoading, isError, isSuccess } = useUpsertItem()
   const defaultGoal = getInitialGoalForm(editItem as Goal)
 
   const defaultInputOrder = (Object.keys(defaultGoal) as InputType[]).filter(
@@ -74,20 +75,23 @@ function GoalForm() {
   })
 
   const onSubmit = (data: GoalFormType) => {
-    console.log("onSubmit", data)
+    const { dream, tasks, ...rest } = data
     const newGoal = {
-      ...pruneObject({ ...data, parentId: data.dream?.value }),
+      ...pruneObject(rest),
+      ...(editItem ? { itemID: editItem.id } : {}),
+      ...(dream ? { parentID: dream.value } : {}),
       type: "GOAL" as const,
     }
 
     mutateAsync(newGoal)
-      .then(goal => {
+      .then((goal?: ItemResponse) => {
         if (!goal?.itemID) throw Error("Failed to save the goal")
 
-        const taskPromises = newGoal.tasks.map(task =>
+        const taskPromises = tasks.map((task, idx) =>
           mutateAsync({
             ...task,
-            parentId: goal.itemID,
+            ...(fields[idx].itemID ? { itemID: fields[idx].itemID } : {}),
+            parentID: goal.itemID,
             type: "TASK" as const,
           }),
         )

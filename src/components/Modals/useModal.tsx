@@ -160,8 +160,9 @@ const useModalStore = create<ModalState>(set => ({
     set(() => ({
       modalKey: "",
       isOpen: false,
-      // title: "",
-      // modalContent: undefined,
+      title: "",
+      modalContent: undefined,
+      editItem: undefined,
     })),
 }))
 

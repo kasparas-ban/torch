@@ -135,22 +135,48 @@ export const useUpdateItem = () => {
   return { isLoading, isError, isSuccess, data, mutate, mutateAsync, reset }
 }
 
-export const useUpsertItem = (editItem?: GeneralItem) => {
-  const {
-    mutateAsync: mutateAsyncNew,
-    reset: resetNew,
-    isLoading: isLoadingNew,
-    isError: isErrorNew,
-    isSuccess: isSuccessNew,
-  } = useAddNewItem()
-  const { mutateAsync, reset, isLoading, isError, isSuccess } = useUpdateItem()
+export const useUpsertItem = () => {
+  const { getToken } = useAuth()
 
-  if (editItem) return { mutateAsync, reset, isLoading, isError, isSuccess }
-  return {
-    mutateAsync: mutateAsyncNew,
-    reset: resetNew,
-    isLoading: isLoadingNew,
-    isError: isErrorNew,
-    isSuccess: isSuccessNew,
-  }
+  const { data, mutate, isLoading, isError, isSuccess, mutateAsync, reset } =
+    useMutation({
+      mutationFn: async (
+        item:
+          | NewTaskType
+          | NewGoalType
+          | NewDreamType
+          | UpdateTaskType
+          | UpdateGoalType
+          | UpdateDreamType,
+      ) => {
+        const token = await getToken()
+        const endpoint = (item as UpdateTaskType).itemID
+          ? `${HOST}/api/update-item`
+          : `${HOST}/api/add-item`
+        const method = (item as UpdateTaskType).itemID ? "PUT" : "POST"
+
+        if (token) {
+          return fetch(endpoint, {
+            method: method,
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify(item),
+          })
+            .then(res => {
+              if (!res.ok) throw new CustomError("", PostFetchErrorMsg)
+              return res.json() as Promise<ItemResponse>
+            })
+            .catch(err => {
+              throw new CustomError(err, PostFetchErrorMsg)
+            })
+        } else {
+          // TODO: add to localStorage
+        }
+        return undefined
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["items"] })
+      },
+    })
+
+  return { isLoading, isError, isSuccess, data, mutate, mutateAsync, reset }
 }

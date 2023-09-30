@@ -59,8 +59,7 @@ function TaskForm() {
   } = useListStore()
   const { editItem, closeModal } = useModal()
 
-  const { mutateAsync, reset, isLoading, isError, isSuccess } =
-    useUpsertItem(editItem)
+  const { mutateAsync, reset, isLoading, isError, isSuccess } = useUpsertItem()
 
   const defaultTask = getInitialTaskForm(editItem as Task)
 

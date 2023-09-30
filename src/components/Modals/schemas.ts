@@ -51,18 +51,21 @@ export const goalFormSchema = z.object({
   dream: z.object({ label: z.string(), value: z.number() }).optional(),
   targetDate: z.string().nullable().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
-  tasks: z.array(taskFormSchema.omit({ goal: true })),
+  tasks: z.array(
+    taskFormSchema.omit({ goal: true }).extend({
+      itemID: z.number().optional(),
+    }),
+  ),
 })
 
 export type GoalFormType = z.infer<typeof goalFormSchema>
-export type NewGoalType = Omit<GoalFormType, "dream"> & {
+export type NewGoalType = Omit<GoalFormType, "dream" | "tasks"> & {
   parentID?: number
   type: "GOAL"
 }
 export type UpdateGoalType = Omit<NewGoalType, "tasks"> & {
   itemID?: number
-  tasks: UpdateTaskType
-  type: "TASK"
+  type: "GOAL"
 }
 
 const subtaskFormSchema = taskFormSchema
