@@ -180,3 +180,35 @@ export const useUpsertItem = () => {
 
   return { isLoading, isError, isSuccess, data, mutate, mutateAsync, reset }
 }
+
+export const useRemoveItem = () => {
+  const { getToken } = useAuth()
+
+  const { data, mutate, isLoading, isError, isSuccess, mutateAsync, reset } =
+    useMutation({
+      mutationFn: async (itemID: number) => {
+        const token = await getToken()
+        if (token) {
+          return fetch(`${HOST}/api/remove-item/${itemID}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          })
+            .then(res => {
+              if (!res.ok) throw new CustomError("", PostFetchErrorMsg)
+              return res.json() as Promise<ItemResponse>
+            })
+            .catch(err => {
+              throw new CustomError(err, PostFetchErrorMsg)
+            })
+        } else {
+          // TODO: add to localStorage
+        }
+        return undefined
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["items"] })
+      },
+    })
+
+  return { isLoading, isError, isSuccess, data, mutate, mutateAsync, reset }
+}
