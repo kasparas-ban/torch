@@ -141,6 +141,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .signin-panel .cl-header h1,
 .signin-panel .cl-header p,
+.cl-footerActionText,
 .signin-panel .cl-dividerRow p,
 .signin-panel .cl-formField label {
   @apply text-gray-700;
