@@ -122,3 +122,26 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 *::selection {
   @apply bg-gray-400;
 }
+
+/* Sign-in panel */
+
+.signin-panel * {
+  box-shadow: none;
+}
+
+.signin-panel .cl-card > div:last-child {
+  background-color: #ff234f;
+}
+
+.signin-panel form button {
+  background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #ff234f);
+  animation: animatedgradient 4s ease infinite alternate;
+  background-size: 300% 300%;
+}
+
+.signin-panel .cl-header h1,
+.signin-panel .cl-header p,
+.signin-panel .cl-dividerRow p,
+.signin-panel .cl-formField label {
+  @apply text-gray-700;
+}

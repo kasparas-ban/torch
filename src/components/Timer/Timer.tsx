@@ -147,11 +147,11 @@ function Timer() {
             </motion.button>
           </div>
         )}
-        {timerState !== "running" && (
+        {/* {timerState !== "running" && (
           <motion.div layout key="timer_history">
             <TimerHistory />
           </motion.div>
-        )}
+        )} */}
       </AnimatePresence>
     </motion.div>
   )
