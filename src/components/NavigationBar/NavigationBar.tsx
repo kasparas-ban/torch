@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import clsx from "clsx"
 import { useMediaQuery } from "react-responsive"
 import { AnimatePresence, motion } from "framer-motion"
+import { SignOutButton, useUser } from "@clerk/clerk-react"
 import { NavigationBarWrapper, useScrollPosition } from "./helpers"
 import { ROUTES } from "@/routes"
 import { useToast } from "../ui/use-toast"
@@ -15,7 +16,6 @@ import { ReactComponent as WorldIcon } from "../../assets/navigation_icons/world
 import { ReactComponent as StatsIcon } from "../../assets/navigation_icons/stats.svg"
 import { ReactComponent as TorchLogo } from "../../assets/torch_logo.svg"
 import { ReactComponent as UserIcon } from "../../assets/user.svg"
-import { SignOutButton, useUser } from "@clerk/clerk-react"
 
 function NavigationBar() {
   const isDesktop = useMediaQuery({
