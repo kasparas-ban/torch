@@ -15,6 +15,7 @@ import useConfirmModal from "./components/Modals/ConfirmModal/useConfirmModal"
 import { GeneralModal } from "./components/Modals/GeneralModal/GeneralModal"
 import NavigationBar from "./components/NavigationBar/NavigationBar"
 import TimerToast from "./components/TimerToast/TimerToast"
+import DevMarker from "./components/DevMarker/DevMarker"
 import useModal from "./components/Modals/useModal"
 import { Toaster } from "@/components/ui/toaster"
 import TimerPage from "./pages/TimerPage"
@@ -25,9 +26,9 @@ import CalendarPage from "./pages/CalendarPage"
 import StatisticsPage from "./pages/StatisticsPage"
 import WorldPage from "./pages/WorldPage"
 import AccountPage from "./pages/AccountPage"
-import { ROUTES } from "./routes"
 import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
+import { ROUTES } from "./routes"
 
 if (!import.meta.env.VITE_REACT_APP_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
@@ -70,6 +71,7 @@ const Wrapper = () => {
         </ClerkProvider>
       </motion.div>
       <Toaster />
+      <DevMarker />
     </>
   )
 }
